@@ -1,0 +1,51 @@
+{
+  "_help": "Race/Sprint Race preparation. Event identity comes from --event YYYY-RR. Time values are seconds.",
+  "session": "R",
+  "race": {
+    "_help": {
+      "total_laps": "Normally resolved automatically from canonical event metadata. If unavailable, FastF1 session data may be used when available. Set an integer only to manually override the detected race distance."
+    },
+    "total_laps": null
+  },
+  "strategy": {
+    "_help": {
+      "max_stops": "Maximum stop count considered by unrestricted and rules-compliant optimiser runs.",
+      "result_count": "Number of top solutions retained per unrestricted or rules-compliant optimiser run. Cutoff envelopes retain one best solution per fixed stop count."
+    },
+    "max_stops": 3,
+    "result_count": 10
+  },
+  "tyre_prediction": {
+    "_help": {
+      "manual_override": "The cached pre-race prediction is loaded first. Each non-null value replaces only that value for this run; other values and uncertainty remain automatic."
+    },
+    "manual_override": {
+      "SOFT": {"performance_delta_to_medium": null, "degradation_seconds_per_lap": null},
+      "MEDIUM": {"performance_delta_to_medium": null, "degradation_seconds_per_lap": null},
+      "HARD": {"performance_delta_to_medium": null, "degradation_seconds_per_lap": null}
+    }
+  },
+  "pit_loss": {
+    "_help": {
+      "green": "Normal GREEN-state pit loss.",
+      "sc_vsc": "Combined SC/VSC pit loss in V1.",
+      "input_forms": "For each state provide either total, or both pit_in_s3 and pit_out_s1. Units are seconds. Split total equals S3 + S1; mixing forms is rejected."
+    },
+    "green": {"total": 20.5, "pit_in_s3": null, "pit_out_s1": null},
+    "sc_vsc": {"total": 11.3, "pit_in_s3": null, "pit_out_s1": null}
+  },
+  "degradation_cutoff": {
+    "_help": {
+      "scan_min": "Minimum MEDIUM degradation in s/lap. Leave null for a prediction-centred automatic range that extends its lower bound toward zero when needed to find a 1→2 cutoff. An explicit value is a hard lower bound.",
+      "scan_max": "Maximum MEDIUM degradation in s/lap; null selects the automatic range.",
+      "coarse_step": "Coarse scan step in s/lap; normally leave null.",
+      "refine_tolerance": "Crossing refinement tolerance in s/lap; normally leave null."
+    },
+    "scan_min": null,
+    "scan_max": null,
+    "coarse_step": null,
+    "refine_tolerance": null
+  },
+  "data_root": null,
+  "report": {"language": "zh-CN", "template": "engineering"}
+}

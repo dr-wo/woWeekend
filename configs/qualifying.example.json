@@ -1,0 +1,15 @@
+{
+  "_help": {
+    "session": "Q for standard qualifying or SQ for Sprint qualifying.",
+    "push_threshold_fraction": "Existing push-lap threshold relative to the fastest eligible lap. 0.02 means within 2% of that reference; the live planner applies it against the fastest active reference lap.",
+    "data_root": "Optional woData root override. Normally leave null."
+  },
+  "session": "Q",
+  "push_threshold_fraction": 0.02,
+  "data_root": null,
+  "report": {
+    "_help": "Presentation only; changing language does not rerun analysis.",
+    "language": "zh-CN",
+    "template": "engineering"
+  }
+}
