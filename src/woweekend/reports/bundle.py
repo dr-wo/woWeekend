@@ -25,10 +25,10 @@ def create_report_bundle(
     if root.exists():
         raise FileExistsError(f"Report bundle already exists: {root}")
     image_suffixes = {".png", ".jpg", ".jpeg", ".webp", ".svg"}
-    figure_paths = [
+    figure_paths = sorted([
         Path(value) for value in figures
         if Path(value).exists() and Path(value).suffix.lower() in image_suffixes
-    ]
+    ], key=lambda path: (0 if path.name.startswith("live_mc_") else 1, path.name))
     if len(figure_paths) + 5 > MAX_BUNDLE_FILES:
         figure_paths = figure_paths[: MAX_BUNDLE_FILES - 5]
     (root / "figures").mkdir(parents=True)

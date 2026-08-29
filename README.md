@@ -24,6 +24,27 @@ Regenerate presentation artifacts without rerunning deterministic analysis:
 woweekend-race --event 2026-07 --report-only RUN_ID --language en-GB
 ```
 
+Post-Race reconstructs the historical live tyre-MC sequence before presenting
+the separate full-race Retro MC result. It first merges complete local live
+recording fragments, then reuses or downloads the canonical archive replay when
+the recovered record lacks race distance or tyre metadata. Every leader-lap
+cut is passed to woPlanner's existing live recalculation service; Post does not
+contain another MC implementation.
+
+```json
+{
+  "live_replay": {
+    "mode": "algorithm_only"
+  }
+}
+```
+
+`algorithm_only` ignores recorded manual overrides. `operational` preserves the
+calculated MC coordinates and separately reconstructs recorded manual and
+effective values. The compact `live_mc_history.json` artifact and two English
+evolution figures are included in the report bundle when replay succeeds;
+replay failure does not stop other Post components.
+
 Pit loss can be supplied as one whole value; no S3/S1 split is required:
 
 ```json
@@ -77,3 +98,8 @@ as exact references with provenance and are never silently replaced by `latest`.
 
 See [AUDIT.md](AUDIT.md) for the audit-first reuse map and known extraction gap
 for the Event-Aware Hindsight Optimum.
+
+Future maintainers and AI development agents should start with
+[docs/AI_DEVELOPMENT_GUIDE.md](docs/AI_DEVELOPMENT_GUIDE.md). It describes the
+repository boundaries, workflow/data flow, deterministic artifacts, test
+strategy, and the assumptions and compromises behind the current design.

@@ -9,7 +9,7 @@ description = "Lightweight orchestration for repeatable race-weekend workflows."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-dependencies = ["wodata", "wostrategy", "wostanding"]
+dependencies = ["wodata", "wostrategy", "wostanding", "woplanner"]
 
 [project.scripts]
 woweekend-quali = "woweekend.cli.qualifying:main"

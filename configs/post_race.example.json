@@ -14,6 +14,12 @@
     "_help": {"overrides": "Passed only to supported stable race-review adapter parameters."},
     "overrides": {}
   },
+  "live_replay": {
+    "_help": {
+      "mode": "algorithm_only evaluates the live MC model without historical manual overrides. operational also replays saved manual overrides and reconstructs the effective values used during the race."
+    },
+    "mode": "algorithm_only"
+  },
   "data_root": null,
   "report": {"language": "zh-CN", "template": "engineering"}
 }
