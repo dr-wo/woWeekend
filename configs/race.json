@@ -1,0 +1,62 @@
+{
+  "_help": "Race/Sprint Race preparation. Event identity comes from --event YYYY-RR. Time values are seconds.",
+  "session": "R",
+  "race": {
+    "_help": {
+      "total_laps": "Normally detected from FastF1 race results/laps. Leave null for automatic detection; set an integer only to override it."
+    },
+    "total_laps": 72
+  },
+  "pit_loss": {
+    "_help": {
+      "green": "Normal GREEN-state pit loss.",
+      "sc_vsc": "Combined SC/VSC pit loss in V1.",
+      "input_forms": "For each state provide either total, or both pit_in_s3 and pit_out_s1. Units are seconds. Split total equals S3 + S1; mixing forms is rejected."
+    },
+    "green": {"total": 18.1, "pit_in_s3": null, "pit_out_s1": null},
+    "sc_vsc": {"total": 8.9, "pit_in_s3": null, "pit_out_s1": null}
+  },
+  "strategy": {
+    "_help": {
+      "max_stops": "Maximum stop count considered by unrestricted and rules-compliant optimiser runs.",
+      "result_count": "Number of top solutions retained per unrestricted or rules-compliant optimiser run. Cutoff envelopes retain one best solution per fixed stop count."
+    },
+    "max_stops": 4,
+    "result_count": 20
+  },
+  "tyre_prediction": {
+    "_help": {
+      "manual_override": "The cached pre-race prediction is loaded first. Each non-null value replaces only that value for this run; other values and uncertainty remain automatic."
+    },
+    "manual_override": {
+      "SOFT": {
+        "performance_delta_to_medium": -0.16,
+        "degradation_seconds_per_lap": 0.083
+      },
+
+      "MEDIUM": {
+        "performance_delta_to_medium": 0.0,
+        "degradation_seconds_per_lap": 0.070
+      },
+
+      "HARD": {
+        "performance_delta_to_medium": 0.45,
+        "degradation_seconds_per_lap": 0.045
+      }
+    }
+  },
+  "degradation_cutoff": {
+    "_help": {
+      "scan_min": "Minimum MEDIUM degradation in s/lap; null selects the automatic range.",
+      "scan_max": "Maximum MEDIUM degradation in s/lap; null selects the automatic range.",
+      "coarse_step": "Coarse scan step in s/lap; normally leave null.",
+      "refine_tolerance": "Crossing refinement tolerance in s/lap; normally leave null."
+    },
+    "scan_min": null,
+    "scan_max": null,
+    "coarse_step": null,
+    "refine_tolerance": null
+  },
+  "data_root": null,
+  "report": {"language": "zh-CN", "template": "engineering"}
+}
