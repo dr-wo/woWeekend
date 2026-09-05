@@ -140,6 +140,13 @@ that the offline orchestration reproduced every operational UI interaction.
 `run_race` resolves race distance, pit loss, tyre inputs, exact strategies, and
 degradation cutoff envelopes.
 
+Race Preparation also calls
+`wostrategy.analysis.ensure_pre_race_model_config` before strategy products are
+calculated. A valid/fresh event config is reused; otherwise the shared API runs
+the canonical `pre_race_analysis` producer. The immutable Race run stores
+`live_mc_model_config.json` so woPlanner readiness and producer provenance are
+auditable.
+
 The tyre flow is:
 
 ```text
@@ -242,6 +249,12 @@ passes each eligible snapshot to
 The full-race Retro output is shown as a separate endpoint and is never used as
 historical lap input.
 
+Before replay, Post calls the same shared woStrategy prerequisite API used by
+Race Preparation. Missing or stale historical configs are generated
+automatically through the canonical `pre_race_analysis` implementation. Replay
+receives the ensured artifact provenance and does not implement or substitute
+any model-config calculation. Direct low-level replay calls also self-ensure.
+
 Replay modes:
 
 - `algorithm_only`: report the live algorithm coordinates without reconstructing
@@ -261,9 +274,21 @@ Compromises:
 
 - if local fragments are incomplete, the workflow may use/download the canonical
   archive replay;
+- legacy model configs without embedded identity remain reusable only from the
+  exact event-scoped path and only when structurally valid and fresh relative to
+  selected FP caches;
+- freshness uses FP cache modification times rather than full content/code
+  hashing, balancing inexpensive normal startup against conservative rebuilds;
+- automatic generation uses the canonical sample count and can be expensive or
+  require uncached FP downloads; numerical equivalence is preferred over a
+  second reduced-cost model;
 - a replay failure is isolated so the full-race Retro and season trackers can
   still complete;
 - operational mode can only reproduce manual actions that were actually recorded.
+
+See
+[`LIVE_MC_MODEL_CONFIG_PREREQUISITE.md`](LIVE_MC_MODEL_CONFIG_PREREQUISITE.md)
+for the complete validation policy, provenance contract, and design rationale.
 
 ## Report bundles
 
@@ -319,6 +344,9 @@ For a Post change, tests should cover at least:
 - figures referenced by JSON exist in the run;
 - report bundle file count is no greater than 20;
 - live replay does not leak future laps into historical snapshots.
+- missing and stale live-MC model configs invoke the canonical producer;
+- valid event configs are reused and wrong-round identity is rejected;
+- model-config generation failure is isolated from unrelated Post outputs.
 
 The 2026-R11 integration smoke used during the tracker/Retro audit produced all
 11 rounds in both trackers, a fresh 80,000-sample Retro run, and an 11-file

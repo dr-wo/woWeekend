@@ -27,6 +27,7 @@ from woplanner.analysis.service import (
     OfflineAnalysisService,
     leader_lap_snapshots,
 )
+from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 
 
 REPLAY_MODES = frozenset({"algorithm_only", "operational"})
@@ -59,11 +60,26 @@ def reconstruct_live_mc_history(
     downloader=run_fetch_replay_data,
     analysis_service_factory=OfflineAnalysisService,
     analysis_options: Mapping[str, Any] | None = None,
+    session_names: tuple[str, ...] | None = None,
+    model_config_ensurer=ensure_pre_race_model_config,
+    ensured_model_config: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Replay one completed Race through woPlanner's unchanged live-MC API."""
     mode = str(mode).lower()
     if mode not in REPLAY_MODES:
         raise ValueError(f"Unsupported live replay mode: {mode}")
+    if ensured_model_config is None:
+        ensured = model_config_ensurer(
+            season=year,
+            round_number=round_number,
+            data_root=data_root,
+            session_names=session_names,
+        )
+        model_config_provenance = (
+            ensured.to_dict() if hasattr(ensured, "to_dict") else dict(ensured)
+        )
+    else:
+        model_config_provenance = dict(ensured_model_config)
     replay = obtain_complete_replay(
         year=year,
         round_number=round_number,
@@ -179,6 +195,7 @@ def reconstruct_live_mc_history(
             "replay_mode": mode,
             "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
             "snapshot_api": "woplanner.analysis.service.leader_lap_snapshots",
+            "model_config": model_config_provenance,
         },
     }
     figures = plot_live_mc_history(

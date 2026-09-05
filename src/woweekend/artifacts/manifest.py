@@ -12,7 +12,24 @@ def build_manifest(*, workflow: str, event: str, run_id: str, components: Mappin
     warnings = [warning for item in components.values() for warning in item.warnings]
     warnings.extend(f"{name}: {item.error}" for name, item in components.items() if item.error)
     outputs = {name: item.status for name, item in components.items()}
-    return {"workflow": workflow, "event": event, "run_id": run_id, "status": overall_status(components), "config": config_path, "inputs": {}, "outputs": outputs, "warnings": warnings, "package_versions": _versions(), "git_commits": _git_commits()}
+    provenance = {
+        name: dict(item.provenance)
+        for name, item in components.items()
+        if item.provenance
+    }
+    return {
+        "workflow": workflow,
+        "event": event,
+        "run_id": run_id,
+        "status": overall_status(components),
+        "config": config_path,
+        "inputs": {},
+        "outputs": outputs,
+        "output_provenance": provenance,
+        "warnings": warnings,
+        "package_versions": _versions(),
+        "git_commits": _git_commits(),
+    }
 
 
 def _versions() -> dict[str, str]:

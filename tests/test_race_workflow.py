@@ -2,6 +2,8 @@ from pathlib import Path
 
 from wodata.events import EventMetadata
 from wostrategy.model.tyre_prediction import PreRaceTyrePrediction, TyreCompoundPrediction
+from wodata.artifacts import write_weekend_model_config
+from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from woweekend.config.race import RaceConfig
 from woweekend.workflows.race import run_race
 
@@ -16,6 +18,14 @@ def _tyres(**kwargs):
         }, generated_at="2026-01-01T00:00:00+00:00", provider="test",
         artifact_id="test-artifact",
     )
+
+
+def _ensure(**kwargs):
+    return {
+        "status": "reused",
+        "path": str(Path(kwargs["data_root"]) / "model_config.json"),
+        "producer_api": "test",
+    }
 
 
 def _event(*args, **kwargs):
@@ -49,18 +59,59 @@ def test_race_produces_both_strategy_modes_and_cutoffs(tmp_path: Path) -> None:
     raw = RaceConfig.template()
     raw.update({"total_laps": 6, "result_count": 2, "data_root": str(tmp_path)})
     raw["degradation_cutoff"] = {"scan_min": 0.05, "scan_max": 0.15, "coarse_step": 0.05, "refine_tolerance": 0.01}
-    run = run_race(RaceConfig.parse(raw), event="2026-07", input_config=raw, tyre_provider=_tyres, event_resolver=_event)
+    run = run_race(RaceConfig.parse(raw), event="2026-07", input_config=raw, tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event)
     assert run.load_json("strategy_unrestricted")
     compliant = run.load_json("strategy_rules_compliant")
     assert compliant and len(set(compliant[0]["compounds"])) >= 2
     assert "primary_1_to_2" in run.load_json("cutoff_rules_compliant")
 
 
+def test_race_preparation_generates_missing_live_model_config(tmp_path: Path) -> None:
+    def producer(values):
+        write_weekend_model_config(
+            {
+                "season": 2026,
+                "round_number": 7,
+                "source_sessions": ["FP1"],
+                "sample_count": 100,
+                "random_seed": 42,
+                "fuel_rate_bounds": [0.0, .1],
+                "track_rate_bounds": [-.05, .05],
+                "default_degradation_bounds": [0.0, .2],
+                "default_compound_delta_bounds": [-1.0, 1.0],
+                "reference_compound": "MEDIUM",
+                "clean_lap_noise_sigma": .35,
+            },
+            year=2026,
+            round_number=7,
+            data_root=tmp_path,
+        )
+        return 0
+
+    def ensure(**kwargs):
+        return ensure_pre_race_model_config(**kwargs, runner=producer)
+
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    run = run_race(
+        RaceConfig.parse(raw),
+        event="2026-07",
+        input_config=raw,
+        tyre_provider=_tyres,
+        model_config_ensurer=ensure,
+        event_resolver=_event,
+    )
+
+    prerequisite = run.load_json("live_mc_model_config")
+    assert prerequisite["status"] == "generated"
+    assert Path(prerequisite["path"]).is_file()
+
+
 def test_missing_manual_pit_loss_is_actionable(tmp_path: Path) -> None:
     raw = RaceConfig.template()
     raw.update({"total_laps": 6, "data_root": str(tmp_path)})
     raw["pit_loss"]["green"] = {"pit_in_s3": None, "pit_out_s1": None}
-    run = run_race(RaceConfig.parse(raw), event="2026-07", input_config=raw, tyre_provider=_tyres, event_resolver=_event)
+    run = run_race(RaceConfig.parse(raw), event="2026-07", input_config=raw, tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event)
     manifest = run.load_json("manifest")
     assert manifest["status"] == "FAILED"
     assert "provide either one total value" in manifest["warnings"][0]
@@ -82,7 +133,7 @@ def test_complete_manual_tyre_fallback_does_not_claim_automatic_values(tmp_path:
 
     run = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
-        tyre_provider=missing, event_resolver=_event,
+        tyre_provider=missing, model_config_ensurer=_ensure, event_resolver=_event,
     )
     effective = run.load_json("tyre_prediction.effective")
     assert effective["automatic_artifact_id"] is None
@@ -104,6 +155,7 @@ def test_scheduled_event_laps_are_used_and_recorded(tmp_path: Path) -> None:
     run = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres,
+        model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: _distance_event(scheduled=6),
     )
     resolved = run.load_json("config.resolved")
@@ -123,6 +175,7 @@ def test_manual_race_laps_override_event_metadata(tmp_path: Path) -> None:
     run = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres,
+        model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: _distance_event(scheduled=6),
     )
     distance = run.load_json("race_distance")
@@ -137,6 +190,7 @@ def test_session_laps_are_used_after_scheduled_metadata(tmp_path: Path) -> None:
     run = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres,
+        model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: _distance_event(session=6),
     )
     distance = run.load_json("race_distance")
@@ -151,6 +205,7 @@ def test_missing_all_race_lap_sources_fails_without_mutating_prior_run(tmp_path:
     failed = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres,
+        model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: _distance_event(),
     )
     before = (failed.path / "manifest.json").read_bytes()
@@ -161,6 +216,7 @@ def test_missing_all_race_lap_sources_fails_without_mutating_prior_run(tmp_path:
     recovered = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres,
+        model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: _distance_event(scheduled=6),
     )
     assert recovered.run_id != failed.run_id

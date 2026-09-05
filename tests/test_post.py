@@ -66,6 +66,93 @@ def _retro():
     }
 
 
+def _model_config(**kwargs):
+    return {
+        "status": "reused",
+        "path": str(Path(kwargs["data_root"]) / "model_config.json"),
+        "producer_api": "test",
+    }
+
+
+def _providers(live_provider):
+    return {
+        "retro_tyre_estimate": lambda **kwargs: _retro(),
+        "standings": lambda **kwargs: {"ok": True},
+        "qualifying_performance": lambda **kwargs: {},
+        "qualifying_performance_tracker": lambda **kwargs: {},
+        "race_performance": lambda **kwargs: {},
+        "race_performance_tracker": lambda **kwargs: {},
+        "empirical_pit_loss": lambda **kwargs: {},
+        "retro_green_optimum": lambda **kwargs: {"strategies": []},
+        "live_mc_history": live_provider,
+    }
+
+
+def test_post_generates_missing_historical_prerequisite_then_replays(tmp_path: Path) -> None:
+    pre = _pre_race_run(tmp_path)
+    raw = PostRaceConfig.template()
+    raw.update({"data_root": str(tmp_path), "pre_race_run_id": pre.run_id})
+    prerequisite = tmp_path / "generated-model-config.json"
+
+    def ensure(**_kwargs):
+        prerequisite.write_text("{}")
+        return {
+            "status": "generated",
+            "path": str(prerequisite),
+            "producer_api": "canonical-test-producer",
+        }
+
+    def replay(**kwargs):
+        assert prerequisite.is_file()
+        assert kwargs["ensured_model_config"]["status"] == "generated"
+        return {
+            "mode": kwargs["mode"],
+            "updates": [{"leader_lap": 3}, {"leader_lap": 6}],
+            "replay": {"complete": True},
+            "provenance": {"model_config": kwargs["ensured_model_config"]},
+        }
+
+    run = run_post_race(
+        PostRaceConfig.parse(raw),
+        event="2026-03",
+        input_config=raw,
+        providers=_providers(replay),
+        model_config_ensurer=ensure,
+        event_resolver=_event,
+    )
+
+    assert run.load_json("live_mc_history")["updates"][-1]["leader_lap"] == 6
+    manifest = run.load_json("manifest")
+    provenance = manifest["output_provenance"]["live_mc_history"]["model_config"]
+    assert provenance["status"] == "generated"
+
+
+def test_post_model_config_generation_failure_is_isolated(tmp_path: Path) -> None:
+    pre = _pre_race_run(tmp_path)
+    raw = PostRaceConfig.template()
+    raw.update({"data_root": str(tmp_path), "pre_race_run_id": pre.run_id})
+    replay_calls = []
+
+    def fail(**_kwargs):
+        raise RuntimeError("FP source unavailable")
+
+    run = run_post_race(
+        PostRaceConfig.parse(raw),
+        event="2026-03",
+        input_config=raw,
+        providers=_providers(lambda **kwargs: replay_calls.append(kwargs)),
+        model_config_ensurer=fail,
+        event_resolver=_event,
+    )
+
+    results = run.load_json("analysis_results")
+    assert results["live_mc_history"]["status"] == "FAILED"
+    assert "FP source unavailable" in results["live_mc_history"]["error"]
+    assert results["standings"]["status"] == "SUCCESS"
+    assert results["retro_tyre_estimate"]["status"] == "SUCCESS"
+    assert replay_calls == []
+
+
 def test_post_dependencies_share_fresh_retro_and_trackers_cover_season(tmp_path: Path) -> None:
     pre = _pre_race_run(tmp_path)
     raw = PostRaceConfig.template()
@@ -104,6 +191,7 @@ def test_post_dependencies_share_fresh_retro_and_trackers_cover_season(tmp_path:
     run = run_post_race(
         PostRaceConfig.parse(raw), event="2026-03", input_config=raw,
         providers=providers, event_resolver=_event,
+        model_config_ensurer=_model_config,
     )
     persisted_retro = run.load_json("retro_tyre_estimate")
     comparison = run.load_json("tyre_comparison")
@@ -139,6 +227,7 @@ def test_retro_failure_blocks_comparison_and_green_optimum(tmp_path: Path) -> No
     run = run_post_race(
         PostRaceConfig.parse(raw), event="2026-03", input_config=raw,
         providers=providers, event_resolver=_event,
+        model_config_ensurer=_model_config,
     )
     results = run.load_json("analysis_results")
     assert results["retro_tyre_estimate"]["status"] == "FAILED"

@@ -10,6 +10,7 @@ from woweekend.artifacts.models import ComponentResult
 from woweekend.config.common import resolved_dict
 from woweekend.config.post_race import PostRaceConfig
 from woweekend.reports.bundle import create_report_bundle
+from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from .common import create_run, finish_run, resolve_workflow_event
 
 
@@ -67,7 +68,7 @@ def resolve_retro_pit_loss(*, empirical: Mapping[str, Any], saved_pre_race_confi
     return output
 
 
-def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str, Any] | None = None, providers: Mapping[str, Callable[..., Any]] | None = None, event_resolver=None):
+def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str, Any] | None = None, providers: Mapping[str, Callable[..., Any]] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None):
     custom_providers_supplied = bool(providers)
     providers = dict(providers or {})
     metadata = resolve_workflow_event(
@@ -140,7 +141,36 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
     live_provider = providers.get("live_mc_history")
     if live_provider is None and not custom_providers_supplied:
         live_provider = _default_live_mc_history
-    if live_provider is None:
+    model_config_output = None
+    model_config_error = None
+    if pre_tyre and metadata.total_laps is not None:
+        try:
+            ensured = model_config_ensurer(
+                season=metadata.season,
+                round_number=metadata.round_number,
+                data_root=config.data_root,
+                session_names=metadata.session_names,
+            )
+            model_config_output = (
+                ensured.to_dict() if hasattr(ensured, "to_dict") else dict(ensured)
+            )
+        except Exception as exc:
+            model_config_error = f"{type(exc).__name__}: {exc}"
+    if model_config_error is not None:
+        components["live_mc_history"] = ComponentResult(
+            "FAILED",
+            error=f"Live-MC model-config generation failed: {model_config_error}",
+            provenance={
+                "owner": "woPlanner/woStrategy",
+                "mode": config.live_replay.mode,
+                "failure_isolated": True,
+                "model_config": {
+                    "status": "generation_failed",
+                    "error": model_config_error,
+                },
+            },
+        )
+    elif live_provider is None:
         components["live_mc_history"] = ComponentResult(
             "FAILED", error="No public live_mc_history workflow adapter was supplied."
         )
@@ -170,7 +200,12 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
                 pre_race_tyre=pre_tyre,
                 retro_tyre_estimate=retro_output,
                 run_path=run.path,
+                session_names=metadata.session_names,
+                ensured_model_config=model_config_output,
             )
+            model_config_provenance = dict(
+                dict(live_output.get("provenance") or {}).get("model_config") or {}
+            ) if isinstance(live_output, Mapping) else {}
             components["live_mc_history"] = ComponentResult(
                 "SUCCESS",
                 _jsonable(live_output),
@@ -178,6 +213,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
                     "owner": "woPlanner/woStrategy",
                     "mode": config.live_replay.mode,
                     "full_race_retro_is_separate": True,
+                    "model_config": model_config_provenance,
                 },
             )
         except Exception as exc:
@@ -188,6 +224,9 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
                     "owner": "woPlanner/woStrategy",
                     "mode": config.live_replay.mode,
                     "failure_isolated": True,
+                    "model_config": model_config_output or {
+                        "status": "generation_failed_or_unavailable"
+                    },
                 },
             )
     retro = components.get("retro_tyre_estimate")
@@ -260,7 +299,8 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
 
 def _default_live_mc_history(
     *, season: int, round_number: int, total_laps: int, data_root, mode: str,
-    pre_race_tyre, retro_tyre_estimate, run_path, **_kwargs,
+    pre_race_tyre, retro_tyre_estimate, run_path, session_names=None,
+    ensured_model_config=None, **_kwargs,
 ):
     from .live_mc_replay import reconstruct_live_mc_history
 
@@ -273,6 +313,8 @@ def _default_live_mc_history(
         pre_race_tyre=pre_race_tyre,
         retro_tyre_estimate=retro_tyre_estimate,
         figures_dir=Path(run_path) / "figures",
+        session_names=None if session_names is None else tuple(session_names),
+        ensured_model_config=ensured_model_config,
     )
 
 

@@ -31,6 +31,14 @@ the recovered record lacks race distance or tyre metadata. Every leader-lap
 cut is passed to woPlanner's existing live recalculation service; Post does not
 contain another MC implementation.
 
+Race Preparation now ensures woPlanner's event-specific live-MC
+`model_config.json` exists by reusing woStrategy's canonical pre-race producer.
+Post repeats that inexpensive validation and automatically generates a missing
+or stale historical prerequisite before replay. Operators do not need to run
+`wostrategy.script.pre_race_analysis` separately. The manifest records whether
+the config was `reused` or `generated`; a genuine generation failure is isolated
+to live-MC history in Post.
+
 ```json
 {
   "live_replay": {
@@ -44,6 +52,10 @@ calculated MC coordinates and separately reconstructs recorded manual and
 effective values. The compact `live_mc_history.json` artifact and two English
 evolution figures are included in the report bundle when replay succeeds;
 replay failure does not stop other Post components.
+
+The validation, legacy compatibility boundary, and deliberate freshness/runtime
+compromises are documented in
+[docs/LIVE_MC_MODEL_CONFIG_PREREQUISITE.md](docs/LIVE_MC_MODEL_CONFIG_PREREQUISITE.md).
 
 Pit loss can be supplied as one whole value; no S3/S1 split is required:
 

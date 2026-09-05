@@ -8,6 +8,7 @@ from wodata.events import resolve_race_distance
 from wostrategy.algorithm.exact_strategy_search import StrategyModel, StrategyRules, search_best_compound_sequences
 from wostrategy.analysis.degradation_cutoff import calculate_degradation_cutoffs
 from wostrategy.analysis.pre_race_tyre_prediction import get_pre_race_tyre_prediction
+from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from wostrategy.model.tyre_prediction import PreRaceTyrePrediction, TyreCompoundPrediction
 
 from woweekend.artifacts.models import ComponentResult
@@ -21,7 +22,7 @@ def _strategy_dict(results):
     return [{"rank": item.rank, "compounds": list(item.plan.compounds), "pit_laps": list(item.plan.pit_laps), "cost": item.remaining_cost, "delta_to_best": item.delta_to_best, "formatted_strategy": item.formatted_strategy} for item in results]
 
 
-def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = get_pre_race_tyre_prediction, tyre_refresh: Callable[[], object] | None = None, event_resolver=None):
+def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = get_pre_race_tyre_prediction, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None):
     metadata = resolve_workflow_event(
         event, config, include_race_distance=True,
         **({"resolver": event_resolver} if event_resolver is not None else {}),
@@ -71,6 +72,36 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
     }
     run.save_json("race_distance", race_distance_output)
     components["race_distance"] = ComponentResult("SUCCESS", race_distance_output)
+    try:
+        ensured = model_config_ensurer(
+            season=metadata.season,
+            round_number=metadata.round_number,
+            data_root=resolved.data_root,
+            session_names=metadata.session_names,
+        )
+        model_config_output = (
+            ensured.to_dict() if hasattr(ensured, "to_dict") else dict(ensured)
+        )
+        run.save_json("live_mc_model_config", model_config_output)
+        components["live_mc_model_config"] = ComponentResult(
+            "SUCCESS",
+            model_config_output,
+            provenance={
+                "owner": "woStrategy",
+                "status": model_config_output.get("status"),
+                "producer_api": model_config_output.get("producer_api"),
+            },
+        )
+    except Exception as exc:
+        components["live_mc_model_config"] = ComponentResult(
+            "FAILED",
+            error=f"{type(exc).__name__}: {exc}",
+            provenance={
+                "owner": "woStrategy",
+                "generation_attempted": True,
+                "failure_isolated": True,
+            },
+        )
     if resolved.pit_loss.green.effective_total is None:
         components["pit_loss"] = ComponentResult("FAILED", error="Missing required green pit loss: provide either one total value or both pit_in_s3 and pit_out_s1.")
         finish_run(run, components, status_override="FAILED")
