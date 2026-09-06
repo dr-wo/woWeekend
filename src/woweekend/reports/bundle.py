@@ -33,7 +33,7 @@ def create_report_bundle(
         figure_paths = figure_paths[: MAX_BUNDLE_FILES - 5]
     (root / "figures").mkdir(parents=True)
     _write(root / "CHATGPT_PROMPT.md", _prompt(language))
-    _write(root / "REPORT_INSTRUCTION.md", _instruction(language, template))
+    _write(root / "REPORT_INSTRUCTION.md", _instruction(language, template, workflow))
     _json(root / "report_context.json", {**dict(context), "workflow": workflow, "event": event, "language": language, "template": template})
     _json(root / "analysis_results.json", results)
     manifest = []
@@ -64,9 +64,20 @@ def _prompt(language: str) -> str:
     return f"""Follow `REPORT_INSTRUCTION.md` and generate the requested {language} report.\n\nNumerical conclusions in JSON/CSV are authoritative. Images are for interpretation and presentation only. Do not recompute or replace deterministic conclusions.\n"""
 
 
-def _instruction(language: str, template: str) -> str:
+def _instruction(language: str, template: str, workflow: str = "") -> str:
     article = "an" if template[:1].lower() in "aeiou" else "a"
-    return f"""# Report instruction\n\nGenerate {article} {template} report in `{language}` from the supplied deterministic artifacts. Explain the outputs, structure the narrative, compare supplied pre/post results, preserve supplied caveats and warnings, and integrate useful figures.\n\nNumerical conclusions provided in JSON/CSV are authoritative. Do not derive replacement numerical conclusions from images. Do not recompute tyre degradation, select another strategy, alter cutoff values, determine sporting legality, calculate standings, or calculate unsupplied prediction errors. Clearly retain fallback provenance and unavailable components.\n"""
+    race = "" if workflow != "race_preparation" else """
+
+For a race-preparation report, use these explicit sections:
+
+1. `Tyre inputs used for strategy`: lead with effective values and their exact source family. Manual overrides, when present, drive all primary conclusions.
+2. `Practice evidence`: report the supplied FP1/FP2/FP3 coordinates, support and structural-identifiability labels. State that FP is diagnostic-only and distinguish a posterior coordinate from a physically identifiable measurement.
+3. `Automatic model baseline`: explain the selected P0/D0 or other supplied source, including whether Pirelli affected allocation, descriptors, or both.
+4. `Automatic model result without manual override`: include this appendix only when the deterministic component is supplied; do not substitute FP diagnostic values.
+
+Preserve `(default)` in human-facing fallback/default source labels. Explicitly report freshness warnings without implying that FP modified production inputs.
+"""
+    return f"""# Report instruction\n\nGenerate {article} {template} report in `{language}` from the supplied deterministic artifacts. Explain the outputs, structure the narrative, compare supplied pre/post results, preserve supplied caveats and warnings, and integrate useful figures.{race}\n\nNumerical conclusions provided in JSON/CSV are authoritative. Do not derive replacement numerical conclusions from images. Do not recompute tyre degradation, select another strategy, alter cutoff values, determine sporting legality, calculate standings, or calculate unsupplied prediction errors. Clearly retain fallback provenance and unavailable components.\n"""
 
 
 def _write(path: Path, text: str) -> None:

@@ -88,6 +88,13 @@ without a positive crossing reports `no_positive_degradation_crossing`; it does
 not describe the result merely as outside the initial range. Cutoff figures
 label the prediction and each available 1→2 and 2→3 cutoff.
 
+When persisted FP evidence contains a usable MEDIUM degradation coordinate, the
+same figures add visibly distinct `FP1 diagnostic`, `FP2 diagnostic` and `FP3
+diagnostic` reference lines. These do not alter the envelope or constitute an FP
+strategy: absolute degradation remains confounded with fuel/load in the current
+practice model, while compound performance is not independently identifiable.
+The marker values and limitations are also stored in cutoff/report JSON.
+
 Assumptions and compatibility choices:
 
 - the existing exact optimiser and crossing refinement define each cutoff;

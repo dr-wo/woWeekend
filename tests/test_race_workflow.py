@@ -141,8 +141,77 @@ def test_complete_manual_tyre_fallback_does_not_claim_automatic_values(tmp_path:
         "automatic_value": None,
         "effective_value": -0.4,
         "source": "manual_override",
+        "human_source": "manual override",
         "uncertainty": None,
     }
+
+
+def test_manual_override_adds_automatic_counterfactual(tmp_path: Path) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "result_count": 2, "data_root": str(tmp_path)})
+    raw["tyre_prediction"]["manual_override"]["MEDIUM"]["degradation_seconds_per_lap"] = .15
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event,
+    )
+    effective = run.load_json("tyre_prediction.effective")
+    assert effective["compounds"]["MEDIUM"]["degradation_seconds_per_lap"]["source"] == "manual_override"
+    assert effective["compounds"]["SOFT"]["degradation_seconds_per_lap"]["source"] == "automatic_model"
+    appendix = run.load_json("automatic_model_without_manual_override")
+    assert appendix["tyre_values"]["MEDIUM"]["degradation_seconds_per_lap"] == .1
+    assert appendix["rules_compliant_strategy"]
+    assert "primary_1_to_2" in appendix["degradation_cutoffs"]
+
+
+def test_practice_evidence_is_deterministic_and_report_facing(tmp_path: Path) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event,
+    )
+    evidence = run.load_json("practice_tyre_evidence")
+    assert evidence["source_family"] == "fp_diagnostic"
+    assert evidence["production_strategy_inputs_modified"] is False
+    assert [row["status"] for row in evidence["sessions"]] == ["unavailable"] * 3
+    assert "physically identifiable" in evidence["confounding"][1]
+
+
+def test_cutoff_output_includes_supported_fp_medium_markers(tmp_path: Path) -> None:
+    from wodata.artifacts import weekend_model_root
+    import csv
+    import json
+
+    root = weekend_model_root(2026, 7, tmp_path)
+    session = root / "sessions" / "FP2"
+    session.mkdir(parents=True)
+    (session / "manifest.json").write_text(json.dumps({
+        "analysis_id": "fp2-analysis", "created_at": "2026-01-01T01:00:00+00:00",
+    }))
+    columns = [
+        "parameter", "compound", "p10", "median", "p90", "unit",
+        "support_status", "usable_lap_count", "usable_run_count",
+    ]
+    with (session / "latest_parameters.csv").open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=columns)
+        writer.writeheader()
+        writer.writerow({
+            "parameter": "degradation", "compound": "MEDIUM", "p10": .04,
+            "median": .08, "p90": .12, "unit": "s/lap", "support_status": "measured",
+            "usable_lap_count": 12, "usable_run_count": 2,
+        })
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event,
+    )
+    cutoff = run.load_json("cutoff_rules_compliant")
+    marker = cutoff["fp_diagnostic_medium_markers"][0]
+    assert marker["session"] == "FP2"
+    assert marker["medium_degradation"] == .08
+    assert marker["production_input"] is False
+    assert "not fully separable" in cutoff["fp_marker_limitation"]
 
 
 def test_scheduled_event_laps_are_used_and_recorded(tmp_path: Path) -> None:

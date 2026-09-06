@@ -1,8 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import asdict, replace
+from datetime import datetime, timezone
+import csv
+import json
+from pathlib import Path
 from typing import Any, Callable
 
+from wodata import get_data_root
+from wodata.artifacts import weekend_model_root
 from wodata.contracts import StrategySearchState
 from wodata.events import resolve_race_distance
 from wostrategy.algorithm.exact_strategy_search import StrategyModel, StrategyRules, search_best_compound_sequences
@@ -134,6 +140,18 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
     effective_tyre = _effective_tyre_prediction(tyre, resolved.tyre_prediction.manual_override)
     run.save_json("tyre_prediction.effective", effective_tyre)
     components["effective_tyre_prediction"] = ComponentResult("SUCCESS", effective_tyre)
+    fp_evidence = _report_fp_evidence(
+        season=metadata.season,
+        round_number=metadata.round_number,
+        data_root=resolved.data_root,
+        tyre=tyre,
+    )
+    run.save_json("practice_tyre_evidence", fp_evidence)
+    components["practice_tyre_evidence"] = ComponentResult(
+        "SUCCESS", fp_evidence,
+        provenance={"source_family": "fp_diagnostic", "production_input": False},
+    )
+    fp_cutoff_markers = _fp_medium_cutoff_markers(fp_evidence)
     model = StrategyModel(
         {key: value["performance_delta_to_medium"]["effective_value"] for key, value in effective_tyre["compounds"].items()},
         {key: value["degradation_seconds_per_lap"]["effective_value"] for key, value in effective_tyre["compounds"].items()},
@@ -151,12 +169,13 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
     for name, rules in (("cutoff_unrestricted", StrategyRules()), ("cutoff_rules_compliant", StrategyRules(minimum_distinct_dry_compounds=2))):
         try:
             cutoff = calculate_degradation_cutoffs(model=model, state=state, pit_loss=resolved.pit_loss.green.effective_total, strategy_rules=rules, **asdict(resolved.degradation_cutoff))
-            output = cutoff.to_dict()
+            output = _cutoff_output_with_fp_markers(cutoff.to_dict(), fp_cutoff_markers)
             run.save_json(name, output)
             try:
                 from wostrategy.plots.degradation_cutoff import save_degradation_cutoff_plot
                 figure_path = save_degradation_cutoff_plot(
-                    cutoff, run.path / "figures" / f"{name}.png"
+                    cutoff, run.path / "figures" / f"{name}.png",
+                    fp_diagnostic_markers=fp_cutoff_markers,
                 )
                 figures.append(figure_path)
             except Exception as plot_error:
@@ -168,6 +187,27 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
             components[name] = ComponentResult("SUCCESS", output, warnings=cutoff_warnings, provenance={"owner": "woStrategy"})
         except Exception as exc:
             components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}")
+    if _has_manual_override(resolved.tyre_prediction.manual_override) and tyre.provider != "complete_manual_fallback":
+        try:
+            appendix = _automatic_baseline_appendix(
+                tyre=tyre, state=state,
+                pit_loss=resolved.pit_loss.green.effective_total,
+                max_stops=resolved.max_stops, result_count=resolved.result_count,
+                cutoff_config=resolved.degradation_cutoff,
+                effective_tyre=effective_tyre,
+                primary_strategy=(components.get("strategy_rules_compliant").output or [])
+                if components.get("strategy_rules_compliant") else [],
+                fp_cutoff_markers=fp_cutoff_markers,
+            )
+            run.save_json("automatic_model_without_manual_override", appendix)
+            components["automatic_model_without_manual_override"] = ComponentResult(
+                "SUCCESS", appendix,
+                provenance={"source_family": _automatic_source_family(tyre), "counterfactual": True},
+            )
+        except Exception as exc:
+            components["automatic_model_without_manual_override"] = ComponentResult(
+                "FAILED", error=f"{type(exc).__name__}: {exc}",
+            )
     manifest = finish_run(run, components)
     context = {"warnings": manifest["warnings"], "tyre_uncertainty_retained": True, "strategy_central_values_only": True}
     run.save_json("report_context", context)
@@ -186,16 +226,21 @@ def _effective_tyre_prediction(tyre, overrides):
             "performance_delta_to_medium": {
                 "automatic_value": automatic.performance_delta_to_medium if automatic_available else None,
                 "effective_value": automatic.performance_delta_to_medium if performance_override is None else performance_override,
-                "source": "automatic" if performance_override is None else "manual_override",
+                "source": _automatic_source_family(tyre) if performance_override is None else "manual_override",
+                "human_source": _human_source(tyre, performance_override is not None),
                 "uncertainty": automatic.performance_uncertainty,
             },
             "degradation_seconds_per_lap": {
                 "automatic_value": automatic.degradation_seconds_per_lap if automatic_available else None,
                 "effective_value": automatic.degradation_seconds_per_lap if degradation_override is None else degradation_override,
-                "source": "automatic" if degradation_override is None else "manual_override",
+                "source": _automatic_source_family(tyre) if degradation_override is None else "manual_override",
+                "human_source": _human_source(tyre, degradation_override is not None),
                 "uncertainty": automatic.degradation_uncertainty,
             },
-            "identifiable": automatic.identifiable,
+            "prediction_domain_status": (
+                "inside_observed_descriptor_domain" if automatic.identifiable
+                else "descriptor_boundary_or_outside_observed_domain"
+            ),
             "diagnostics": dict(automatic.diagnostics),
         }
     if abs(compounds["MEDIUM"]["performance_delta_to_medium"]["effective_value"]) > 1e-12:
@@ -204,7 +249,230 @@ def _effective_tyre_prediction(tyre, overrides):
         "reference_compound": "MEDIUM",
         "automatic_artifact_id": tyre.artifact_id if automatic_available else None,
         "manual_fallback_artifact_id": None if automatic_available else tyre.artifact_id,
+        "automatic_source_family": _automatic_source_family(tyre) if automatic_available else None,
+        "automatic_model_version": tyre.model_version,
+        "automatic_generated_at": tyre.generated_at,
+        "automatic_provenance": dict(tyre.provenance),
         "compounds": compounds,
+    }
+
+
+def _automatic_source_family(tyre) -> str:
+    families = {
+        str(value.diagnostics.get("selected_default"))
+        for value in tyre.compounds.values()
+        if value.diagnostics.get("selected_default")
+    }
+    return next(iter(families)) if len(families) == 1 else "automatic_model"
+
+
+def _human_source(tyre, overridden: bool) -> str:
+    if overridden:
+        return "manual override"
+    family = _automatic_source_family(tyre)
+    if family == "historical_baseline":
+        return (
+            "Historical Race-Retro cross-event P0/D0 prediction (default), mapped "
+            "to the Pirelli-announced compound allocation; current-weekend FP does "
+            "not modify the production input."
+        )
+    return family.replace("_", " ") + " (default)"
+
+
+def _has_manual_override(overrides) -> bool:
+    return any(
+        getattr(value, field, None) is not None
+        for value in overrides.values()
+        for field in ("performance_delta_to_medium", "degradation_seconds_per_lap")
+    )
+
+
+def _automatic_baseline_appendix(*, tyre, state, pit_loss, max_stops, result_count,
+                                  cutoff_config, effective_tyre, primary_strategy,
+                                  fp_cutoff_markers=()):
+    automatic = {
+        compound: {
+            "performance_delta_to_medium": value.performance_delta_to_medium,
+            "degradation_seconds_per_lap": value.degradation_seconds_per_lap,
+        }
+        for compound, value in tyre.compounds.items()
+    }
+    model = StrategyModel(
+        {key: value["performance_delta_to_medium"] for key, value in automatic.items()},
+        {key: value["degradation_seconds_per_lap"] for key, value in automatic.items()},
+        tyre.artifact_id, tyre.model_version or "unknown",
+    )
+    rules = StrategyRules(minimum_distinct_dry_compounds=2)
+    strategies = _strategy_dict(search_best_compound_sequences(
+        state, model, pit_loss, max_stops=max_stops, k=result_count,
+        allow_any_start=True, strategy_rules=rules,
+    ))
+    cutoff = _cutoff_output_with_fp_markers(calculate_degradation_cutoffs(
+        model=model, state=state, pit_loss=pit_loss, strategy_rules=rules,
+        **asdict(cutoff_config),
+    ).to_dict(), fp_cutoff_markers)
+    return {
+        "title": "Automatic model result without manual override",
+        "source_family": _automatic_source_family(tyre),
+        "tyre_values": automatic,
+        "rules_compliant_strategy": strategies,
+        "degradation_cutoffs": cutoff,
+        "comparison": {
+            "manual_effective_tyre_values": effective_tyre["compounds"],
+            "primary_manual_strategy": list(primary_strategy),
+            "automatic_best_strategy": strategies[0] if strategies else None,
+            "manual_best_strategy": primary_strategy[0] if primary_strategy else None,
+        },
+    }
+
+
+FP_CUTOFF_MARKER_LIMITATION = (
+    "FP degradation estimates are diagnostic coordinates. Absolute degradation is not "
+    "fully separable from fuel/load effects with the current practice-session model, "
+    "and compound performance is not independently identifiable without stronger "
+    "cross-compound constraints. Therefore FP values are shown only as reference "
+    "markers against the production cutoff envelope and do not replace the production "
+    "tyre inputs."
+)
+
+
+def _fp_medium_cutoff_markers(fp_evidence):
+    markers = []
+    for session in fp_evidence.get("sessions", ()):
+        if session.get("status") != "available":
+            continue
+        quantity = session.get("quantities", {}).get("degradation:MEDIUM")
+        if not quantity:
+            continue
+        support = quantity.get("support", {})
+        coordinate = quantity.get("posterior_coordinate", {})
+        value = coordinate.get("median")
+        if (
+            support.get("status") != "measured"
+            or int(support.get("usable_laps", 0)) <= 0
+            or int(support.get("usable_runs", 0)) <= 0
+            or value is None
+            or float(value) < 0
+        ):
+            continue
+        markers.append({
+            "session": session["session"],
+            "medium_degradation": float(value),
+            "unit": coordinate.get("unit", "s/lap"),
+            "p10": coordinate.get("p10"),
+            "p90": coordinate.get("p90"),
+            "support": dict(support),
+            "fp_structural_identifiability": quantity.get("fp_structural_identifiability"),
+            "source_family": "fp_diagnostic",
+            "production_input": False,
+        })
+    return markers
+
+
+def _cutoff_output_with_fp_markers(output, markers):
+    return {
+        **dict(output),
+        "fp_diagnostic_medium_markers": list(markers),
+        "fp_marker_interpretation": (
+            "Session-level FP MEDIUM posterior coordinates positioned against the "
+            "unchanged production strategy cutoff envelope."
+        ),
+        "fp_marker_limitation": FP_CUTOFF_MARKER_LIMITATION,
+        "fp_markers_modify_production_inputs": False,
+    }
+
+
+def _as_utc(value):
+    if not value:
+        return None
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    return parsed.replace(tzinfo=parsed.tzinfo or timezone.utc).astimezone(timezone.utc)
+
+
+def _report_fp_evidence(*, season: int, round_number: int, data_root, tyre):
+    root = weekend_model_root(season, round_number, get_data_root(data_root))
+    report_path = root / "fp_tyre_evidence_report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8")) if report_path.is_file() else {}
+    sessions = []
+    timestamps = []
+    for session in ("FP1", "FP2", "FP3"):
+        directory = root / "sessions" / session
+        parameters_path = directory / "latest_parameters.csv"
+        manifest_path = directory / "manifest.json"
+        if not parameters_path.is_file():
+            sessions.append({"session": session, "status": "unavailable", "quantities": {}})
+            continue
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
+        created_at = manifest.get("created_at")
+        if created_at:
+            timestamps.append(str(created_at))
+        with parameters_path.open(newline="", encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle))
+        quantities = {}
+        for row in rows:
+            parameter = row["parameter"]
+            compound = row.get("compound") or None
+            key = f"{parameter}:{compound}" if compound else parameter
+            if parameter == "track_rate":
+                structural = "conditionally_identifiable_in_current_model"
+            elif parameter == "fuel_rate":
+                structural = "not_identifiable_separately_from_absolute_degradation"
+            elif parameter == "degradation":
+                structural = "absolute_not_identifiable; combined_slope_or_contrasts_only"
+            else:
+                structural = (
+                    "reference_definition" if compound == "MEDIUM"
+                    else "not_identifiable_with_free_single_compound_run_intercepts"
+                )
+            quantities[key] = {
+                "parameter": parameter, "compound": compound,
+                "posterior_coordinate": {
+                    "p10": float(row["p10"]), "median": float(row["median"]),
+                    "p90": float(row["p90"]), "unit": row["unit"],
+                },
+                "fp_structural_identifiability": structural,
+                "support": {
+                    "usable_laps": int(float(row["usable_lap_count"])),
+                    "usable_runs": int(float(row["usable_run_count"])),
+                    "status": row["support_status"],
+                },
+            }
+        sessions.append({
+            "session": session, "status": "available", "analysis_id": manifest.get("analysis_id"),
+            "calculated_at": created_at, "quantities": quantities,
+        })
+    latest_fp = max(timestamps, key=lambda value: _as_utc(value)) if timestamps else None
+    prediction_time = tyre.generated_at
+    return {
+        "source_family": "fp_diagnostic",
+        "report_status": "diagnostic_only",
+        "production_strategy_inputs_modified": bool(report.get("production_strategy_inputs_modified", False)),
+        "artifact": {
+            "path": str(report_path) if report_path.is_file() else None,
+            "artifact_id": report.get("report_fingerprint"),
+            "calculated_at": latest_fp,
+        },
+        "production_tyre_prediction": {
+            "artifact_id": tyre.artifact_id, "generated_at": prediction_time,
+        },
+        "freshness": {
+            "fp_evidence_newer_than_prediction": bool(
+                latest_fp and prediction_time and _as_utc(latest_fp) > _as_utc(prediction_time)
+            ),
+            "warning": (
+                "FP evidence is newer than the production tyre prediction; FP remains diagnostic-only."
+                if latest_fp and prediction_time and _as_utc(latest_fp) > _as_utc(prediction_time)
+                else None
+            ),
+        },
+        "sessions": sessions,
+        "confounding": [
+            "Absolute fuel and the common absolute degradation level are structurally confounded.",
+            "A reported posterior coordinate is not automatically a physically identifiable measurement.",
+            "Non-reference compound performance is absorbed by free single-compound run intercepts.",
+        ],
+        "limitations": report.get("limitations", []),
+        "performance_note": report.get("performance_note"),
     }
 
 
