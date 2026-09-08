@@ -18,6 +18,11 @@ woweekend-race --generate-config race.json
 woweekend-race --validate-config race.json
 ```
 
+The repository also keeps current operator configs under `configs/`. The
+current race config is a 53-lap setup with a 23-second green-state pit loss and
+no manual tyre-model overrides, so the cached pre-race tyre prediction remains
+the source of compound performance and degradation values.
+
 Regenerate presentation artifacts without rerunning deterministic analysis:
 
 ```bash

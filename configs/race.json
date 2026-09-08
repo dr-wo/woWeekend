@@ -5,7 +5,7 @@
     "_help": {
       "total_laps": "Normally detected from FastF1 race results/laps. Leave null for automatic detection; set an integer only to override it."
     },
-    "total_laps": 72
+    "total_laps": 53
   },
   "pit_loss": {
     "_help": {
@@ -13,7 +13,7 @@
       "sc_vsc": "Combined SC/VSC pit loss in V1.",
       "input_forms": "For each state provide either total, or both pit_in_s3 and pit_out_s1. Units are seconds. Split total equals S3 + S1; mixing forms is rejected."
     },
-    "green": {"total": 18.1, "pit_in_s3": null, "pit_out_s1": null},
+    "green": {"total": 23, "pit_in_s3": null, "pit_out_s1": null},
     "sc_vsc": {"total": 8.9, "pit_in_s3": null, "pit_out_s1": null}
   },
   "strategy": {
@@ -30,18 +30,18 @@
     },
     "manual_override": {
       "SOFT": {
-        "performance_delta_to_medium": -0.16,
-        "degradation_seconds_per_lap": 0.083
+        "performance_delta_to_medium": null,
+        "degradation_seconds_per_lap": null
       },
 
       "MEDIUM": {
-        "performance_delta_to_medium": 0.0,
-        "degradation_seconds_per_lap": 0.070
+        "performance_delta_to_medium": null,
+        "degradation_seconds_per_lap": null
       },
 
       "HARD": {
-        "performance_delta_to_medium": 0.45,
-        "degradation_seconds_per_lap": 0.045
+        "performance_delta_to_medium": null,
+        "degradation_seconds_per_lap": null
       }
     }
   },
