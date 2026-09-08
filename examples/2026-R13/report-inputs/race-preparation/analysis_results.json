@@ -1,0 +1,2127 @@
+{
+  "cutoff_rules_compliant": {
+    "error": null,
+    "output": {
+      "effective_scan_min": 0.055929848794943664,
+      "fp_diagnostic_medium_markers": [
+        {
+          "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+          "medium_degradation": 0.05755353222325722,
+          "p10": 0.02389896031218499,
+          "p90": 0.09962221356081691,
+          "production_input": false,
+          "session": "FP1",
+          "source_family": "fp_diagnostic",
+          "support": {
+            "status": "measured",
+            "usable_laps": 44,
+            "usable_runs": 8
+          },
+          "unit": "s/lap"
+        },
+        {
+          "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+          "medium_degradation": 0.09978413843994124,
+          "p10": 0.04004527576970557,
+          "p90": 0.1670820297589883,
+          "production_input": false,
+          "session": "FP2",
+          "source_family": "fp_diagnostic",
+          "support": {
+            "status": "measured",
+            "usable_laps": 57,
+            "usable_runs": 10
+          },
+          "unit": "s/lap"
+        },
+        {
+          "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+          "medium_degradation": 0.06307495689908138,
+          "p10": 0.020614988304162918,
+          "p90": 0.13956616785085932,
+          "production_input": false,
+          "session": "FP3",
+          "source_family": "fp_diagnostic",
+          "support": {
+            "status": "measured",
+            "usable_laps": 8,
+            "usable_runs": 2
+          },
+          "unit": "s/lap"
+        }
+      ],
+      "fp_marker_interpretation": "Session-level FP MEDIUM posterior coordinates positioned against the unchanged production strategy cutoff envelope.",
+      "fp_marker_limitation": "FP degradation estimates are diagnostic coordinates. Absolute degradation is not fully separable from fuel/load effects with the current practice-session model, and compound performance is not independently identifiable without stronger cross-compound constraints. Therefore FP values are shown only as reference markers against the production cutoff envelope and do not replace the production tyre inputs.",
+      "fp_markers_modify_production_inputs": false,
+      "initial_scan_min": 0.055929848794943664,
+      "non_monotonic": false,
+      "predicted_medium_degradation": 0.22371939517977465,
+      "primary_1_to_2": 0.10027342346971876,
+      "primary_1_to_2_status": "found_initial_scan",
+      "primary_2_to_3": 0.2528401279440937,
+      "reversal_regions": [],
+      "rules": {
+        "available_compounds": null,
+        "minimum_distinct_dry_compounds": 2
+      },
+      "sweep": [
+        {
+          "costs": {
+            "1": 56.466758472981596,
+            "2": 63.252398658427595,
+            "3": 78.03355888334399
+          },
+          "medium_degradation": 0.055929848795,
+          "preferred_stop_count": 1
+        },
+        {
+          "costs": {
+            "1": 71.31667770533565,
+            "2": 73.67944585962347,
+            "3": 86.05603047118589
+          },
+          "medium_degradation": 0.075775924174,
+          "preferred_stop_count": 1
+        },
+        {
+          "costs": {
+            "1": 83.58152502859934,
+            "2": 84.02633682241638,
+            "3": 94.03918109728966
+          },
+          "medium_degradation": 0.095621999553,
+          "preferred_stop_count": 1
+        },
+        {
+          "costs": {
+            "1": 95.7384730800893,
+            "2": 93.93342355690135,
+            "3": 102.0019701188535
+          },
+          "medium_degradation": 0.115468074931,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 107.81009536554593,
+            "2": 102.95001861957442,
+            "3": 109.92668210945683
+          },
+          "medium_degradation": 0.13531415031,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 119.85869836729404,
+            "2": 111.88966759099122,
+            "3": 117.37113505170694
+          },
+          "medium_degradation": 0.155160225689,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 131.9073013690421,
+            "2": 120.76009071830241,
+            "3": 124.54388480405848
+          },
+          "medium_degradation": 0.175006301068,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 143.8844837442965,
+            "2": 128.6051559121795,
+            "3": 131.65240376387237
+          },
+          "medium_degradation": 0.194852376447,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 155.8592633920179,
+            "2": 136.21527191582354,
+            "3": 138.743358226371
+          },
+          "medium_degradation": 0.214698451826,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 167.8340430397393,
+            "2": 143.8253879194676,
+            "3": 145.52797358239866
+          },
+          "medium_degradation": 0.234544527205,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 179.80882268685735,
+            "2": 151.43459129733122,
+            "3": 151.27331666343633
+          },
+          "medium_degradation": 0.254390602583,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 191.78360233457875,
+            "2": 158.9936623774091,
+            "3": 156.8725586158149
+          },
+          "medium_degradation": 0.274236677962,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 203.75838198230014,
+            "2": 166.55273345748697,
+            "3": 162.47180056819352
+          },
+          "medium_degradation": 0.294082753341,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 215.73316163002153,
+            "2": 174.11180453756484,
+            "3": 168.07104252057206
+          },
+          "medium_degradation": 0.31392882872,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 227.70034933857414,
+            "2": 181.67087561764274,
+            "3": 173.6702844729507
+          },
+          "medium_degradation": 0.333774904099,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 239.63582732859658,
+            "2": 189.22994669772055,
+            "3": 179.26952642532927
+          },
+          "medium_degradation": 0.353620979478,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 251.57130531861904,
+            "2": 196.78901777779848,
+            "3": 184.86876837770788
+          },
+          "medium_degradation": 0.373467054857,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 263.5067833080401,
+            "2": 204.34808885749544,
+            "3": 190.4676502239478
+          },
+          "medium_degradation": 0.393313130235,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 275.4422612980626,
+            "2": 211.90715993757334,
+            "3": 196.03390476115263
+          },
+          "medium_degradation": 0.413159205614,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 287.22255844172537,
+            "2": 219.46623101765124,
+            "3": 201.60015929835748
+          },
+          "medium_degradation": 0.433005280993,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 298.85856232945855,
+            "2": 226.99734592856663,
+            "3": 207.1664138355623
+          },
+          "medium_degradation": 0.452851356372,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 310.4945662171916,
+            "2": 234.5265571950818,
+            "3": 212.73266837276714
+          },
+          "medium_degradation": 0.472697431751,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 322.1305701049248,
+            "2": 242.05576846159698,
+            "3": 218.29892290997202
+          },
+          "medium_degradation": 0.49254350713,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 333.7665739926579,
+            "2": 249.58497972811216,
+            "3": 223.86517744717685
+          },
+          "medium_degradation": 0.512389582509,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 345.4025778798047,
+            "2": 257.1141909942479,
+            "3": 229.4314319841012
+          },
+          "medium_degradation": 0.532235657887,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 357.03858176753783,
+            "2": 264.6434022607631,
+            "3": 234.99768652130604
+          },
+          "medium_degradation": 0.552081733266,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 368.674585655271,
+            "2": 272.1726135272783,
+            "3": 240.56394105851092
+          },
+          "medium_degradation": 0.571927808645,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 380.3105895430041,
+            "2": 279.70182479379343,
+            "3": 246.13019559571572
+          },
+          "medium_degradation": 0.591773884024,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 391.9465934307372,
+            "2": 287.2310360603086,
+            "3": 251.69645013292055
+          },
+          "medium_degradation": 0.611619959403,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 403.58259731847033,
+            "2": 294.76024732682384,
+            "3": 257.26270467012546
+          },
+          "medium_degradation": 0.631466034782,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 415.2186012056172,
+            "2": 302.2894585929596,
+            "3": 262.82895920704976
+          },
+          "medium_degradation": 0.65131211016,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 426.8546050933503,
+            "2": 309.81866985947477,
+            "3": 268.3952137442546
+          },
+          "medium_degradation": 0.671158185539,
+          "preferred_stop_count": 3
+        }
+      ],
+      "warnings": []
+    },
+    "provenance": {
+      "owner": "woStrategy"
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "cutoff_unrestricted": {
+    "error": null,
+    "output": {
+      "effective_scan_min": 0.055929848794943664,
+      "fp_diagnostic_medium_markers": [
+        {
+          "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+          "medium_degradation": 0.05755353222325722,
+          "p10": 0.02389896031218499,
+          "p90": 0.09962221356081691,
+          "production_input": false,
+          "session": "FP1",
+          "source_family": "fp_diagnostic",
+          "support": {
+            "status": "measured",
+            "usable_laps": 44,
+            "usable_runs": 8
+          },
+          "unit": "s/lap"
+        },
+        {
+          "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+          "medium_degradation": 0.09978413843994124,
+          "p10": 0.04004527576970557,
+          "p90": 0.1670820297589883,
+          "production_input": false,
+          "session": "FP2",
+          "source_family": "fp_diagnostic",
+          "support": {
+            "status": "measured",
+            "usable_laps": 57,
+            "usable_runs": 10
+          },
+          "unit": "s/lap"
+        },
+        {
+          "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+          "medium_degradation": 0.06307495689908138,
+          "p10": 0.020614988304162918,
+          "p90": 0.13956616785085932,
+          "production_input": false,
+          "session": "FP3",
+          "source_family": "fp_diagnostic",
+          "support": {
+            "status": "measured",
+            "usable_laps": 8,
+            "usable_runs": 2
+          },
+          "unit": "s/lap"
+        }
+      ],
+      "fp_marker_interpretation": "Session-level FP MEDIUM posterior coordinates positioned against the unchanged production strategy cutoff envelope.",
+      "fp_marker_limitation": "FP degradation estimates are diagnostic coordinates. Absolute degradation is not fully separable from fuel/load effects with the current practice-session model, and compound performance is not independently identifiable without stronger cross-compound constraints. Therefore FP values are shown only as reference markers against the production cutoff envelope and do not replace the production tyre inputs.",
+      "fp_markers_modify_production_inputs": false,
+      "initial_scan_min": 0.055929848794943664,
+      "non_monotonic": false,
+      "predicted_medium_degradation": 0.22371939517977465,
+      "primary_1_to_2": 0.09221095534723436,
+      "primary_1_to_2_status": "found_initial_scan",
+      "primary_2_to_3": 0.2925322787020156,
+      "reversal_regions": [],
+      "rules": {
+        "available_compounds": null,
+        "minimum_distinct_dry_compounds": 0
+      },
+      "sweep": [
+        {
+          "costs": {
+            "1": 49.58266041474594,
+            "2": 58.61204332710078,
+            "3": 74.62673478327821
+          },
+          "medium_degradation": 0.055929848795,
+          "preferred_stop_count": 1
+        },
+        {
+          "costs": {
+            "1": 65.02660560726798,
+            "2": 69.09867277881328,
+            "3": 82.63470636458594
+          },
+          "medium_degradation": 0.075775924174,
+          "preferred_stop_count": 1
+        },
+        {
+          "costs": {
+            "1": 80.47055079979002,
+            "2": 79.58530223052578,
+            "3": 90.64267794589367
+          },
+          "medium_degradation": 0.095621999553,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 95.7384730800893,
+            "2": 90.07193168170988,
+            "3": 98.65064952679788
+          },
+          "medium_degradation": 0.115468074931,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 106.97740673364763,
+            "2": 100.55856113342239,
+            "3": 106.6586211081056
+          },
+          "medium_degradation": 0.13531415031,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 116.69977816405253,
+            "2": 111.04519058513489,
+            "3": 114.66659268941335
+          },
+          "medium_degradation": 0.155160225689,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 126.42214959445742,
+            "2": 120.76009071830241,
+            "3": 122.67456427072104
+          },
+          "medium_degradation": 0.175006301068,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 136.14452102486229,
+            "2": 128.50432015349767,
+            "3": 130.68253585202876
+          },
+          "medium_degradation": 0.194852376447,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 145.86689245526722,
+            "2": 135.10593038401953,
+            "3": 138.6905074333365
+          },
+          "medium_degradation": 0.214698451826,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 155.58926388567212,
+            "2": 141.7075406145414,
+            "3": 145.52797358239866
+          },
+          "medium_degradation": 0.234544527205,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 165.31163531558713,
+            "2": 148.3091508447306,
+            "3": 151.27331666343633
+          },
+          "medium_degradation": 0.254390602583,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 175.03400674599203,
+            "2": 154.91076107525242,
+            "3": 156.3491382398826
+          },
+          "medium_degradation": 0.274236677962,
+          "preferred_stop_count": 2
+        },
+        {
+          "costs": {
+            "1": 184.7563781763969,
+            "2": 161.51237130577425,
+            "3": 161.3903678704629
+          },
+          "medium_degradation": 0.294082753341,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 194.47874960680178,
+            "2": 168.11398153629608,
+            "3": 166.43159750104326
+          },
+          "medium_degradation": 0.31392882872,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 204.2011210372067,
+            "2": 174.71559176681794,
+            "3": 171.47282713162357
+          },
+          "medium_degradation": 0.333774904099,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 213.92349246761157,
+            "2": 181.31720199733974,
+            "3": 176.51405676220384
+          },
+          "medium_degradation": 0.353620979478,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 223.64586389801647,
+            "2": 187.9188122278616,
+            "3": 181.55528639278418
+          },
+          "medium_degradation": 0.373467054857,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 233.36823532793147,
+            "2": 194.5204224580508,
+            "3": 186.59651602311047
+          },
+          "medium_degradation": 0.393313130235,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 243.09060675833638,
+            "2": 201.12203268857266,
+            "3": 191.63774565369079
+          },
+          "medium_degradation": 0.413159205614,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 252.81297818874128,
+            "2": 207.7236429190945,
+            "3": 196.67897528427113
+          },
+          "medium_degradation": 0.433005280993,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 262.53534961914613,
+            "2": 214.32525314961634,
+            "3": 201.72020491485145
+          },
+          "medium_degradation": 0.452851356372,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 272.25772104955104,
+            "2": 220.92686338013817,
+            "3": 206.76143454543174
+          },
+          "medium_degradation": 0.472697431751,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 281.98009247995594,
+            "2": 227.52847361066003,
+            "3": 211.80266417601206
+          },
+          "medium_degradation": 0.49254350713,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 291.70246391036085,
+            "2": 234.1300838411819,
+            "3": 216.8438938065924
+          },
+          "medium_degradation": 0.512389582509,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 301.4248353402759,
+            "2": 240.73169407137107,
+            "3": 221.8851234369187
+          },
+          "medium_degradation": 0.532235657887,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 311.1472067706808,
+            "2": 247.3333043018929,
+            "3": 226.926353067499
+          },
+          "medium_degradation": 0.552081733266,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 320.8695782010857,
+            "2": 253.93491453241478,
+            "3": 231.96758269807935
+          },
+          "medium_degradation": 0.571927808645,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 330.59194963149054,
+            "2": 260.5365247629366,
+            "3": 237.00881232865962
+          },
+          "medium_degradation": 0.591773884024,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 340.3143210618954,
+            "2": 267.1381349934584,
+            "3": 242.05004195923993
+          },
+          "medium_degradation": 0.611619959403,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 350.03669249230035,
+            "2": 273.7397452239803,
+            "3": 247.09127158982028
+          },
+          "medium_degradation": 0.631466034782,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 359.7590639222153,
+            "2": 280.3413554541695,
+            "3": 252.13250122014657
+          },
+          "medium_degradation": 0.65131211016,
+          "preferred_stop_count": 3
+        },
+        {
+          "costs": {
+            "1": 369.4814353526202,
+            "2": 286.94296568469133,
+            "3": 257.1737308507269
+          },
+          "medium_degradation": 0.671158185539,
+          "preferred_stop_count": 3
+        }
+      ],
+      "warnings": []
+    },
+    "provenance": {
+      "owner": "woStrategy"
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "effective_tyre_prediction": {
+    "error": null,
+    "output": {
+      "automatic_artifact_id": "5d9fc0e7c27933e9051efb30fed4eb27a105174340fd0783b275e44a0181eaa6",
+      "automatic_generated_at": "2026-09-05T21:40:19.355710+00:00",
+      "automatic_model_version": "linear_v1.1",
+      "automatic_provenance": {
+        "default_prediction_family": "historical_baseline",
+        "path": "<WODATA_ROOT>/wostrategy/tyre_prediction/schema_v1/year=2026/predictions/round=13/prediction.json",
+        "pirelli_preview_effect": "compound_allocation_only_for_selected_historical_baseline",
+        "production_policy": {
+          "degradation": {
+            "formulation_code": "D0",
+            "model_name": "degradation_baseline",
+            "weighting_policy": "uniform"
+          },
+          "performance": {
+            "formulation_code": "P0",
+            "model_name": "performance_baseline",
+            "weighting_policy": "uniform"
+          }
+        },
+        "target_preview_hash": "433a7dd73b58e5f7451df5b1b25c6e1787d6bd6ff01fc8352a1f6e92874fc964",
+        "trained_through_round": 12,
+        "training_data_hash": "a96619b49920ebbf7f6c71e79d19ca8891be928dd20113a3b66d335cefe7c455",
+        "training_rounds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "automatic_source_family": "historical_baseline",
+      "compounds": {
+        "HARD": {
+          "degradation_seconds_per_lap": {
+            "automatic_value": 0.15033970038173766,
+            "effective_value": 0.15033970038173766,
+            "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+            "source": "historical_baseline",
+            "uncertainty": null
+          },
+          "diagnostics": {
+            "absolute_compound": "C3",
+            "selected_default": "historical_baseline"
+          },
+          "performance_delta_to_medium": {
+            "automatic_value": 0.3337454833569559,
+            "effective_value": 0.3337454833569559,
+            "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+            "source": "historical_baseline",
+            "uncertainty": null
+          },
+          "prediction_domain_status": "inside_observed_descriptor_domain"
+        },
+        "MEDIUM": {
+          "degradation_seconds_per_lap": {
+            "automatic_value": 0.22371939517977465,
+            "effective_value": 0.22371939517977465,
+            "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+            "source": "historical_baseline",
+            "uncertainty": null
+          },
+          "diagnostics": {
+            "absolute_compound": "C4",
+            "selected_default": "historical_baseline"
+          },
+          "performance_delta_to_medium": {
+            "automatic_value": 0.0,
+            "effective_value": 0.0,
+            "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+            "source": "historical_baseline",
+            "uncertainty": null
+          },
+          "prediction_domain_status": "inside_observed_descriptor_domain"
+        },
+        "SOFT": {
+          "degradation_seconds_per_lap": {
+            "automatic_value": 0.23881396730993304,
+            "effective_value": 0.23881396730993304,
+            "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+            "source": "historical_baseline",
+            "uncertainty": null
+          },
+          "diagnostics": {
+            "absolute_compound": "C5",
+            "selected_default": "historical_baseline"
+          },
+          "performance_delta_to_medium": {
+            "automatic_value": -0.31964500240628674,
+            "effective_value": -0.31964500240628674,
+            "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+            "source": "historical_baseline",
+            "uncertainty": null
+          },
+          "prediction_domain_status": "inside_observed_descriptor_domain"
+        }
+      },
+      "manual_fallback_artifact_id": null,
+      "reference_compound": "MEDIUM"
+    },
+    "provenance": {},
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "live_mc_model_config": {
+    "error": null,
+    "output": {
+      "path": "<WODATA_ROOT>/wostrategy/weekend_model/schema_v1/year=2026/round=13/model_config.json",
+      "producer_api": "wostrategy.script.pre_race_analysis.run_from_script_config",
+      "reason": "valid and fresh",
+      "round_number": 13,
+      "season": 2026,
+      "sessions": [
+        "FP1",
+        "FP2",
+        "FP3"
+      ],
+      "status": "reused"
+    },
+    "provenance": {
+      "owner": "woStrategy",
+      "producer_api": "wostrategy.script.pre_race_analysis.run_from_script_config",
+      "status": "reused"
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "pit_loss": {
+    "error": null,
+    "output": {
+      "green": {
+        "effective_total": 23.0,
+        "pit_in_s3": null,
+        "pit_out_s1": null,
+        "total": 23.0
+      },
+      "sc_vsc": {
+        "effective_total": 8.9,
+        "pit_in_s3": null,
+        "pit_out_s1": null,
+        "total": 8.9
+      },
+      "source": "config"
+    },
+    "provenance": {},
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "practice_tyre_evidence": {
+    "error": null,
+    "output": {
+      "artifact": {
+        "artifact_id": "a0cf7e5432dc2c3af35c24c3d4c86bf1dc9232f723052f892256136ffaef758e",
+        "calculated_at": "2026-09-05T21:49:20.651104+00:00",
+        "path": "<WODATA_ROOT>/wostrategy/weekend_model/schema_v1/year=2026/round=13/fp_tyre_evidence_report.json"
+      },
+      "confounding": [
+        "Absolute fuel and the common absolute degradation level are structurally confounded.",
+        "A reported posterior coordinate is not automatically a physically identifiable measurement.",
+        "Non-reference compound performance is absorbed by free single-compound run intercepts."
+      ],
+      "freshness": {
+        "fp_evidence_newer_than_prediction": true,
+        "warning": "FP evidence is newer than the production tyre prediction; FP remains diagnostic-only."
+      },
+      "limitations": [
+        "FP degradation is inferred from limited clean long-run evidence.",
+        "FP conditions and programmes may differ materially from Race conditions.",
+        "Available history shows a tendency for FP degradation estimates to be lower than final Race Retro.",
+        "Calibration currently contains only a small number of independent events.",
+        "The apparent best update weight is not stable under leave-one-event-out testing.",
+        "FP1, FP2 and FP3 have different historical behaviour and remain independently recalibrated.",
+        "Displayed candidate updates are diagnostic and never replace Strategy Prediction inputs automatically."
+      ],
+      "performance_note": "FP long-run pace does not update compound performance because unknown starting fuel, engine mode and programme offsets cannot yet be robustly removed from public data. Existing P0/P1 pre-race performance is retained.",
+      "production_strategy_inputs_modified": false,
+      "production_tyre_prediction": {
+        "artifact_id": "5d9fc0e7c27933e9051efb30fed4eb27a105174340fd0783b275e44a0181eaa6",
+        "generated_at": "2026-09-05T21:40:19.355710+00:00"
+      },
+      "report_status": "diagnostic_only",
+      "sessions": [
+        {
+          "analysis_id": "analysis-a1676093e65c2c1efccf",
+          "calculated_at": "2026-09-05T21:49:20.651104+00:00",
+          "quantities": {
+            "compound_delta:HARD": {
+              "compound": "HARD",
+              "fp_structural_identifiability": "not_identifiable_with_free_single_compound_run_intercepts",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": 0.49218492431249183,
+                "p10": 0.053426232634033934,
+                "p90": 0.8262186082720613,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "compound_delta:MEDIUM": {
+              "compound": "MEDIUM",
+              "fp_structural_identifiability": "reference_definition",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": 0.0,
+                "p10": 0.0,
+                "p90": 0.0,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "compound_delta:SOFT": {
+              "compound": "SOFT",
+              "fp_structural_identifiability": "not_identifiable_with_free_single_compound_run_intercepts",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": -0.49087948569319384,
+                "p10": -0.9254715844120704,
+                "p90": -0.09812556548014317,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "degradation:HARD": {
+              "compound": "HARD",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.007585624150970312,
+                "p10": 0.0010324211469868083,
+                "p90": 0.03192895398282772,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "degradation:MEDIUM": {
+              "compound": "MEDIUM",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.05755353222325722,
+                "p10": 0.02389896031218499,
+                "p90": 0.09962221356081691,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "degradation:SOFT": {
+              "compound": "SOFT",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.1343654231755339,
+                "p10": 0.06809790633841285,
+                "p90": 0.1905220723419686,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "fuel_rate": {
+              "compound": null,
+              "fp_structural_identifiability": "not_identifiable_separately_from_absolute_degradation",
+              "parameter": "fuel_rate",
+              "posterior_coordinate": {
+                "median": 0.008232997726677623,
+                "p10": 0.001255550830000712,
+                "p90": 0.026845058198179263,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            },
+            "track_rate": {
+              "compound": null,
+              "fp_structural_identifiability": "conditionally_identifiable_in_current_model",
+              "parameter": "track_rate",
+              "posterior_coordinate": {
+                "median": -0.046600304339446626,
+                "p10": -0.049671303000924524,
+                "p90": -0.04122729653524733,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 44,
+                "usable_runs": 8
+              }
+            }
+          },
+          "session": "FP1",
+          "status": "available"
+        },
+        {
+          "analysis_id": "analysis-f1ff691985da158aded0",
+          "calculated_at": "2026-09-05T21:49:20.651104+00:00",
+          "quantities": {
+            "compound_delta:HARD": {
+              "compound": "HARD",
+              "fp_structural_identifiability": "not_identifiable_with_free_single_compound_run_intercepts",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": 0.5022503573959327,
+                "p10": 0.09729700326089122,
+                "p90": 0.8971109080057768,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "compound_delta:MEDIUM": {
+              "compound": "MEDIUM",
+              "fp_structural_identifiability": "reference_definition",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": 0.0,
+                "p10": 0.0,
+                "p90": 0.0,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "compound_delta:SOFT": {
+              "compound": "SOFT",
+              "fp_structural_identifiability": "not_identifiable_with_free_single_compound_run_intercepts",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": -0.4903100166352812,
+                "p10": -0.8948631769778533,
+                "p90": -0.09697697942184869,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "degradation:HARD": {
+              "compound": "HARD",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.02017451563210819,
+                "p10": 0.0034459028985635238,
+                "p90": 0.058610944575555914,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "degradation:MEDIUM": {
+              "compound": "MEDIUM",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.09978413843994124,
+                "p10": 0.04004527576970557,
+                "p90": 0.1670820297589883,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "degradation:SOFT": {
+              "compound": "SOFT",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.17029716003213463,
+                "p10": 0.12001178494943127,
+                "p90": 0.19515422794609202,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "fuel_rate": {
+              "compound": null,
+              "fp_structural_identifiability": "not_identifiable_separately_from_absolute_degradation",
+              "parameter": "fuel_rate",
+              "posterior_coordinate": {
+                "median": 0.02038028768077189,
+                "p10": 0.003580604071616924,
+                "p90": 0.05429064696571517,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            },
+            "track_rate": {
+              "compound": null,
+              "fp_structural_identifiability": "conditionally_identifiable_in_current_model",
+              "parameter": "track_rate",
+              "posterior_coordinate": {
+                "median": -0.035842443149958735,
+                "p10": -0.04705233993072261,
+                "p90": -0.019996009019700306,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 57,
+                "usable_runs": 10
+              }
+            }
+          },
+          "session": "FP2",
+          "status": "available"
+        },
+        {
+          "analysis_id": "analysis-fc872e348e33ab2747f6",
+          "calculated_at": "2026-09-05T21:49:20.651104+00:00",
+          "quantities": {
+            "compound_delta:HARD": {
+              "compound": "HARD",
+              "fp_structural_identifiability": "not_identifiable_with_free_single_compound_run_intercepts",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": 0.48591208761957355,
+                "p10": 0.09483206399693331,
+                "p90": 0.9052208439424372,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "compound_delta:MEDIUM": {
+              "compound": "MEDIUM",
+              "fp_structural_identifiability": "reference_definition",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": 0.0,
+                "p10": 0.0,
+                "p90": 0.0,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "compound_delta:SOFT": {
+              "compound": "SOFT",
+              "fp_structural_identifiability": "not_identifiable_with_free_single_compound_run_intercepts",
+              "parameter": "compound_delta",
+              "posterior_coordinate": {
+                "median": -0.5008110023297065,
+                "p10": -0.9075117498627189,
+                "p90": -0.09710245480995805,
+                "unit": "s"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "degradation:HARD": {
+              "compound": "HARD",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.02993286320322809,
+                "p10": 0.004378781172707214,
+                "p90": 0.09613755129511686,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "degradation:MEDIUM": {
+              "compound": "MEDIUM",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.06307495689908138,
+                "p10": 0.020614988304162918,
+                "p90": 0.13956616785085932,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "degradation:SOFT": {
+              "compound": "SOFT",
+              "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+              "parameter": "degradation",
+              "posterior_coordinate": {
+                "median": 0.10609058495983603,
+                "p10": 0.04417348832225574,
+                "p90": 0.1774172862654054,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "fuel_rate": {
+              "compound": null,
+              "fp_structural_identifiability": "not_identifiable_separately_from_absolute_degradation",
+              "parameter": "fuel_rate",
+              "posterior_coordinate": {
+                "median": 0.01899910692254034,
+                "p10": 0.0030722338470677703,
+                "p90": 0.05630806731136671,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            },
+            "track_rate": {
+              "compound": null,
+              "fp_structural_identifiability": "conditionally_identifiable_in_current_model",
+              "parameter": "track_rate",
+              "posterior_coordinate": {
+                "median": -0.031711033186812246,
+                "p10": -0.04712328412497529,
+                "p90": 0.006537434817542584,
+                "unit": "s/lap"
+              },
+              "support": {
+                "status": "measured",
+                "usable_laps": 8,
+                "usable_runs": 2
+              }
+            }
+          },
+          "session": "FP3",
+          "status": "available"
+        }
+      ],
+      "source_family": "fp_diagnostic"
+    },
+    "provenance": {
+      "production_input": false,
+      "source_family": "fp_diagnostic"
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "race_distance": {
+    "error": null,
+    "output": {
+      "provenance": {
+        "input": "manual_override"
+      },
+      "source": "manual_override",
+      "source_detail": "race.total_laps",
+      "total_laps": 53
+    },
+    "provenance": {},
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "strategy_rules_compliant": {
+    "error": null,
+    "output": [
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 139.6744155537223,
+        "delta_to_best": 0.0,
+        "formatted_strategy": "H-(19)H-38(S)",
+        "pit_laps": [
+          19,
+          38
+        ],
+        "rank": 1
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 139.6744155537223,
+        "delta_to_best": 0.0,
+        "formatted_strategy": "H-(19)S-34(H)",
+        "pit_laps": [
+          19,
+          34
+        ],
+        "rank": 2
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 139.6744155537223,
+        "delta_to_best": 0.0,
+        "formatted_strategy": "S-(15)H-34(H)",
+        "pit_laps": [
+          15,
+          34
+        ],
+        "rank": 3
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 2.271896268426161,
+        "formatted_strategy": "H-(16)S-28(S)-40(S)",
+        "pit_laps": [
+          16,
+          28,
+          40
+        ],
+        "rank": 4
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 2.271896268426161,
+        "formatted_strategy": "S-(12)H-28(S)-40(S)",
+        "pit_laps": [
+          12,
+          28,
+          40
+        ],
+        "rank": 5
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 2.271896268426161,
+        "formatted_strategy": "S-(12)S-24(H)-40(S)",
+        "pit_laps": [
+          12,
+          24,
+          40
+        ],
+        "rank": 6
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 2.271896268426161,
+        "formatted_strategy": "S-(12)S-24(S)-37(H)",
+        "pit_laps": [
+          12,
+          24,
+          37
+        ],
+        "rank": 7
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 2.4141348921190513,
+        "formatted_strategy": "H-(14)H-29(S)-41(S)",
+        "pit_laps": [
+          14,
+          29,
+          41
+        ],
+        "rank": 8
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 2.4141348921190513,
+        "formatted_strategy": "H-(14)S-26(H)-41(S)",
+        "pit_laps": [
+          14,
+          26,
+          41
+        ],
+        "rank": 9
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 2.4141348921190513,
+        "formatted_strategy": "H-(14)S-26(S)-38(H)",
+        "pit_laps": [
+          14,
+          26,
+          38
+        ],
+        "rank": 10
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 2.4141348921190513,
+        "formatted_strategy": "S-(12)H-26(H)-41(S)",
+        "pit_laps": [
+          12,
+          26,
+          41
+        ],
+        "rank": 11
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 2.4141348921190513,
+        "formatted_strategy": "S-(12)H-26(S)-38(H)",
+        "pit_laps": [
+          12,
+          26,
+          38
+        ],
+        "rank": 12
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 2.4141348921190513,
+        "formatted_strategy": "S-(12)S-24(H)-38(H)",
+        "pit_laps": [
+          12,
+          24,
+          38
+        ],
+        "rank": 13
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.46588496997808,
+        "delta_to_best": 2.7914694162557794,
+        "formatted_strategy": "S-(16)S-32(H)",
+        "pit_laps": [
+          16,
+          32
+        ],
+        "rank": 14
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 142.4658849699781,
+        "delta_to_best": 2.791469416255808,
+        "formatted_strategy": "H-(21)S-37(S)",
+        "pit_laps": [
+          21,
+          37
+        ],
+        "rank": 15
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.4658849699781,
+        "delta_to_best": 2.791469416255808,
+        "formatted_strategy": "S-(16)H-37(S)",
+        "pit_laps": [
+          16,
+          37
+        ],
+        "rank": 16
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.61994273722593,
+        "delta_to_best": 2.9455271835036285,
+        "formatted_strategy": "H-(14)H-28(H)-42(S)",
+        "pit_laps": [
+          14,
+          28,
+          42
+        ],
+        "rank": 17
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.61994273722593,
+        "delta_to_best": 2.9455271835036285,
+        "formatted_strategy": "H-(14)H-28(S)-39(H)",
+        "pit_laps": [
+          14,
+          28,
+          39
+        ],
+        "rank": 18
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 142.61994273722593,
+        "delta_to_best": 2.9455271835036285,
+        "formatted_strategy": "H-(14)S-25(H)-39(H)",
+        "pit_laps": [
+          14,
+          25,
+          39
+        ],
+        "rank": 19
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 142.61994273722593,
+        "delta_to_best": 2.9455271835036285,
+        "formatted_strategy": "S-(11)H-25(H)-39(H)",
+        "pit_laps": [
+          11,
+          25,
+          39
+        ],
+        "rank": 20
+      }
+    ],
+    "provenance": {
+      "owner": "woStrategy",
+      "rules": {
+        "available_compounds": null,
+        "minimum_distinct_dry_compounds": 2
+      }
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "strategy_unrestricted": {
+    "error": null,
+    "output": [
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 138.1066623068788,
+        "delta_to_best": 0.0,
+        "formatted_strategy": "H-(17)H-35(H)",
+        "pit_laps": [
+          17,
+          35
+        ],
+        "rank": 1
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 139.6744155537223,
+        "delta_to_best": 1.5677532468434947,
+        "formatted_strategy": "H-(19)H-38(S)",
+        "pit_laps": [
+          19,
+          38
+        ],
+        "rank": 2
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 139.6744155537223,
+        "delta_to_best": 1.5677532468434947,
+        "formatted_strategy": "H-(19)S-34(H)",
+        "pit_laps": [
+          19,
+          34
+        ],
+        "rank": 3
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 139.6744155537223,
+        "delta_to_best": 1.5677532468434947,
+        "formatted_strategy": "S-(15)H-34(H)",
+        "pit_laps": [
+          15,
+          34
+        ],
+        "rank": 4
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 3.839649515269656,
+        "formatted_strategy": "H-(16)S-28(S)-40(S)",
+        "pit_laps": [
+          16,
+          28,
+          40
+        ],
+        "rank": 5
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 3.839649515269656,
+        "formatted_strategy": "S-(12)H-28(S)-40(S)",
+        "pit_laps": [
+          12,
+          28,
+          40
+        ],
+        "rank": 6
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 3.839649515269656,
+        "formatted_strategy": "S-(12)S-24(H)-40(S)",
+        "pit_laps": [
+          12,
+          24,
+          40
+        ],
+        "rank": 7
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 141.94631182214846,
+        "delta_to_best": 3.839649515269656,
+        "formatted_strategy": "S-(12)S-24(S)-37(H)",
+        "pit_laps": [
+          12,
+          24,
+          37
+        ],
+        "rank": 8
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 3.981888138962546,
+        "formatted_strategy": "H-(14)H-29(S)-41(S)",
+        "pit_laps": [
+          14,
+          29,
+          41
+        ],
+        "rank": 9
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 3.981888138962546,
+        "formatted_strategy": "H-(14)S-26(H)-41(S)",
+        "pit_laps": [
+          14,
+          26,
+          41
+        ],
+        "rank": 10
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 3.981888138962546,
+        "formatted_strategy": "H-(14)S-26(S)-38(H)",
+        "pit_laps": [
+          14,
+          26,
+          38
+        ],
+        "rank": 11
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 3.981888138962546,
+        "formatted_strategy": "S-(12)H-26(H)-41(S)",
+        "pit_laps": [
+          12,
+          26,
+          41
+        ],
+        "rank": 12
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 3.981888138962546,
+        "formatted_strategy": "S-(12)H-26(S)-38(H)",
+        "pit_laps": [
+          12,
+          26,
+          38
+        ],
+        "rank": 13
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "HARD",
+          "HARD"
+        ],
+        "cost": 142.08855044584135,
+        "delta_to_best": 3.981888138962546,
+        "formatted_strategy": "S-(12)S-24(H)-38(H)",
+        "pit_laps": [
+          12,
+          24,
+          38
+        ],
+        "rank": 14
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 142.3304945156215,
+        "delta_to_best": 4.223832208742692,
+        "formatted_strategy": "S-(13)S-26(S)-40(S)",
+        "pit_laps": [
+          13,
+          26,
+          40
+        ],
+        "rank": 15
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.46588496997808,
+        "delta_to_best": 4.359222663099274,
+        "formatted_strategy": "S-(16)S-32(H)",
+        "pit_laps": [
+          16,
+          32
+        ],
+        "rank": 16
+      },
+      {
+        "compounds": [
+          "HARD",
+          "SOFT",
+          "SOFT"
+        ],
+        "cost": 142.4658849699781,
+        "delta_to_best": 4.3592226630993025,
+        "formatted_strategy": "H-(21)S-37(S)",
+        "pit_laps": [
+          21,
+          37
+        ],
+        "rank": 17
+      },
+      {
+        "compounds": [
+          "SOFT",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.4658849699781,
+        "delta_to_best": 4.3592226630993025,
+        "formatted_strategy": "S-(16)H-37(S)",
+        "pit_laps": [
+          16,
+          37
+        ],
+        "rank": 18
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "HARD",
+          "SOFT"
+        ],
+        "cost": 142.61994273722593,
+        "delta_to_best": 4.513280430347123,
+        "formatted_strategy": "H-(14)H-28(H)-42(S)",
+        "pit_laps": [
+          14,
+          28,
+          42
+        ],
+        "rank": 19
+      },
+      {
+        "compounds": [
+          "HARD",
+          "HARD",
+          "SOFT",
+          "HARD"
+        ],
+        "cost": 142.61994273722593,
+        "delta_to_best": 4.513280430347123,
+        "formatted_strategy": "H-(14)H-28(S)-39(H)",
+        "pit_laps": [
+          14,
+          28,
+          39
+        ],
+        "rank": 20
+      }
+    ],
+    "provenance": {
+      "owner": "woStrategy",
+      "rules": {
+        "available_compounds": null,
+        "minimum_distinct_dry_compounds": 0
+      }
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  },
+  "tyre_prediction": {
+    "error": null,
+    "output": {
+      "artifact_id": "5d9fc0e7c27933e9051efb30fed4eb27a105174340fd0783b275e44a0181eaa6",
+      "compounds": {
+        "HARD": {
+          "available": true,
+          "degradation_seconds_per_lap": 0.15033970038173766,
+          "degradation_uncertainty": null,
+          "diagnostics": {
+            "absolute_compound": "C3",
+            "selected_default": "historical_baseline"
+          },
+          "identifiable": true,
+          "performance_delta_to_medium": 0.3337454833569559,
+          "performance_uncertainty": null
+        },
+        "MEDIUM": {
+          "available": true,
+          "degradation_seconds_per_lap": 0.22371939517977465,
+          "degradation_uncertainty": null,
+          "diagnostics": {
+            "absolute_compound": "C4",
+            "selected_default": "historical_baseline"
+          },
+          "identifiable": true,
+          "performance_delta_to_medium": 0.0,
+          "performance_uncertainty": null
+        },
+        "SOFT": {
+          "available": true,
+          "degradation_seconds_per_lap": 0.23881396730993304,
+          "degradation_uncertainty": null,
+          "diagnostics": {
+            "absolute_compound": "C5",
+            "selected_default": "historical_baseline"
+          },
+          "identifiable": true,
+          "performance_delta_to_medium": -0.31964500240628674,
+          "performance_uncertainty": null
+        }
+      },
+      "event": "Italian Grand Prix",
+      "freshness": {
+        "producer_metadata_available": true
+      },
+      "generated_at": "2026-09-05T21:40:19.355710+00:00",
+      "model_version": "linear_v1.1",
+      "provenance": {
+        "default_prediction_family": "historical_baseline",
+        "path": "<WODATA_ROOT>/wostrategy/tyre_prediction/schema_v1/year=2026/predictions/round=13/prediction.json",
+        "pirelli_preview_effect": "compound_allocation_only_for_selected_historical_baseline",
+        "production_policy": {
+          "degradation": {
+            "formulation_code": "D0",
+            "model_name": "degradation_baseline",
+            "weighting_policy": "uniform"
+          },
+          "performance": {
+            "formulation_code": "P0",
+            "model_name": "performance_baseline",
+            "weighting_policy": "uniform"
+          }
+        },
+        "target_preview_hash": "433a7dd73b58e5f7451df5b1b25c6e1787d6bd6ff01fc8352a1f6e92874fc964",
+        "trained_through_round": 12,
+        "training_data_hash": "a96619b49920ebbf7f6c71e79d19ca8891be928dd20113a3b66d335cefe7c455",
+        "training_rounds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "provider": "current_pre_race_cache",
+      "reference_compound": "MEDIUM",
+      "round_number": 13,
+      "season": 2026
+    },
+    "provenance": {
+      "api": "get_pre_race_tyre_prediction",
+      "owner": "woStrategy"
+    },
+    "status": "SUCCESS",
+    "warnings": []
+  }
+}

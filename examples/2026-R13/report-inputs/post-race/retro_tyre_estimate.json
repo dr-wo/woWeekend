@@ -1,75 +1,53 @@
 {
-  "compounds": [
-    {
-      "available": true,
-      "compound": "SOFT",
-      "degradation": {
-        "pre_race": 0.23881396730993304,
-        "pre_race_uncertainty": null,
-        "prediction_minus_retro": -0.0063903453376459585,
-        "retro_estimate": 0.245204312647579,
-        "retro_uncertainty": 0.15964994926757356
+  "compounds": {
+    "HARD": {
+      "degradation_seconds_per_lap": 0.033241112864802,
+      "degradation_uncertainty": 0.03916977348412055,
+      "diagnostics": {
+        "degradation_p10": 0.0060217324248845,
+        "degradation_p90": 0.0843612793931256,
+        "degradation_sample_count": 80000,
+        "delta_sample_count": 80000,
+        "performance_p10": 0.232291303997021,
+        "performance_p90": 0.232291303997021
       },
-      "identifiability": {
-        "pre_race": null,
-        "retro": true
-      },
-      "performance_delta": {
-        "pre_race": -0.31964500240628674,
-        "pre_race_uncertainty": null,
-        "prediction_minus_retro": 0.09417254138905878,
-        "retro_estimate": -0.4138175437953455,
-        "retro_uncertainty": 0.47161446091421566
-      }
+      "identifiable": true,
+      "performance_delta_to_medium": 0.232291303997021,
+      "performance_uncertainty": 0.0
     },
-    {
-      "available": true,
-      "compound": "MEDIUM",
-      "degradation": {
-        "pre_race": 0.22371939517977465,
-        "pre_race_uncertainty": null,
-        "prediction_minus_retro": 0.14832784965041906,
-        "retro_estimate": 0.0753915455293556,
-        "retro_uncertainty": 0.0572232161630402
+    "MEDIUM": {
+      "degradation_seconds_per_lap": 0.0753915455293556,
+      "degradation_uncertainty": 0.0572232161630402,
+      "diagnostics": {
+        "degradation_p10": 0.0294945345563167,
+        "degradation_p90": 0.1439409668823971,
+        "degradation_sample_count": 80000,
+        "delta_sample_count": 80000,
+        "performance_p10": -0.5081654828114324,
+        "performance_p90": 0.2030828568441778
       },
-      "identifiability": {
-        "pre_race": null,
-        "retro": true
-      },
-      "performance_delta": {
-        "pre_race": 0.0,
-        "pre_race_uncertainty": null,
-        "prediction_minus_retro": 0.0,
-        "retro_estimate": 0.0,
-        "retro_uncertainty": 0.3556241698278051
-      }
+      "identifiable": true,
+      "performance_delta_to_medium": 0.0,
+      "performance_uncertainty": 0.3556241698278051
     },
-    {
-      "available": true,
-      "compound": "HARD",
-      "degradation": {
-        "pre_race": 0.15033970038173766,
-        "pre_race_uncertainty": null,
-        "prediction_minus_retro": 0.11709858751693566,
-        "retro_estimate": 0.033241112864802,
-        "retro_uncertainty": 0.03916977348412055
+    "SOFT": {
+      "degradation_seconds_per_lap": 0.245204312647579,
+      "degradation_uncertainty": 0.15964994926757356,
+      "diagnostics": {
+        "degradation_p10": 0.1118858835960524,
+        "degradation_p90": 0.4311857821311995,
+        "degradation_sample_count": 80000,
+        "delta_sample_count": 80000,
+        "performance_p10": -0.8557992513115528,
+        "performance_p90": 0.08742967051687861
       },
-      "identifiability": {
-        "pre_race": null,
-        "retro": true
-      },
-      "performance_delta": {
-        "pre_race": 0.3337454833569559,
-        "pre_race_uncertainty": null,
-        "prediction_minus_retro": 0.10145417935993492,
-        "retro_estimate": 0.232291303997021,
-        "retro_uncertainty": 0.0
-      }
+      "identifiable": true,
+      "performance_delta_to_medium": -0.4138175437953455,
+      "performance_uncertainty": 0.47161446091421566
     }
-  ],
-  "reference_compound": "MEDIUM",
-  "retro_is_estimate_not_ground_truth": true,
-  "retro_provenance": {
+  },
+  "event": "2026-13",
+  "provenance": {
     "artifact_directory": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R",
     "execution": {
       "executed_rounds": [
@@ -140,5 +118,23 @@
       "teams": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/race_performance_2026_13_R_team_baseline_summary.csv",
       "tyre": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/tyre_information.csv"
     }
-  }
+  },
+  "quality": [
+    {
+      "BestRMSESeconds": 0.405203895432767,
+      "EffectiveSampleFraction": 0.0247774347163898,
+      "EffectiveSampleSize": 1982.1947773111872,
+      "MedianRMSESeconds": 4.0328153254914145,
+      "P10RMSESeconds": 1.981161292150472,
+      "P90RMSESeconds": 5.637514730826577,
+      "SampleCount": 80000,
+      "Top1PctWeightShare": 0.5527316787458537,
+      "WeightSum": 629.9416424059605,
+      "WeightedRMSESeconds": 0.8624692993298773
+    }
+  ],
+  "reference_compound": "MEDIUM",
+  "retro_is_estimate_not_ground_truth": true,
+  "round_number": 13,
+  "season": 2026
 }

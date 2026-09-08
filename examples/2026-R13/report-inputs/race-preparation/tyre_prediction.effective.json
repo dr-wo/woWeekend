@@ -1,0 +1,107 @@
+{
+  "automatic_artifact_id": "5d9fc0e7c27933e9051efb30fed4eb27a105174340fd0783b275e44a0181eaa6",
+  "automatic_generated_at": "2026-09-05T21:40:19.355710+00:00",
+  "automatic_model_version": "linear_v1.1",
+  "automatic_provenance": {
+    "default_prediction_family": "historical_baseline",
+    "path": "<WODATA_ROOT>/wostrategy/tyre_prediction/schema_v1/year=2026/predictions/round=13/prediction.json",
+    "pirelli_preview_effect": "compound_allocation_only_for_selected_historical_baseline",
+    "production_policy": {
+      "degradation": {
+        "formulation_code": "D0",
+        "model_name": "degradation_baseline",
+        "weighting_policy": "uniform"
+      },
+      "performance": {
+        "formulation_code": "P0",
+        "model_name": "performance_baseline",
+        "weighting_policy": "uniform"
+      }
+    },
+    "target_preview_hash": "433a7dd73b58e5f7451df5b1b25c6e1787d6bd6ff01fc8352a1f6e92874fc964",
+    "trained_through_round": 12,
+    "training_data_hash": "a96619b49920ebbf7f6c71e79d19ca8891be928dd20113a3b66d335cefe7c455",
+    "training_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  "automatic_source_family": "historical_baseline",
+  "compounds": {
+    "HARD": {
+      "degradation_seconds_per_lap": {
+        "automatic_value": 0.15033970038173766,
+        "effective_value": 0.15033970038173766,
+        "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+        "source": "historical_baseline",
+        "uncertainty": null
+      },
+      "diagnostics": {
+        "absolute_compound": "C3",
+        "selected_default": "historical_baseline"
+      },
+      "performance_delta_to_medium": {
+        "automatic_value": 0.3337454833569559,
+        "effective_value": 0.3337454833569559,
+        "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+        "source": "historical_baseline",
+        "uncertainty": null
+      },
+      "prediction_domain_status": "inside_observed_descriptor_domain"
+    },
+    "MEDIUM": {
+      "degradation_seconds_per_lap": {
+        "automatic_value": 0.22371939517977465,
+        "effective_value": 0.22371939517977465,
+        "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+        "source": "historical_baseline",
+        "uncertainty": null
+      },
+      "diagnostics": {
+        "absolute_compound": "C4",
+        "selected_default": "historical_baseline"
+      },
+      "performance_delta_to_medium": {
+        "automatic_value": 0.0,
+        "effective_value": 0.0,
+        "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+        "source": "historical_baseline",
+        "uncertainty": null
+      },
+      "prediction_domain_status": "inside_observed_descriptor_domain"
+    },
+    "SOFT": {
+      "degradation_seconds_per_lap": {
+        "automatic_value": 0.23881396730993304,
+        "effective_value": 0.23881396730993304,
+        "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+        "source": "historical_baseline",
+        "uncertainty": null
+      },
+      "diagnostics": {
+        "absolute_compound": "C5",
+        "selected_default": "historical_baseline"
+      },
+      "performance_delta_to_medium": {
+        "automatic_value": -0.31964500240628674,
+        "effective_value": -0.31964500240628674,
+        "human_source": "Historical Race-Retro cross-event P0/D0 prediction (default), mapped to the Pirelli-announced compound allocation; current-weekend FP does not modify the production input.",
+        "source": "historical_baseline",
+        "uncertainty": null
+      },
+      "prediction_domain_status": "inside_observed_descriptor_domain"
+    }
+  },
+  "manual_fallback_artifact_id": null,
+  "reference_compound": "MEDIUM"
+}

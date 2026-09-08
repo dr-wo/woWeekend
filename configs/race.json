@@ -58,5 +58,5 @@
     "refine_tolerance": null
   },
   "data_root": null,
-  "report": {"language": "zh-CN", "template": "engineering"}
+  "report": {"language": "en-GB", "template": "engineering"}
 }

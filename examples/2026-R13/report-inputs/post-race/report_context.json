@@ -1,0 +1,55 @@
+{
+  "event_metadata": {
+    "country": "Italy",
+    "event_format": "conventional",
+    "event_id": "2026-13",
+    "event_name": "Italian Grand Prix",
+    "is_sprint": false,
+    "location": "Monza",
+    "official_event_name": "FORMULA 1 PIRELLI GRAN PREMIO D’ITALIA 2026",
+    "race_start": "2026-09-06T13:00:00+00:00",
+    "round_number": 13,
+    "scheduled_race_laps": null,
+    "scheduled_race_laps_provenance": null,
+    "scheduled_race_laps_source": null,
+    "season": 2026,
+    "session_names": [
+      "Practice 1",
+      "Practice 2",
+      "Practice 3",
+      "Qualifying",
+      "Race"
+    ],
+    "session_total_laps": 53,
+    "session_total_laps_source": "fastf1_session_total_laps",
+    "source": "fastf1_event_schedule",
+    "total_laps": 53,
+    "total_laps_source": "fastf1_session"
+  },
+  "fallbacks": {
+    "GREEN": {
+      "pit_in_s3": 5.2705,
+      "pit_out_s1": 25.01075,
+      "sample_count": 2,
+      "source": "race_empirical_median",
+      "value": 30.28125
+    },
+    "SC/VSC": {
+      "pit_in_s3": 12.686500000000002,
+      "pit_out_s1": 28.554,
+      "sample_count": 7,
+      "source": "race_empirical_median",
+      "value": 37.2315
+    }
+  },
+  "full_race_retro_is_separate_from_live_replay": true,
+  "pre_race_recomputed": false,
+  "tyre_estimate_flow": [
+    "Pre-race prediction",
+    "Historical live MC evolution",
+    "Final full-race Retro MC"
+  ],
+  "warnings": [
+    "event_aware_hindsight_optimum: Deterministic SC/VSC counterfactual API is not yet extracted from woPlanner."
+  ]
+}

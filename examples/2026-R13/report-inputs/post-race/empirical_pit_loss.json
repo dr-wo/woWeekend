@@ -1,0 +1,16 @@
+{
+  "normal": {
+    "pit_in_s3": 5.2705,
+    "pit_out_s1": 25.01075,
+    "sample_count": 2,
+    "statistic": "median",
+    "total": 30.28125
+  },
+  "sc_vsc": {
+    "pit_in_s3": 12.686500000000002,
+    "pit_out_s1": 28.554,
+    "sample_count": 7,
+    "statistic": "median",
+    "total": 37.2315
+  }
+}

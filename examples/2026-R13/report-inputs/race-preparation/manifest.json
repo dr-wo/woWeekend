@@ -1,0 +1,65 @@
+{
+  "config": "config.resolved.json",
+  "event": "2026-13",
+  "generated_at": "2026-09-08T21:04:51.341404+00:00",
+  "git_commits": {},
+  "inputs": {},
+  "output_provenance": {
+    "cutoff_rules_compliant": {
+      "owner": "woStrategy"
+    },
+    "cutoff_unrestricted": {
+      "owner": "woStrategy"
+    },
+    "live_mc_model_config": {
+      "owner": "woStrategy",
+      "producer_api": "wostrategy.script.pre_race_analysis.run_from_script_config",
+      "status": "reused"
+    },
+    "practice_tyre_evidence": {
+      "production_input": false,
+      "source_family": "fp_diagnostic"
+    },
+    "strategy_rules_compliant": {
+      "owner": "woStrategy",
+      "rules": {
+        "available_compounds": null,
+        "minimum_distinct_dry_compounds": 2
+      }
+    },
+    "strategy_unrestricted": {
+      "owner": "woStrategy",
+      "rules": {
+        "available_compounds": null,
+        "minimum_distinct_dry_compounds": 0
+      }
+    },
+    "tyre_prediction": {
+      "api": "get_pre_race_tyre_prediction",
+      "owner": "woStrategy"
+    }
+  },
+  "outputs": {
+    "cutoff_rules_compliant": "SUCCESS",
+    "cutoff_unrestricted": "SUCCESS",
+    "effective_tyre_prediction": "SUCCESS",
+    "live_mc_model_config": "SUCCESS",
+    "pit_loss": "SUCCESS",
+    "practice_tyre_evidence": "SUCCESS",
+    "race_distance": "SUCCESS",
+    "strategy_rules_compliant": "SUCCESS",
+    "strategy_unrestricted": "SUCCESS",
+    "tyre_prediction": "SUCCESS"
+  },
+  "package_versions": {
+    "wodata": "0.1.0",
+    "woplanner": "0.1.0",
+    "wostanding": "0.1.0",
+    "wostrategy": "0.1.0",
+    "woweekend": "0.1.0"
+  },
+  "run_id": "20260908T210451.341404Z-347bfbf4c7",
+  "status": "SUCCESS",
+  "warnings": [],
+  "workflow": "race_preparation"
+}

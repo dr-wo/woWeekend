@@ -1,0 +1,355 @@
+{
+  "effective_scan_min": 0.055929848794943664,
+  "fp_diagnostic_medium_markers": [
+    {
+      "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+      "medium_degradation": 0.05755353222325722,
+      "p10": 0.02389896031218499,
+      "p90": 0.09962221356081691,
+      "production_input": false,
+      "session": "FP1",
+      "source_family": "fp_diagnostic",
+      "support": {
+        "status": "measured",
+        "usable_laps": 44,
+        "usable_runs": 8
+      },
+      "unit": "s/lap"
+    },
+    {
+      "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+      "medium_degradation": 0.09978413843994124,
+      "p10": 0.04004527576970557,
+      "p90": 0.1670820297589883,
+      "production_input": false,
+      "session": "FP2",
+      "source_family": "fp_diagnostic",
+      "support": {
+        "status": "measured",
+        "usable_laps": 57,
+        "usable_runs": 10
+      },
+      "unit": "s/lap"
+    },
+    {
+      "fp_structural_identifiability": "absolute_not_identifiable; combined_slope_or_contrasts_only",
+      "medium_degradation": 0.06307495689908138,
+      "p10": 0.020614988304162918,
+      "p90": 0.13956616785085932,
+      "production_input": false,
+      "session": "FP3",
+      "source_family": "fp_diagnostic",
+      "support": {
+        "status": "measured",
+        "usable_laps": 8,
+        "usable_runs": 2
+      },
+      "unit": "s/lap"
+    }
+  ],
+  "fp_marker_interpretation": "Session-level FP MEDIUM posterior coordinates positioned against the unchanged production strategy cutoff envelope.",
+  "fp_marker_limitation": "FP degradation estimates are diagnostic coordinates. Absolute degradation is not fully separable from fuel/load effects with the current practice-session model, and compound performance is not independently identifiable without stronger cross-compound constraints. Therefore FP values are shown only as reference markers against the production cutoff envelope and do not replace the production tyre inputs.",
+  "fp_markers_modify_production_inputs": false,
+  "initial_scan_min": 0.055929848794943664,
+  "non_monotonic": false,
+  "predicted_medium_degradation": 0.22371939517977465,
+  "primary_1_to_2": 0.09221095534723436,
+  "primary_1_to_2_status": "found_initial_scan",
+  "primary_2_to_3": 0.2925322787020156,
+  "reversal_regions": [],
+  "rules": {
+    "available_compounds": null,
+    "minimum_distinct_dry_compounds": 0
+  },
+  "sweep": [
+    {
+      "costs": {
+        "1": 49.58266041474594,
+        "2": 58.61204332710078,
+        "3": 74.62673478327821
+      },
+      "medium_degradation": 0.055929848795,
+      "preferred_stop_count": 1
+    },
+    {
+      "costs": {
+        "1": 65.02660560726798,
+        "2": 69.09867277881328,
+        "3": 82.63470636458594
+      },
+      "medium_degradation": 0.075775924174,
+      "preferred_stop_count": 1
+    },
+    {
+      "costs": {
+        "1": 80.47055079979002,
+        "2": 79.58530223052578,
+        "3": 90.64267794589367
+      },
+      "medium_degradation": 0.095621999553,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 95.7384730800893,
+        "2": 90.07193168170988,
+        "3": 98.65064952679788
+      },
+      "medium_degradation": 0.115468074931,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 106.97740673364763,
+        "2": 100.55856113342239,
+        "3": 106.6586211081056
+      },
+      "medium_degradation": 0.13531415031,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 116.69977816405253,
+        "2": 111.04519058513489,
+        "3": 114.66659268941335
+      },
+      "medium_degradation": 0.155160225689,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 126.42214959445742,
+        "2": 120.76009071830241,
+        "3": 122.67456427072104
+      },
+      "medium_degradation": 0.175006301068,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 136.14452102486229,
+        "2": 128.50432015349767,
+        "3": 130.68253585202876
+      },
+      "medium_degradation": 0.194852376447,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 145.86689245526722,
+        "2": 135.10593038401953,
+        "3": 138.6905074333365
+      },
+      "medium_degradation": 0.214698451826,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 155.58926388567212,
+        "2": 141.7075406145414,
+        "3": 145.52797358239866
+      },
+      "medium_degradation": 0.234544527205,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 165.31163531558713,
+        "2": 148.3091508447306,
+        "3": 151.27331666343633
+      },
+      "medium_degradation": 0.254390602583,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 175.03400674599203,
+        "2": 154.91076107525242,
+        "3": 156.3491382398826
+      },
+      "medium_degradation": 0.274236677962,
+      "preferred_stop_count": 2
+    },
+    {
+      "costs": {
+        "1": 184.7563781763969,
+        "2": 161.51237130577425,
+        "3": 161.3903678704629
+      },
+      "medium_degradation": 0.294082753341,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 194.47874960680178,
+        "2": 168.11398153629608,
+        "3": 166.43159750104326
+      },
+      "medium_degradation": 0.31392882872,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 204.2011210372067,
+        "2": 174.71559176681794,
+        "3": 171.47282713162357
+      },
+      "medium_degradation": 0.333774904099,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 213.92349246761157,
+        "2": 181.31720199733974,
+        "3": 176.51405676220384
+      },
+      "medium_degradation": 0.353620979478,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 223.64586389801647,
+        "2": 187.9188122278616,
+        "3": 181.55528639278418
+      },
+      "medium_degradation": 0.373467054857,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 233.36823532793147,
+        "2": 194.5204224580508,
+        "3": 186.59651602311047
+      },
+      "medium_degradation": 0.393313130235,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 243.09060675833638,
+        "2": 201.12203268857266,
+        "3": 191.63774565369079
+      },
+      "medium_degradation": 0.413159205614,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 252.81297818874128,
+        "2": 207.7236429190945,
+        "3": 196.67897528427113
+      },
+      "medium_degradation": 0.433005280993,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 262.53534961914613,
+        "2": 214.32525314961634,
+        "3": 201.72020491485145
+      },
+      "medium_degradation": 0.452851356372,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 272.25772104955104,
+        "2": 220.92686338013817,
+        "3": 206.76143454543174
+      },
+      "medium_degradation": 0.472697431751,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 281.98009247995594,
+        "2": 227.52847361066003,
+        "3": 211.80266417601206
+      },
+      "medium_degradation": 0.49254350713,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 291.70246391036085,
+        "2": 234.1300838411819,
+        "3": 216.8438938065924
+      },
+      "medium_degradation": 0.512389582509,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 301.4248353402759,
+        "2": 240.73169407137107,
+        "3": 221.8851234369187
+      },
+      "medium_degradation": 0.532235657887,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 311.1472067706808,
+        "2": 247.3333043018929,
+        "3": 226.926353067499
+      },
+      "medium_degradation": 0.552081733266,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 320.8695782010857,
+        "2": 253.93491453241478,
+        "3": 231.96758269807935
+      },
+      "medium_degradation": 0.571927808645,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 330.59194963149054,
+        "2": 260.5365247629366,
+        "3": 237.00881232865962
+      },
+      "medium_degradation": 0.591773884024,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 340.3143210618954,
+        "2": 267.1381349934584,
+        "3": 242.05004195923993
+      },
+      "medium_degradation": 0.611619959403,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 350.03669249230035,
+        "2": 273.7397452239803,
+        "3": 247.09127158982028
+      },
+      "medium_degradation": 0.631466034782,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 359.7590639222153,
+        "2": 280.3413554541695,
+        "3": 252.13250122014657
+      },
+      "medium_degradation": 0.65131211016,
+      "preferred_stop_count": 3
+    },
+    {
+      "costs": {
+        "1": 369.4814353526202,
+        "2": 286.94296568469133,
+        "3": 257.1737308507269
+      },
+      "medium_degradation": 0.671158185539,
+      "preferred_stop_count": 3
+    }
+  ],
+  "warnings": []
+}

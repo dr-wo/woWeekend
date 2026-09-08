@@ -1,0 +1,78 @@
+{
+  "data_root": null,
+  "degradation_cutoff": {
+    "coarse_step": null,
+    "refine_tolerance": null,
+    "scan_max": null,
+    "scan_min": null
+  },
+  "event_id": "2026-13",
+  "event_metadata": {
+    "country": "Italy",
+    "event_format": "conventional",
+    "event_id": "2026-13",
+    "event_name": "Italian Grand Prix",
+    "is_sprint": false,
+    "location": "Monza",
+    "official_event_name": "FORMULA 1 PIRELLI GRAN PREMIO D’ITALIA 2026",
+    "race_start": "2026-09-06T13:00:00+00:00",
+    "round_number": 13,
+    "scheduled_race_laps": null,
+    "scheduled_race_laps_provenance": null,
+    "scheduled_race_laps_source": null,
+    "season": 2026,
+    "session_names": [
+      "Practice 1",
+      "Practice 2",
+      "Practice 3",
+      "Qualifying",
+      "Race"
+    ],
+    "session_total_laps": 53,
+    "session_total_laps_source": "fastf1_session_total_laps",
+    "source": "fastf1_event_schedule",
+    "total_laps": 53,
+    "total_laps_source": "fastf1_session"
+  },
+  "event_name": "Italian Grand Prix",
+  "max_stops": 4,
+  "pit_loss": {
+    "green": {
+      "pit_in_s3": null,
+      "pit_out_s1": null,
+      "total": 23.0
+    },
+    "sc_vsc": {
+      "pit_in_s3": null,
+      "pit_out_s1": null,
+      "total": 8.9
+    }
+  },
+  "report": {
+    "language": "en-GB",
+    "template": "engineering"
+  },
+  "resolved_total_laps": 53,
+  "result_count": 20,
+  "round_number": 13,
+  "season": 2026,
+  "session": "R",
+  "total_laps": 53,
+  "total_laps_source": "manual_override",
+  "tyre_prediction": {
+    "manual_override": {
+      "HARD": {
+        "degradation_seconds_per_lap": null,
+        "performance_delta_to_medium": null
+      },
+      "MEDIUM": {
+        "degradation_seconds_per_lap": null,
+        "performance_delta_to_medium": null
+      },
+      "SOFT": {
+        "degradation_seconds_per_lap": null,
+        "performance_delta_to_medium": null
+      }
+    }
+  }
+}

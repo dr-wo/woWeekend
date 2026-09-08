@@ -1,0 +1,52 @@
+{
+  "data_root": null,
+  "event_id": "2026-13",
+  "event_metadata": {
+    "country": "Italy",
+    "event_format": "conventional",
+    "event_id": "2026-13",
+    "event_name": "Italian Grand Prix",
+    "is_sprint": false,
+    "location": "Monza",
+    "official_event_name": "FORMULA 1 PIRELLI GRAN PREMIO D’ITALIA 2026",
+    "race_start": "2026-09-06T13:00:00+00:00",
+    "round_number": 13,
+    "scheduled_race_laps": null,
+    "scheduled_race_laps_provenance": null,
+    "scheduled_race_laps_source": null,
+    "season": 2026,
+    "session_names": [
+      "Practice 1",
+      "Practice 2",
+      "Practice 3",
+      "Qualifying",
+      "Race"
+    ],
+    "session_total_laps": 53,
+    "session_total_laps_source": "fastf1_session_total_laps",
+    "source": "fastf1_event_schedule",
+    "total_laps": 53,
+    "total_laps_source": "fastf1_session"
+  },
+  "event_name": "Italian Grand Prix",
+  "live_replay": {
+    "mode": "algorithm_only"
+  },
+  "pre_race_run_id": null,
+  "qualifying_performance": {
+    "overrides": {}
+  },
+  "race_performance": {
+    "overrides": {}
+  },
+  "race_start": "2026-09-06T13:00:00+00:00",
+  "race_start_source": "fastf1_event_schedule",
+  "report": {
+    "language": "en-GB",
+    "template": "engineering"
+  },
+  "resolved_total_laps": 53,
+  "round_number": 13,
+  "season": 2026,
+  "total_laps_source": "fastf1_session"
+}
