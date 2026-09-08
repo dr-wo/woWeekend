@@ -26,7 +26,10 @@ Ownership stays explicit: `woData` is the reproducible data and artifact layer;
 interactive qualifying/race support; `woStanding` owns championship analysis;
 `woWeekend` coordinates those capabilities without duplicating them.
 
-## Canonical weekend example: 2026-R13
+## Finished reports: 2026-R13 Italian Grand Prix
+
+- **[Race Preparation report](examples/2026-R13/reports/race-preparation/2026_Italian_GP_PreRace_Strategy_Report_FP_Markers_en-GB.md)** — pre-race tyre assumptions, exact strategy search, stop-count cutoffs and FP diagnostic evidence.
+- **[Post-Race Review](examples/2026-R13/reports/post-race/2026_R13_Italian_GP_Post_Race_Report_en-GB.md)** — causal replay, tyre-model evolution, sampler quality and the Retro Green Optimum.
 
 [Browse the compact 2026-R13 example](examples/2026-R13/) for the exact
 Race Preparation and historical Post-Race outputs selected from immutable local
