@@ -22,6 +22,7 @@ The repository also keeps current operator configs under `configs/`. The
 current race config is a 53-lap setup with a 23-second green-state pit loss and
 no manual tyre-model overrides, so the cached pre-race tyre prediction remains
 the source of compound performance and degradation values.
+The checked-in qualifying config uses a 5% push-lap threshold.
 
 Regenerate presentation artifacts without rerunning deterministic analysis:
 
