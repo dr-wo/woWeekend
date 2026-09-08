@@ -1,0 +1,330 @@
+[
+  {
+    "compounds": [
+      "HARD",
+      "HARD",
+      "SOFT"
+    ],
+    "cost": 139.6744155537223,
+    "delta_to_best": 0.0,
+    "formatted_strategy": "H-(19)H-38(S)",
+    "pit_laps": [
+      19,
+      38
+    ],
+    "rank": 1
+  },
+  {
+    "compounds": [
+      "HARD",
+      "SOFT",
+      "HARD"
+    ],
+    "cost": 139.6744155537223,
+    "delta_to_best": 0.0,
+    "formatted_strategy": "H-(19)S-34(H)",
+    "pit_laps": [
+      19,
+      34
+    ],
+    "rank": 2
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "HARD",
+      "HARD"
+    ],
+    "cost": 139.6744155537223,
+    "delta_to_best": 0.0,
+    "formatted_strategy": "S-(15)H-34(H)",
+    "pit_laps": [
+      15,
+      34
+    ],
+    "rank": 3
+  },
+  {
+    "compounds": [
+      "HARD",
+      "SOFT",
+      "SOFT",
+      "SOFT"
+    ],
+    "cost": 141.94631182214846,
+    "delta_to_best": 2.271896268426161,
+    "formatted_strategy": "H-(16)S-28(S)-40(S)",
+    "pit_laps": [
+      16,
+      28,
+      40
+    ],
+    "rank": 4
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "HARD",
+      "SOFT",
+      "SOFT"
+    ],
+    "cost": 141.94631182214846,
+    "delta_to_best": 2.271896268426161,
+    "formatted_strategy": "S-(12)H-28(S)-40(S)",
+    "pit_laps": [
+      12,
+      28,
+      40
+    ],
+    "rank": 5
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "SOFT",
+      "HARD",
+      "SOFT"
+    ],
+    "cost": 141.94631182214846,
+    "delta_to_best": 2.271896268426161,
+    "formatted_strategy": "S-(12)S-24(H)-40(S)",
+    "pit_laps": [
+      12,
+      24,
+      40
+    ],
+    "rank": 6
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "SOFT",
+      "SOFT",
+      "HARD"
+    ],
+    "cost": 141.94631182214846,
+    "delta_to_best": 2.271896268426161,
+    "formatted_strategy": "S-(12)S-24(S)-37(H)",
+    "pit_laps": [
+      12,
+      24,
+      37
+    ],
+    "rank": 7
+  },
+  {
+    "compounds": [
+      "HARD",
+      "HARD",
+      "SOFT",
+      "SOFT"
+    ],
+    "cost": 142.08855044584135,
+    "delta_to_best": 2.4141348921190513,
+    "formatted_strategy": "H-(14)H-29(S)-41(S)",
+    "pit_laps": [
+      14,
+      29,
+      41
+    ],
+    "rank": 8
+  },
+  {
+    "compounds": [
+      "HARD",
+      "SOFT",
+      "HARD",
+      "SOFT"
+    ],
+    "cost": 142.08855044584135,
+    "delta_to_best": 2.4141348921190513,
+    "formatted_strategy": "H-(14)S-26(H)-41(S)",
+    "pit_laps": [
+      14,
+      26,
+      41
+    ],
+    "rank": 9
+  },
+  {
+    "compounds": [
+      "HARD",
+      "SOFT",
+      "SOFT",
+      "HARD"
+    ],
+    "cost": 142.08855044584135,
+    "delta_to_best": 2.4141348921190513,
+    "formatted_strategy": "H-(14)S-26(S)-38(H)",
+    "pit_laps": [
+      14,
+      26,
+      38
+    ],
+    "rank": 10
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "HARD",
+      "HARD",
+      "SOFT"
+    ],
+    "cost": 142.08855044584135,
+    "delta_to_best": 2.4141348921190513,
+    "formatted_strategy": "S-(12)H-26(H)-41(S)",
+    "pit_laps": [
+      12,
+      26,
+      41
+    ],
+    "rank": 11
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "HARD",
+      "SOFT",
+      "HARD"
+    ],
+    "cost": 142.08855044584135,
+    "delta_to_best": 2.4141348921190513,
+    "formatted_strategy": "S-(12)H-26(S)-38(H)",
+    "pit_laps": [
+      12,
+      26,
+      38
+    ],
+    "rank": 12
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "SOFT",
+      "HARD",
+      "HARD"
+    ],
+    "cost": 142.08855044584135,
+    "delta_to_best": 2.4141348921190513,
+    "formatted_strategy": "S-(12)S-24(H)-38(H)",
+    "pit_laps": [
+      12,
+      24,
+      38
+    ],
+    "rank": 13
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "SOFT",
+      "HARD"
+    ],
+    "cost": 142.46588496997808,
+    "delta_to_best": 2.7914694162557794,
+    "formatted_strategy": "S-(16)S-32(H)",
+    "pit_laps": [
+      16,
+      32
+    ],
+    "rank": 14
+  },
+  {
+    "compounds": [
+      "HARD",
+      "SOFT",
+      "SOFT"
+    ],
+    "cost": 142.4658849699781,
+    "delta_to_best": 2.791469416255808,
+    "formatted_strategy": "H-(21)S-37(S)",
+    "pit_laps": [
+      21,
+      37
+    ],
+    "rank": 15
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "HARD",
+      "SOFT"
+    ],
+    "cost": 142.4658849699781,
+    "delta_to_best": 2.791469416255808,
+    "formatted_strategy": "S-(16)H-37(S)",
+    "pit_laps": [
+      16,
+      37
+    ],
+    "rank": 16
+  },
+  {
+    "compounds": [
+      "HARD",
+      "HARD",
+      "HARD",
+      "SOFT"
+    ],
+    "cost": 142.61994273722593,
+    "delta_to_best": 2.9455271835036285,
+    "formatted_strategy": "H-(14)H-28(H)-42(S)",
+    "pit_laps": [
+      14,
+      28,
+      42
+    ],
+    "rank": 17
+  },
+  {
+    "compounds": [
+      "HARD",
+      "HARD",
+      "SOFT",
+      "HARD"
+    ],
+    "cost": 142.61994273722593,
+    "delta_to_best": 2.9455271835036285,
+    "formatted_strategy": "H-(14)H-28(S)-39(H)",
+    "pit_laps": [
+      14,
+      28,
+      39
+    ],
+    "rank": 18
+  },
+  {
+    "compounds": [
+      "HARD",
+      "SOFT",
+      "HARD",
+      "HARD"
+    ],
+    "cost": 142.61994273722593,
+    "delta_to_best": 2.9455271835036285,
+    "formatted_strategy": "H-(14)S-25(H)-39(H)",
+    "pit_laps": [
+      14,
+      25,
+      39
+    ],
+    "rank": 19
+  },
+  {
+    "compounds": [
+      "SOFT",
+      "HARD",
+      "HARD",
+      "HARD"
+    ],
+    "cost": 142.61994273722593,
+    "delta_to_best": 2.9455271835036285,
+    "formatted_strategy": "S-(11)H-25(H)-39(H)",
+    "pit_laps": [
+      11,
+      25,
+      39
+    ],
+    "rank": 20
+  }
+]

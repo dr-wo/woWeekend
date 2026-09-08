@@ -1,0 +1,5577 @@
+{
+  "algorithm_duplicated_in_woweekend": false,
+  "calculation_options": {
+    "allowed_compounds": [
+      "SOFT",
+      "MEDIUM",
+      "HARD"
+    ],
+    "enforce_compound_order": true,
+    "exclude_stint_end_laps": 0,
+    "exclude_stint_start_laps": 0,
+    "min_clean_laps": 4,
+    "min_gap_ahead_seconds": 2.5,
+    "min_gap_behind_seconds": 1.0,
+    "quick_lap_threshold": 1.1,
+    "race_baseline_architecture": "retro",
+    "sample_count": 80000,
+    "use_sector_boundary_traffic": false
+  },
+  "calculation_owner": "woPlanner OfflineAnalysisService / woStrategy live Retro MC",
+  "causality": {
+    "full_race_cache_used_as_lap_input": false,
+    "policy": "leader_lap_completion_clock_cut",
+    "scheduled_total_laps_is_event_metadata_not_observed_future_laps": true
+  },
+  "figures": [
+    "<WODATA_ROOT>/woweekend/runs/schema_v1/event=2026-13/workflow=post_race/runs/20260906T183831.870845Z-ff2dcac268/figures/live_mc_degradation_evolution.png",
+    "<WODATA_ROOT>/woweekend/runs/schema_v1/event=2026-13/workflow=post_race/runs/20260906T183831.870845Z-ff2dcac268/figures/live_mc_model_quality_evolution.png"
+  ],
+  "manual_override_history_available": false,
+  "mode": "algorithm_only",
+  "provenance": {
+    "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+    "model_config": {
+      "path": "<WODATA_ROOT>/wostrategy/weekend_model/schema_v1/year=2026/round=13/model_config.json",
+      "producer_api": "wostrategy.script.pre_race_analysis.run_from_script_config",
+      "reason": "valid and fresh",
+      "round_number": 13,
+      "season": 2026,
+      "sessions": [
+        "FP1",
+        "FP2",
+        "FP3"
+      ],
+      "status": "reused"
+    },
+    "replay_mode": "algorithm_only",
+    "snapshot_api": "woplanner.analysis.service.leader_lap_snapshots"
+  },
+  "replay": {
+    "complete": true,
+    "downloaded": false,
+    "expected_total_laps": 53,
+    "final_leader_lap": 53,
+    "reconstructed_from_fragments": false,
+    "source_kind": "live_record_fragments",
+    "source_paths": [
+      "<WODATA_ROOT>/wodata/live_timing/schema_v1/year=2026/round=13/session=R/live_timing_raw.jsonl"
+    ]
+  },
+  "round_number": 13,
+  "schema_version": 1,
+  "update_attempts": [
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 0,
+      "leader_lap": 1,
+      "max_input_lap": 0,
+      "session_time_seconds": null,
+      "status": "waiting-for-clean-laps",
+      "timestamp": "2026-09-06T13:06:26.700000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 1,
+      "leader_lap": 2,
+      "max_input_lap": 2,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:06:26.700000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 22,
+      "leader_lap": 3,
+      "max_input_lap": 3,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:08:25.841000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 43,
+      "leader_lap": 4,
+      "max_input_lap": 4,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:41:04.301000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 64,
+      "leader_lap": 5,
+      "max_input_lap": 5,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:44:24.510000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 85,
+      "leader_lap": 6,
+      "max_input_lap": 6,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:47:10.721000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 106,
+      "leader_lap": 7,
+      "max_input_lap": 7,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:48:37.272000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 127,
+      "leader_lap": 8,
+      "max_input_lap": 8,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:50:03.277000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 148,
+      "leader_lap": 9,
+      "max_input_lap": 9,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:51:29.800000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 169,
+      "leader_lap": 10,
+      "max_input_lap": 10,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:52:56.120000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 190,
+      "leader_lap": 11,
+      "max_input_lap": 11,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:54:22.672000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 211,
+      "leader_lap": 12,
+      "max_input_lap": 12,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:55:49.271000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 232,
+      "leader_lap": 13,
+      "max_input_lap": 13,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:57:15.553000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 253,
+      "leader_lap": 14,
+      "max_input_lap": 14,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T13:58:41.982000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 274,
+      "leader_lap": 15,
+      "max_input_lap": 15,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T14:00:08.539000+00:00"
+    },
+    {
+      "eligible_lap_count": 0,
+      "input_completed_lap_count": 295,
+      "leader_lap": 16,
+      "max_input_lap": 16,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T14:01:34.212000+00:00"
+    },
+    {
+      "eligible_lap_count": 8,
+      "input_completed_lap_count": 316,
+      "leader_lap": 17,
+      "max_input_lap": 17,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:02:59.789000+00:00"
+    },
+    {
+      "eligible_lap_count": 17,
+      "input_completed_lap_count": 337,
+      "leader_lap": 18,
+      "max_input_lap": 18,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:04:25.409000+00:00"
+    },
+    {
+      "eligible_lap_count": 24,
+      "input_completed_lap_count": 358,
+      "leader_lap": 19,
+      "max_input_lap": 19,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:05:51.153000+00:00"
+    },
+    {
+      "eligible_lap_count": 28,
+      "input_completed_lap_count": 379,
+      "leader_lap": 20,
+      "max_input_lap": 20,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:07:16.801000+00:00"
+    },
+    {
+      "eligible_lap_count": 32,
+      "input_completed_lap_count": 400,
+      "leader_lap": 21,
+      "max_input_lap": 21,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:08:42.590000+00:00"
+    },
+    {
+      "eligible_lap_count": 35,
+      "input_completed_lap_count": 421,
+      "leader_lap": 22,
+      "max_input_lap": 22,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:10:09.194000+00:00"
+    },
+    {
+      "eligible_lap_count": 36,
+      "input_completed_lap_count": 442,
+      "leader_lap": 23,
+      "max_input_lap": 23,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:11:35.395000+00:00"
+    },
+    {
+      "eligible_lap_count": 37,
+      "input_completed_lap_count": 463,
+      "leader_lap": 24,
+      "max_input_lap": 24,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:13:01.155000+00:00"
+    },
+    {
+      "eligible_lap_count": 40,
+      "input_completed_lap_count": 483,
+      "leader_lap": 25,
+      "max_input_lap": 25,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:14:26.442000+00:00"
+    },
+    {
+      "eligible_lap_count": 41,
+      "input_completed_lap_count": 503,
+      "leader_lap": 26,
+      "max_input_lap": 26,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:15:52.033000+00:00"
+    },
+    {
+      "eligible_lap_count": 40,
+      "input_completed_lap_count": 523,
+      "leader_lap": 27,
+      "max_input_lap": 27,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:17:17.470000+00:00"
+    },
+    {
+      "eligible_lap_count": 40,
+      "input_completed_lap_count": 542,
+      "leader_lap": 28,
+      "max_input_lap": 28,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T14:19:03.182000+00:00"
+    },
+    {
+      "eligible_lap_count": 40,
+      "input_completed_lap_count": 559,
+      "leader_lap": 29,
+      "max_input_lap": 29,
+      "session_time_seconds": null,
+      "status": "no-new-clean-laps",
+      "timestamp": "2026-09-06T14:20:41.571000+00:00"
+    },
+    {
+      "eligible_lap_count": 44,
+      "input_completed_lap_count": 578,
+      "leader_lap": 30,
+      "max_input_lap": 30,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:22:07.149000+00:00"
+    },
+    {
+      "eligible_lap_count": 45,
+      "input_completed_lap_count": 597,
+      "leader_lap": 31,
+      "max_input_lap": 31,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:23:32.808000+00:00"
+    },
+    {
+      "eligible_lap_count": 46,
+      "input_completed_lap_count": 615,
+      "leader_lap": 32,
+      "max_input_lap": 32,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:24:58.181000+00:00"
+    },
+    {
+      "eligible_lap_count": 58,
+      "input_completed_lap_count": 634,
+      "leader_lap": 33,
+      "max_input_lap": 33,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:26:23.581000+00:00"
+    },
+    {
+      "eligible_lap_count": 64,
+      "input_completed_lap_count": 653,
+      "leader_lap": 34,
+      "max_input_lap": 34,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:27:49.043000+00:00"
+    },
+    {
+      "eligible_lap_count": 74,
+      "input_completed_lap_count": 672,
+      "leader_lap": 35,
+      "max_input_lap": 35,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:29:14.346000+00:00"
+    },
+    {
+      "eligible_lap_count": 89,
+      "input_completed_lap_count": 691,
+      "leader_lap": 36,
+      "max_input_lap": 36,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:30:39.493000+00:00"
+    },
+    {
+      "eligible_lap_count": 94,
+      "input_completed_lap_count": 710,
+      "leader_lap": 37,
+      "max_input_lap": 37,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:32:04.781000+00:00"
+    },
+    {
+      "eligible_lap_count": 99,
+      "input_completed_lap_count": 729,
+      "leader_lap": 38,
+      "max_input_lap": 38,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:33:30.239000+00:00"
+    },
+    {
+      "eligible_lap_count": 104,
+      "input_completed_lap_count": 748,
+      "leader_lap": 39,
+      "max_input_lap": 39,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:34:55.169000+00:00"
+    },
+    {
+      "eligible_lap_count": 111,
+      "input_completed_lap_count": 767,
+      "leader_lap": 40,
+      "max_input_lap": 40,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:36:20.286000+00:00"
+    },
+    {
+      "eligible_lap_count": 121,
+      "input_completed_lap_count": 786,
+      "leader_lap": 41,
+      "max_input_lap": 41,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:37:45.624000+00:00"
+    },
+    {
+      "eligible_lap_count": 129,
+      "input_completed_lap_count": 805,
+      "leader_lap": 42,
+      "max_input_lap": 42,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:39:10.730000+00:00"
+    },
+    {
+      "eligible_lap_count": 140,
+      "input_completed_lap_count": 824,
+      "leader_lap": 43,
+      "max_input_lap": 43,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:40:36.063000+00:00"
+    },
+    {
+      "eligible_lap_count": 148,
+      "input_completed_lap_count": 843,
+      "leader_lap": 44,
+      "max_input_lap": 44,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:42:01.179000+00:00"
+    },
+    {
+      "eligible_lap_count": 146,
+      "input_completed_lap_count": 862,
+      "leader_lap": 45,
+      "max_input_lap": 45,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:43:26.297000+00:00"
+    },
+    {
+      "eligible_lap_count": 154,
+      "input_completed_lap_count": 881,
+      "leader_lap": 46,
+      "max_input_lap": 46,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:44:51.292000+00:00"
+    },
+    {
+      "eligible_lap_count": 162,
+      "input_completed_lap_count": 900,
+      "leader_lap": 47,
+      "max_input_lap": 47,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:46:16.219000+00:00"
+    },
+    {
+      "eligible_lap_count": 171,
+      "input_completed_lap_count": 918,
+      "leader_lap": 48,
+      "max_input_lap": 48,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:47:41.408000+00:00"
+    },
+    {
+      "eligible_lap_count": 169,
+      "input_completed_lap_count": 937,
+      "leader_lap": 49,
+      "max_input_lap": 49,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:49:09.462000+00:00"
+    },
+    {
+      "eligible_lap_count": 176,
+      "input_completed_lap_count": 956,
+      "leader_lap": 50,
+      "max_input_lap": 50,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:50:34.307000+00:00"
+    },
+    {
+      "eligible_lap_count": 188,
+      "input_completed_lap_count": 974,
+      "leader_lap": 51,
+      "max_input_lap": 51,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:51:58.790000+00:00"
+    },
+    {
+      "eligible_lap_count": 191,
+      "input_completed_lap_count": 992,
+      "leader_lap": 52,
+      "max_input_lap": 52,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:53:23.135000+00:00"
+    },
+    {
+      "eligible_lap_count": 196,
+      "input_completed_lap_count": 1011,
+      "leader_lap": 53,
+      "max_input_lap": 53,
+      "session_time_seconds": null,
+      "status": "updated",
+      "timestamp": "2026-09-06T14:54:46.551000+00:00"
+    }
+  ],
+  "updates": [
+    {
+      "analysis_id": "live-retro-analysis-b8a2049d4d8f06c19629",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.3337454833569559,
+            "calculated_value": null,
+            "effective_value": 0.3337454833569559,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.15033970038173766,
+            "calculated_value": null,
+            "effective_value": 0.15033970038173766,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.5999661016898908,
+            "calculated_value": -0.5999661016898908,
+            "effective_value": -0.5999661016898908,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0795111150909236,
+              "p10_p90_width": 0.9594282648926671,
+              "p90": -0.12008285019825649
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.2150402756708179,
+            "calculated_value": 0.2150402756708179,
+            "effective_value": 0.2150402756708179,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.04162960224092426,
+              "p10_p90_width": 0.3881142303294039,
+              "p90": 0.42974383257032817
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 8,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          8.804466754081418e-18
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          4.47213595499958,
+          3.9374772335525955e-17
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 17,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "7aeffeeb8f39af0154cf1cf2efa488a49c5ca5d8647ae31c715d469d467260ae",
+        "input_fingerprint": "b7459e10fd300986cbb1dd72ddc124f390fe9369b5ca1a248451315403fafd2f",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.14842270147197886,
+        "clean_race_laps": 8,
+        "clean_race_runs": 2,
+        "ess": 77064.06429385993,
+        "ess_fraction": 0.9633008036732492,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.2988513412450534
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:02:59.789000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-b72daf6d98eb6b1f0b70",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.2191115829528829,
+            "calculated_value": 0.2191115829528829,
+            "effective_value": 0.2191115829528829,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.04696518123018875,
+              "p10_p90_width": 0.37712903223466754,
+              "p90": 0.4240942134648563
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.622193299422629,
+            "calculated_value": -0.622193299422629,
+            "effective_value": -0.622193299422629,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0857864354672062,
+              "p10_p90_width": 0.9541013470431929,
+              "p90": -0.13168508842401327
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.3509878822112002,
+            "calculated_value": 0.3509878822112002,
+            "effective_value": 0.3509878822112002,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.14746951366227457,
+              "p10_p90_width": 0.33423618779899655,
+              "p90": 0.4817057014612711
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 17,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          9.296915906640792e-17
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          7.348469228349535,
+          6.831810045850319e-16
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 18,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "e7603e7692426465909bad8c0984715ba04d65daa9d44a711c731f1834b957a8",
+        "input_fingerprint": "8c22ae43b233eec71d1d7d69ef57b00d0c763299b9147adf4487c191e34062d5",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.14891627876904354,
+        "clean_race_laps": 17,
+        "clean_race_runs": 4,
+        "ess": 54971.97933649591,
+        "ess_fraction": 0.6871497417061989,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5104984996253488
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:04:25.409000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-bd875b705b567003fcd4",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.20697562150407547,
+            "calculated_value": 0.20697562150407547,
+            "effective_value": 0.20697562150407547,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.04354607297941178,
+              "p10_p90_width": 0.3708284054639116,
+              "p90": 0.41437447844332337
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6195803235485914,
+            "calculated_value": -0.6195803235485914,
+            "effective_value": -0.6195803235485914,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.085327235711386,
+              "p10_p90_width": 0.955608137765579,
+              "p90": -0.12971909794580694
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.344767246305288,
+            "calculated_value": 0.344767246305288,
+            "effective_value": 0.344767246305288,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.1453579671972597,
+              "p10_p90_width": 0.33391917423652895,
+              "p90": 0.47927714143378863
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 24,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          4.981487017076449e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          10.246950765959598,
+          5.104505220524931e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999999,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 19,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "a11560f2639d875902ecae478e8bab12677f268b08e2767b12a17e2bfeffab79",
+        "input_fingerprint": "ff58969af670d2adce086381b7f5f0496fdc9d9fb36d16a663d8ea8ee3670d0a",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.1376485014871288,
+        "clean_race_laps": 24,
+        "clean_race_runs": 5,
+        "ess": 56192.04598286835,
+        "ess_fraction": 0.7024005747858544,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5238799594246946
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:05:51.153000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-d44d7a45ecf79f79fec8",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.19086278833982126,
+            "calculated_value": 0.19086278833982126,
+            "effective_value": 0.19086278833982126,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03933424649448907,
+              "p10_p90_width": 0.35987747992639796,
+              "p90": 0.39921172642088704
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6183277701858018,
+            "calculated_value": -0.6183277701858018,
+            "effective_value": -0.6183277701858018,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0851122863769367,
+              "p10_p90_width": 0.9558753368981288,
+              "p90": -0.12923694947880793
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.33199911805368093,
+            "calculated_value": 0.33199911805368093,
+            "effective_value": 0.33199911805368093,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.138818881838276,
+              "p10_p90_width": 0.33666278814401,
+              "p90": 0.475481669982286
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 28,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          4.667294847073314e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          13.23631368621944,
+          6.177777866193798e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 20,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "9e3f3c56b97f3ca67649b874a257c059837384e6aa57bcf5e4f88b3466c07359",
+        "input_fingerprint": "4cffed2568b360a03a7290bd33c4cda995eb4f8cb436a67a6ee71d811b7af5b2",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.1338447176326146,
+        "clean_race_laps": 28,
+        "clean_race_runs": 5,
+        "ess": 53407.77959070464,
+        "ess_fraction": 0.667597244883808,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5522200064600494
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:07:16.801000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-c628f38f1f940bee40e7",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.17782378171802865,
+            "calculated_value": 0.17782378171802865,
+            "effective_value": 0.17782378171802865,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03644935700676777,
+              "p10_p90_width": 0.3468500482085034,
+              "p90": 0.38329940521527117
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6175405980612463,
+            "calculated_value": -0.6175405980612463,
+            "effective_value": -0.6175405980612463,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0849410556428936,
+              "p10_p90_width": 0.9559087524548404,
+              "p90": -0.12903230318805314
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.3203108457277125,
+            "calculated_value": 0.3203108457277125,
+            "effective_value": 0.3203108457277125,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.13305006626778526,
+              "p10_p90_width": 0.3381852037505082,
+              "p90": 0.47123527001829346
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 32,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          4.151823941487055e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          16.517208656978994,
+          6.8576542348582635e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 21,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "5986c3972f5b0ff9a3e88be958a9e674b61169fe000ac96204b1b7e9a21113a8",
+        "input_fingerprint": "9c36239d66b2aea61f838b259c836a64bf85e06c8655639b7d50f360f3a8171c",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.12907401658727913,
+        "clean_race_laps": 32,
+        "clean_race_runs": 5,
+        "ess": 50373.90281110688,
+        "ess_fraction": 0.629673785138836,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5673823597831831
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:08:42.590000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-fec22dd4912310760fa2",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.16570750793052036,
+            "calculated_value": 0.16570750793052036,
+            "effective_value": 0.16570750793052036,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03359978533085034,
+              "p10_p90_width": 0.33437248363015165,
+              "p90": 0.367972268961002
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6165078540925746,
+            "calculated_value": -0.6165078540925746,
+            "effective_value": -0.6165078540925746,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0846544641351992,
+              "p10_p90_width": 0.9559926263663558,
+              "p90": -0.12866183776884332
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.3073730712643124,
+            "calculated_value": 0.3073730712643124,
+            "effective_value": 0.3073730712643124,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.12646909617188312,
+              "p10_p90_width": 0.3397118320598568,
+              "p90": 0.4661809282317399
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 35,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.1596231433680214e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          19.339079605813716,
+          2.2426044282338096e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 22,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "f34117261f4b5d1028902e4fee305ce56b7c92a6af8a9d827017c63060ff04ec",
+        "input_fingerprint": "f1268f229dd5bb79c808b0f48a851853ab6c8d87b730d32e8b1218f1e8496fdc",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.12579524480550985,
+        "clean_race_laps": 35,
+        "clean_race_runs": 5,
+        "ess": 46694.55546569463,
+        "ess_fraction": 0.583681943321183,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.586314267696018
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:10:09.194000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-a4129bdead2e7047bb32",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.16491993290064355,
+            "calculated_value": 0.16491993290064355,
+            "effective_value": 0.16491993290064355,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03364043745638229,
+              "p10_p90_width": 0.33175042323494025,
+              "p90": 0.36539086069132254
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6164636345683071,
+            "calculated_value": -0.6164636345683071,
+            "effective_value": -0.6164636345683071,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0846544641351992,
+              "p10_p90_width": 0.956046758751115,
+              "p90": -0.12860770538408417
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.30741439889138694,
+            "calculated_value": 0.30741439889138694,
+            "effective_value": 0.30741439889138694,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.1269109511704909,
+              "p10_p90_width": 0.3388171991889436,
+              "p90": 0.4657281503594345
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 36,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          6.933735466913971e-17
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          20.049937655763422,
+          1.390209638331808e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 23,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "869999d9154740db119b7282386322d11f5137233f45d3672c259efc946d169c",
+        "input_fingerprint": "c974379d8abe92a697e619a6bd8a8c80a4c00bac88a4e7a41d2f7f90e48bff13",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.1298539191936977,
+        "clean_race_laps": 36,
+        "clean_race_runs": 5,
+        "ess": 46834.04762237335,
+        "ess_fraction": 0.5854255952796669,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5851294751454504
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:11:35.395000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-cc123e205f7df33923cf",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.1598224462631806,
+            "calculated_value": 0.1598224462631806,
+            "effective_value": 0.1598224462631806,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03244039970582031,
+              "p10_p90_width": 0.3250360617292762,
+              "p90": 0.3574764614350965
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6170459401820165,
+            "calculated_value": -0.6170459401820165,
+            "effective_value": -0.6170459401820165,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0849282340856965,
+              "p10_p90_width": 0.9561309388079338,
+              "p90": -0.12879729527776274
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.3039300262281669,
+            "calculated_value": 0.3039300262281669,
+            "effective_value": 0.3039300262281669,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.1254341536880997,
+              "p10_p90_width": 0.33838145358705995,
+              "p90": 0.46381560727515964
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 37,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.4978932894491874e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          20.928449536456352,
+          3.1348584119233925e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000004,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 24,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "e25eb88f61b95160bb3d5489ba003a8e8228386953a7890babc340934ca0f9a4",
+        "input_fingerprint": "94a6436fb519dde79d74c901988a4579935b769a4a31af6b51b96b2b28616b2f",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.135359494883181,
+        "clean_race_laps": 37,
+        "clean_race_runs": 5,
+        "ess": 45906.75020146016,
+        "ess_fraction": 0.5738343775182521,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5891986430943787
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:13:01.155000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-a7369fac7ddaa63ac6dd",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.14802449730576173,
+            "calculated_value": 0.14802449730576173,
+            "effective_value": 0.14802449730576173,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.02985015926868919,
+              "p10_p90_width": 0.30823641066388335,
+              "p90": 0.3380865699325725
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.609500583155193,
+            "calculated_value": -0.609500583155193,
+            "effective_value": -0.609500583155193,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0822283221543623,
+              "p10_p90_width": 0.9557810518772341,
+              "p90": -0.1264472702771282
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.2965046377231678,
+            "calculated_value": 0.2965046377231678,
+            "effective_value": 0.2965046377231678,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.1220010431725958,
+              "p10_p90_width": 0.3377396220249856,
+              "p90": 0.4597406651975814
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 40,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.448331455592083e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          23.86868839534937,
+          3.456977220671021e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 25,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "3e5965c53366682d692716c1ff77ed171be3d91a6cc31baf16e1e7667a75f223",
+        "input_fingerprint": "ae1837f83cbde2bbfee0c9088c69c679618bde5d47d1c6a3ea9023061255a8a1",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.13893226007470225,
+        "clean_race_laps": 40,
+        "clean_race_runs": 5,
+        "ess": 43228.75094079892,
+        "ess_fraction": 0.5403593867599865,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5969312864005836
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:14:26.442000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-2a002c7a8fc1bc7da01e",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.14382261512865813,
+            "calculated_value": 0.14382261512865813,
+            "effective_value": 0.14382261512865813,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.028898138116381204,
+              "p10_p90_width": 0.3011196961242353,
+              "p90": 0.3300178342406165
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6103693935486941,
+            "calculated_value": -0.6103693935486941,
+            "effective_value": -0.6103693935486941,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0824761436591372,
+              "p10_p90_width": 0.9558941305280031,
+              "p90": -0.12658201313113415
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.29333568751011674,
+            "calculated_value": 0.29333568751011674,
+            "effective_value": 0.29333568751011674,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.12092659911062159,
+              "p10_p90_width": 0.33681288678032223,
+              "p90": 0.4577394858909438
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 41,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.1787591531811136e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          24.99428506107517,
+          5.44565273540355e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 26,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "f6cf893def4362474f40968adc159071e44bd9dd18ce9c24ca718e3461697e93",
+        "input_fingerprint": "deda6446a1c9afd81ff96c1df5d5ed2a66a72ab9f4c504204c0881c5d75583a0",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.13758574452585468,
+        "clean_race_laps": 41,
+        "clean_race_runs": 5,
+        "ess": 42248.83517772176,
+        "ess_fraction": 0.528110439721522,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5972166090331842
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:15:52.033000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-e880b16f69630e80e1bd",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.14408000075349917,
+            "calculated_value": 0.14408000075349917,
+            "effective_value": 0.14408000075349917,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.028871097286167803,
+              "p10_p90_width": 0.30244135199278943,
+              "p90": 0.33131244927895726
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6103476848484961,
+            "calculated_value": -0.6103476848484961,
+            "effective_value": -0.6103476848484961,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.082377662971202,
+              "p10_p90_width": 0.9557956498400679,
+              "p90": -0.12658201313113415
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.29289211032402274,
+            "calculated_value": 0.29289211032402274,
+            "effective_value": 0.29289211032402274,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.12059775415146981,
+              "p10_p90_width": 0.3372228976335184,
+              "p90": 0.45782065178498826
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 40,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.0695570724536918e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          24.57059799260664,
+          2.6279656857408914e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 27,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "aa0c57a2728ff8f5b7ea4d5f0e1ca0e00f7969122a7d907c94c8f123ea8da786",
+        "input_fingerprint": "d689cd74db91a93e0dca39a0fad3b1afb87eb942e056d792b910b8bacb6cff38",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.13728896520336387,
+        "clean_race_laps": 40,
+        "clean_race_runs": 5,
+        "ess": 42038.005343069286,
+        "ess_fraction": 0.5254750667883661,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.5992901448503547
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:17:17.470000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-87cc09ed66025cca485e",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.14675907155107606,
+            "calculated_value": 0.14675907155107606,
+            "effective_value": 0.14675907155107606,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.029250586691118546,
+              "p10_p90_width": 0.3081414586585899,
+              "p90": 0.3373920453497084
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6093579829842303,
+            "calculated_value": -0.6093579829842303,
+            "effective_value": -0.6093579829842303,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0822384252463653,
+              "p10_p90_width": 0.9559453931773754,
+              "p90": -0.1262930320689899
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.29628869847751044,
+            "calculated_value": 0.29628869847751044,
+            "effective_value": 0.29628869847751044,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.1219006499305014,
+              "p10_p90_width": 0.33766275039171856,
+              "p90": 0.45956340032222
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 44,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.5432541134398033e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          24.77325747079471,
+          3.8231431495107274e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 30,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "c42ce9526f17735fa0db3850a32d448f0865bf1103b303a3522dc543432c74fa",
+        "input_fingerprint": "bc943a27bb00b7125aa6edbf4a20688618f78ae93328c6a9f000658d5948339a",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.15068211128129377,
+        "clean_race_laps": 44,
+        "clean_race_runs": 6,
+        "ess": 43693.31600473066,
+        "ess_fraction": 0.5461664500591332,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6067342059254502
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:22:07.149000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-e2aa1513c374bc874603",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.14603368917560725,
+            "calculated_value": 0.14603368917560725,
+            "effective_value": 0.14603368917560725,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.028971712178236568,
+              "p10_p90_width": 0.3078182469689843,
+              "p90": 0.3367899591472209
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6091495658832099,
+            "calculated_value": -0.6091495658832099,
+            "effective_value": -0.6091495658832099,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0821955413649658,
+              "p10_p90_width": 0.9559767586593295,
+              "p90": -0.12621878270563625
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.2946342424583298,
+            "calculated_value": 0.2946342424583298,
+            "effective_value": 0.2946342424583298,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.12108344173992933,
+              "p10_p90_width": 0.33768802172463874,
+              "p90": 0.45877146346456804
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 45,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.240797106676942e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          24.974272476176072,
+          3.098800502980086e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 31,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "7cfe59f6c0ccb9b2fcd50089e4896f5cb244437c11649ac38e1a579993eb09d7",
+        "input_fingerprint": "abe63a680f063990942da0496c6311bcccb0304eff659c9f386af01acfd4af9b",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.15535554366908405,
+        "clean_race_laps": 45,
+        "clean_race_runs": 6,
+        "ess": 43466.37924162468,
+        "ess_fraction": 0.5433297405203085,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6150070630695066
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:23:32.808000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-3ac04914124f5978ae39",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.14447265794904546,
+            "calculated_value": 0.14447265794904546,
+            "effective_value": 0.14447265794904546,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.02838977531027024,
+              "p10_p90_width": 0.30671578670667876,
+              "p90": 0.335105562016949
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6090473096395661,
+            "calculated_value": -0.6090473096395661,
+            "effective_value": -0.6090473096395661,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0820828064752983,
+              "p10_p90_width": 0.95598552447749,
+              "p90": -0.12609728199780834
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.2914217592170186,
+            "calculated_value": 0.2914217592170186,
+            "effective_value": 0.2914217592170186,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.11963810609122602,
+              "p10_p90_width": 0.3375904962557189,
+              "p90": 0.45722860234694496
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 46,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.5985352266948596e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          25.27279734644121,
+          4.039945683540665e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000004,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 32,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "a2467ccea0c3b835bed0bfb2d88e38d3986512cad97dfdef48356ca18db27bfc",
+        "input_fingerprint": "b3839a89d6e4c35aa62c07c802baeb3ae8ae2abadc1f68931fe37878fdf9299c",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.15983617183327464,
+        "clean_race_laps": 46,
+        "clean_race_runs": 6,
+        "ess": 42809.636318015415,
+        "ess_fraction": 0.5351204539751927,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6269490490107233
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:24:58.181000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-e4c3beaa57beb5a278e3",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.15261182600134918,
+            "calculated_value": 0.15261182600134918,
+            "effective_value": 0.15261182600134918,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.030056729486787247,
+              "p10_p90_width": 0.32039002534102873,
+              "p90": 0.35044675482781595
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6074138078632989,
+            "calculated_value": -0.6074138078632989,
+            "effective_value": -0.6074138078632989,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0812458763679085,
+              "p10_p90_width": 0.956151408011761,
+              "p90": -0.12509446835614746
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.3046112262454629,
+            "calculated_value": 0.3046112262454629,
+            "effective_value": 0.3046112262454629,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.1251556167706616,
+              "p10_p90_width": 0.3379768602829518,
+              "p90": 0.46313247705361343
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 58,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.0766385300546534e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          25.859510546688345,
+          2.7841345422919345e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 33,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "4302b4f38cf421017314b831f94db9dd9d72e9d35876690e65c58e3c02f2c867",
+        "input_fingerprint": "836aa5b6a3b4bd6000adb6c44027df064d3492e7de54a786c9912fcd24d75fe9",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.1780952744767048,
+        "clean_race_laps": 58,
+        "clean_race_runs": 9,
+        "ess": 47690.51303749972,
+        "ess_fraction": 0.5961314129687465,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6259000807119464
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:26:23.581000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-861371a699935c47f3d1",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08404364762079572,
+            "calculated_value": 0.08404364762079572,
+            "effective_value": 0.08404364762079572,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.016591643779182843,
+              "p10_p90_width": 0.1909748258512953,
+              "p90": 0.20756646963047815
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.5851557640535797,
+            "calculated_value": -0.5851557640535797,
+            "effective_value": -0.5851557640535797,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0735127998434284,
+              "p10_p90_width": 0.9543733800561607,
+              "p90": -0.11913941978726772
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.24998987038154646,
+            "calculated_value": 0.24998987038154646,
+            "effective_value": 0.24998987038154646,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.09686912259940239,
+              "p10_p90_width": 0.33371306793149247,
+              "p90": 0.43058219053089486
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 64,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.7143135202085536e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          25.822962588080344,
+          4.4268653896585795e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 34,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "6c26948454dca6938ae463dc7b242ecc626ffd227f59baaf6a9f25d92a6db583",
+        "input_fingerprint": "448c8d74a08744019bb3954f15f8837a96bec85d7c7f51e1e61400d0a46b4c4b",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.18493590018499773,
+        "clean_race_laps": 64,
+        "clean_race_runs": 10,
+        "ess": 26599.659365541072,
+        "ess_fraction": 0.3324957420692634,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6267624495938591
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:27:49.043000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-6cbcc9d4bbacaeacf5dd",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.06321271165380654,
+            "calculated_value": 0.06321271165380654,
+            "effective_value": 0.06321271165380654,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.011361306913404461,
+              "p10_p90_width": 0.15173126375268522,
+              "p90": 0.16309257066608968
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6022900339563869,
+            "calculated_value": -0.6022900339563869,
+            "effective_value": -0.6022900339563869,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0796082371370281,
+              "p10_p90_width": 0.9529713837336082,
+              "p90": -0.1266368534034199
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.15760633244364358,
+            "calculated_value": 0.15760633244364358,
+            "effective_value": 0.15760633244364358,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.06124357821383962,
+              "p10_p90_width": 0.25621026776754174,
+              "p90": 0.3174538459813814
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 74,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.4072754777529315e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          49.665146675091705,
+          6.98925430148591e-15
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 35,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "81726c9faafd117c5b3794822703fd328fbee7b2e7ab6ceb96b72ca7890ead44",
+        "input_fingerprint": "5df4340c6b4d677a53402fc73e7021706e9f3a63e67c3468d005d0750b7cc2e8",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.18163111887383912,
+        "clean_race_laps": 74,
+        "clean_race_runs": 11,
+        "ess": 10623.441186867505,
+        "ess_fraction": 0.13279301483584383,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6509241866911277
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:29:14.346000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-0a159aca21080d68fda9",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.06184613471770333,
+            "calculated_value": 0.06184613471770333,
+            "effective_value": 0.06184613471770333,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.011097904568946356,
+              "p10_p90_width": 0.14993788678478734,
+              "p90": 0.1610357913537337
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6110865762754214,
+            "calculated_value": -0.6110865762754214,
+            "effective_value": -0.6110865762754214,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0804243378808773,
+              "p10_p90_width": 0.9499892536190861,
+              "p90": -0.13043508426179118
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.1418688113988231,
+            "calculated_value": 0.1418688113988231,
+            "effective_value": 0.1418688113988231,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.056230918677706014,
+              "p10_p90_width": 0.22608309967890383,
+              "p90": 0.28231401835660985
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 89,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          3.114843783064105e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          56.67920298735729,
+          1.765468630541983e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999998,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 36,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "f3893027e41e78f82e698baba6a90298381c4db69c5df18e8ca8a1f563081f21",
+        "input_fingerprint": "4e1d731a40c8cdac952173f35fdc5c62424d1bf2c8eb84f9ca6d694a9cc89a2f",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.20906446644734578,
+        "clean_race_laps": 89,
+        "clean_race_runs": 13,
+        "ess": 8904.03562165217,
+        "ess_fraction": 0.11130044527065214,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6621914668293778
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:30:39.493000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-430eadcfc3bc044ce995",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.05830834550749794,
+            "calculated_value": 0.05830834550749794,
+            "effective_value": 0.05830834550749794,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.010433702608989308,
+              "p10_p90_width": 0.1439871542863044,
+              "p90": 0.15442085689529372
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6121896505957655,
+            "calculated_value": -0.6121896505957655,
+            "effective_value": -0.6121896505957655,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0804243378808773,
+              "p10_p90_width": 0.949794975095571,
+              "p90": -0.13062936278530635
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.13643318564516477,
+            "calculated_value": 0.13643318564516477,
+            "effective_value": 0.13643318564516477,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.05371803611452112,
+              "p10_p90_width": 0.2172408985705465,
+              "p90": 0.2709589346850676
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 94,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          3.203399209707944e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          61.21590207345365,
+          1.960989723236603e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 37,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "158eb0e329004e774ea489938629138d264477df2bd05c2ea29f6c76c3319212",
+        "input_fingerprint": "1bc30893051467e5bdf6ec2127e2b5dac9ea9303418984580629cb42c1d49126",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.21737445527085533,
+        "clean_race_laps": 94,
+        "clean_race_runs": 13,
+        "ess": 8090.617981726068,
+        "ess_fraction": 0.10113272477157585,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6657805343388769
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:32:04.781000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-204d326c4e4c67ddddc0",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.05724316938874522,
+            "calculated_value": 0.05724316938874522,
+            "effective_value": 0.05724316938874522,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.010263646925708254,
+              "p10_p90_width": 0.14122235903271121,
+              "p90": 0.15148600595841946
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6129249140975916,
+            "calculated_value": -0.6129249140975916,
+            "effective_value": -0.6129249140975916,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0805447484360842,
+              "p10_p90_width": 0.9497873294167669,
+              "p90": -0.13075741901931726
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.1327770784450273,
+            "calculated_value": 0.1327770784450273,
+            "effective_value": 0.1327770784450273,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.05232663469288314,
+              "p10_p90_width": 0.21082894567869304,
+              "p90": 0.26315558037157616
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 99,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.7362084646634884e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          65.85854854375089,
+          1.8020271799586243e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 38,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "f3907bfee794ebf458126274a1e56d0c8ed974e89a8ab92bb805fa2c8fc0b7e2",
+        "input_fingerprint": "a5cf8a253b582d141d25e6c3579d2fe157e91b5ccbcda1870ea4fc5ade2ea312",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.3097328522751206,
+        "clean_race_laps": 99,
+        "clean_race_runs": 13,
+        "ess": 7590.40163020854,
+        "ess_fraction": 0.09488002037760675,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7101217341620201
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:33:30.239000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-adc7a81d8282d88763f8",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.055294198531810355,
+            "calculated_value": 0.055294198531810355,
+            "effective_value": 0.055294198531810355,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.009873979098969582,
+              "p10_p90_width": 0.13601234811008528,
+              "p90": 0.14588632720905487
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.616013417276651,
+            "calculated_value": -0.616013417276651,
+            "effective_value": -0.616013417276651,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.08061777522217,
+              "p10_p90_width": 0.9495632406497099,
+              "p90": -0.13105453457246008
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.12855355163546067,
+            "calculated_value": 0.12855355163546067,
+            "effective_value": 0.12855355163546067,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.050190440189488365,
+              "p10_p90_width": 0.20443563866108339,
+              "p90": 0.25462607885057176
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 104,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          4.500495485306502e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          70.77087373489732,
+          3.185039977351019e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 39,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "d90fa34716f636eed23a6b268ca615aa6fb2e21c6d9a40781048f250a1b6a4e7",
+        "input_fingerprint": "08d3993b7f0c1a890136d9a3b28fb80fc36c7abda0b9153da35b495a2b7caa93",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.3056657867600098,
+        "clean_race_laps": 104,
+        "clean_race_runs": 13,
+        "ess": 7074.8602701458485,
+        "ess_fraction": 0.0884357533768231,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7069511057461758
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:34:55.169000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-57f69d5069ad11358eb0",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.04128286216349183,
+            "calculated_value": 0.04128286216349183,
+            "effective_value": 0.04128286216349183,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.007112355062044108,
+              "p10_p90_width": 0.1041237461842596,
+              "p90": 0.1112361012463037
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6126579910285387,
+            "calculated_value": -0.6126579910285387,
+            "effective_value": -0.6126579910285387,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0796761451740915,
+              "p10_p90_width": 0.9494497832404005,
+              "p90": -0.13022636193369097
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.09610576310841665,
+            "calculated_value": 0.09610576310841665,
+            "effective_value": 0.09610576310841665,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03719628131554002,
+              "p10_p90_width": 0.14588615807645106,
+              "p90": 0.1830824393919911
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 111,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          3.680803544178846e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          75.51969153488253,
+          2.779731482568888e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999998,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 40,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "b3b9addf70841ce2579575a6389676cc427927dca159f71f713b18e7ea430254",
+        "input_fingerprint": "aa74ed2591b37639d6089b57cdf3e1d7b62f66666fdd9af15975df140124543b",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.2996155535955314,
+        "clean_race_laps": 111,
+        "clean_race_runs": 14,
+        "ess": 4085.271266487007,
+        "ess_fraction": 0.05106589083108758,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6950098754816224
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:36:20.286000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-d8ec8fcaab96594f18f7",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.04098878993986373,
+            "calculated_value": 0.04098878993986373,
+            "effective_value": 0.04098878993986373,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.006983245520349658,
+              "p10_p90_width": 0.10410570517426715,
+              "p90": 0.1110889506946168
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6120056192869585,
+            "calculated_value": -0.6120056192869585,
+            "effective_value": -0.6120056192869585,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0804243378808773,
+              "p10_p90_width": 0.9537766283805389,
+              "p90": -0.12664770950033843
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.09696046885341487,
+            "calculated_value": 0.09696046885341487,
+            "effective_value": 0.09696046885341487,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.037758077963435194,
+              "p10_p90_width": 0.14456990244826348,
+              "p90": 0.18232798041169868
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 121,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.1667433071262952e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          77.33929268250971,
+          1.6757439479770956e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 41,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "49c4a3d4f9c727d6d48a1a3389fad154909dae710f8eaffea71d679899e8e0d0",
+        "input_fingerprint": "836ab1338ca30afdf5f940d4133f3319cb6e80e02c80cdd3e54dc1893b1363d2",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.2936610988650183,
+        "clean_race_laps": 121,
+        "clean_race_runs": 16,
+        "ess": 4144.617154258145,
+        "ess_fraction": 0.05180771442822681,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6878953538761585
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:37:45.624000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-c9d694e4ff57caa25426",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03958290385292558,
+            "calculated_value": 0.03958290385292558,
+            "effective_value": 0.03958290385292558,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.006878522645785679,
+              "p10_p90_width": 0.09749322421293247,
+              "p90": 0.10437174685871814
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6121896505957655,
+            "calculated_value": -0.6121896505957655,
+            "effective_value": -0.6121896505957655,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0805447484360842,
+              "p10_p90_width": 0.9539078950326643,
+              "p90": -0.1266368534034199
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.09506200404375381,
+            "calculated_value": 0.09506200404375381,
+            "effective_value": 0.09506200404375381,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.036562388291116445,
+              "p10_p90_width": 0.1413418271886105,
+              "p90": 0.17790421547972693
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 129,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          3.9247132430213297e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          91.83911622893997,
+          3.6044219569109584e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999999,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 42,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "976cdf7ca5170eaf30e8b59d255b983cab1978ce17cbbaf062440beeb34e3c62",
+        "input_fingerprint": "b36dc8d1da72a0ef927cc7215cdda44bc1f728ad47efc7fe8b6084691a030f9b",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.29455697838003997,
+        "clean_race_laps": 129,
+        "clean_race_runs": 17,
+        "ess": 3971.4850077960064,
+        "ess_fraction": 0.04964356259745008,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6881632825638928
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:39:10.730000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-f564f199af901ad83c0e",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.034802982662487596,
+            "calculated_value": 0.034802982662487596,
+            "effective_value": 0.034802982662487596,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005970506212130448,
+              "p10_p90_width": 0.08328399835556613,
+              "p90": 0.08925450456769658
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6112982909713625,
+            "calculated_value": -0.6112982909713625,
+            "effective_value": -0.6112982909713625,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0789709443455155,
+              "p10_p90_width": 0.9526140005554733,
+              "p90": -0.12635694379004225
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.0849891378108511,
+            "calculated_value": 0.0849891378108511,
+            "effective_value": 0.0849891378108511,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03237829934429058,
+              "p10_p90_width": 0.12467835000948642,
+              "p90": 0.157056649353777
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 140,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.035881376335988e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          117.77556942230105,
+          2.3977708837422897e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999998,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 43,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "4ba7fc440bbf8fe573b58521670a3a2f39c3365b2a675aedf88bcc6204c2efee",
+        "input_fingerprint": "2a4e2ca14cb13347310d7472be60b34f26cb46c789bd9ad5d9d3b9c8fd9904fb",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.29081641608732706,
+        "clean_race_laps": 140,
+        "clean_race_runs": 19,
+        "ess": 3078.747278009887,
+        "ess_fraction": 0.038484340975123585,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.6932086817615842
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:40:36.063000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-c52fe4b64bf9700e23f3",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.0336657787981539,
+            "calculated_value": 0.0336657787981539,
+            "effective_value": 0.0336657787981539,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005804393363753253,
+              "p10_p90_width": 0.08012905814965092,
+              "p90": 0.08593345151340417
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6000083099248418,
+            "calculated_value": -0.6000083099248418,
+            "effective_value": -0.6000083099248418,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0762016922211002,
+              "p10_p90_width": 0.9517931423257693,
+              "p90": -0.1244085498953309
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08390981329914049,
+            "calculated_value": 0.08390981329914049,
+            "effective_value": 0.08390981329914049,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03178923641718984,
+              "p10_p90_width": 0.12328353465382916,
+              "p90": 0.155072771071019
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 148,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.127387443540058e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          127.96331345510553,
+          2.7222754627817207e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 44,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "99953aa9debf8dd57be71e9c39aa975dd31f2d210cabe8b876b79e8511859d36",
+        "input_fingerprint": "42041d6dadc3dc8307f63ce3b38484442983055253498f60dabce9e37f74241e",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.30433414255976227,
+        "clean_race_laps": 148,
+        "clean_race_runs": 20,
+        "ess": 2996.214447213621,
+        "ess_fraction": 0.03745268059017026,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7082829685359738
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:42:01.179000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-24eed96080acc6047dd8",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.0336657787981539,
+            "calculated_value": 0.0336657787981539,
+            "effective_value": 0.0336657787981539,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005804393363753253,
+              "p10_p90_width": 0.0802056444520329,
+              "p90": 0.08601003781578616
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6041232269390112,
+            "calculated_value": -0.6041232269390112,
+            "effective_value": -0.6041232269390112,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0749242347741803,
+              "p10_p90_width": 0.9490131142083851,
+              "p90": -0.12591112056579523
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08331749419662739,
+            "calculated_value": 0.08331749419662739,
+            "effective_value": 0.08331749419662739,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.031781188320962155,
+              "p10_p90_width": 0.1238622078466026,
+              "p90": 0.15564339616756476
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 146,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          1.781901057180363e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          133.32447825191707,
+          2.3757102874511136e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 45,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "f6b9765605186812f303771799fe85d62a73def524cc23899a4e7493f5ca8e0b",
+        "input_fingerprint": "bb44175167dc414fc00e6081461f9c5d1c8401c2365601983e2aaead356b4d54",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.29654691670486444,
+        "clean_race_laps": 146,
+        "clean_race_runs": 19,
+        "ess": 2923.566655082798,
+        "ess_fraction": 0.03654458318853498,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7058262227003302
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:43:26.297000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-d23e5e00235840174840",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03341579381284403,
+            "calculated_value": 0.03341579381284403,
+            "effective_value": 0.03341579381284403,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005804393363753253,
+              "p10_p90_width": 0.07861731348895372,
+              "p90": 0.08442170685270697
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6078656493406355,
+            "calculated_value": -0.6078656493406355,
+            "effective_value": -0.6078656493406355,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.076625072113555,
+              "p10_p90_width": 0.9508460526686469,
+              "p90": -0.1257790194449082
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08314231837435643,
+            "calculated_value": 0.08314231837435643,
+            "effective_value": 0.08314231837435643,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03132146116079235,
+              "p10_p90_width": 0.12320701026594957,
+              "p90": 0.15452847142674192
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 154,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.2840418128512804e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          139.78662823514006,
+          3.1927850376655723e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 46,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "ef8df881e8c729439c68021bf78d615b354cf0848f5cd6d1147ed2aa6de7c73b",
+        "input_fingerprint": "c6d8c626f6852fabe6d5cd73520a22d20083dc99a07e2477a3cbe6311ad8ff30",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.3052815891784824,
+        "clean_race_laps": 154,
+        "clean_race_runs": 20,
+        "ess": 2879.2691116055,
+        "ess_fraction": 0.035990863895068746,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7068023502669764
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:44:51.292000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-bd10023925254e7a794e",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03341579381284403,
+            "calculated_value": 0.03341579381284403,
+            "effective_value": 0.03341579381284403,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005804393363753253,
+              "p10_p90_width": 0.07856970745401277,
+              "p90": 0.08437410081776603
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6078656493406355,
+            "calculated_value": -0.6078656493406355,
+            "effective_value": -0.6078656493406355,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.076625072113555,
+              "p10_p90_width": 0.9508460526686469,
+              "p90": -0.1257790194449082
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08330931208100532,
+            "calculated_value": 0.08330931208100532,
+            "effective_value": 0.08330931208100532,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03132146116079235,
+              "p10_p90_width": 0.12351405812714922,
+              "p90": 0.15483551928794156
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 162,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.1238160710401085e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          145.25853525177814,
+          3.0850241162347256e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999998,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 47,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "b23c5e4884d0ea8535af6a29525398ac18069dfb2ce1a4ce0f142c8436c0b709",
+        "input_fingerprint": "8dc7acb5c298e68ecc17d4bc5dd508452777df9add577849e146d4ad93f2e23b",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.3025503323354987,
+        "clean_race_laps": 162,
+        "clean_race_runs": 21,
+        "ess": 2874.5657425308477,
+        "ess_fraction": 0.0359320717816356,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7069746273528432
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:46:16.219000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-5d119ac71d772f03420f",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03229701034444514,
+            "calculated_value": 0.03229701034444514,
+            "effective_value": 0.03229701034444514,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005589827181435715,
+              "p10_p90_width": 0.07666606721852817,
+              "p90": 0.08225589439996389
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6100796179655062,
+            "calculated_value": -0.6100796179655062,
+            "effective_value": -0.6100796179655062,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.076625072113555,
+              "p10_p90_width": 0.9508460526686469,
+              "p90": -0.1257790194449082
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.07881738039279618,
+            "calculated_value": 0.07881738039279618,
+            "effective_value": 0.07881738039279618,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.030246044242753994,
+              "p10_p90_width": 0.11710862561423212,
+              "p90": 0.14735466985698611
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 171,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          3.0976615274745803e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          157.363065209246,
+          4.8745751294415495e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 48,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "579d533ca3a6ebc8accaf4962aba68d4ff4777f164115431ea8677ef92e42cdf",
+        "input_fingerprint": "39975e7e841bdfbbd08a727b4425f47b7c7dbe2e83a5cce9339d695af0546cf8",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.30015673538594173,
+        "clean_race_laps": 171,
+        "clean_race_runs": 22,
+        "ess": 2565.4298963920396,
+        "ess_fraction": 0.032067873704900496,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7024376314174882
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:47:41.408000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-05d44f3857a49fb8fd43",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03229701034444514,
+            "calculated_value": 0.03229701034444514,
+            "effective_value": 0.03229701034444514,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005447455128620214,
+              "p10_p90_width": 0.07730988613465431,
+              "p90": 0.08275734126327453
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6082695767798607,
+            "calculated_value": -0.6082695767798607,
+            "effective_value": -0.6082695767798607,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0761375447968042,
+              "p10_p90_width": 0.9513116887947262,
+              "p90": -0.12482585600207807
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.07993933001529373,
+            "calculated_value": 0.07993933001529373,
+            "effective_value": 0.07993933001529373,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03046227298647278,
+              "p10_p90_width": 0.11758686434960078,
+              "p90": 0.14804913733607356
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 169,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.629057638280727e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          161.76485228842955,
+          4.252891205142493e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 49,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "2e427c64c0134e241161acfa35c087fae1e528f7d2a160d4319da3db12a31155",
+        "input_fingerprint": "c85cf4ef509305ccae6955170a3a805c27cfb240e4f63ec23cf02a09f4b28db5",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.2918338459295618,
+        "clean_race_laps": 169,
+        "clean_race_runs": 21,
+        "ess": 2592.985609731685,
+        "ess_fraction": 0.03241232012164606,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7035425153286388
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:49:09.462000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-4e608a7722f2455e8723",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03174261928125759,
+            "calculated_value": 0.03174261928125759,
+            "effective_value": 0.03174261928125759,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005355627935722652,
+              "p10_p90_width": 0.07659694978452429,
+              "p90": 0.08195257772024694
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.609100209896522,
+            "calculated_value": -0.609100209896522,
+            "effective_value": -0.609100209896522,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0761375447968042,
+              "p10_p90_width": 0.9513116887947262,
+              "p90": -0.12482585600207807
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.07856418434564127,
+            "calculated_value": 0.07856418434564127,
+            "effective_value": 0.07856418434564127,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.029650432349343895,
+              "p10_p90_width": 0.11635139714315185,
+              "p90": 0.14600182949249574
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 176,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.8418708492503205e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          169.19299291361813,
+          4.808246344586274e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999997,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 50,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "924de63056301a4da96e0ab24a8b0859564ead5760f78b5b5521354ee1213d2b",
+        "input_fingerprint": "514319b71d0f2a14ab471216712fef1d653a4918991fc39ff48e6ace096c478a",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.2898862210492417,
+        "clean_race_laps": 176,
+        "clean_race_runs": 21,
+        "ess": 2502.2466523806684,
+        "ess_fraction": 0.03127808315475836,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7030568349408441
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:50:34.307000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-f3693dfda21bfe788444",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03245881410629255,
+            "calculated_value": 0.03245881410629255,
+            "effective_value": 0.03245881410629255,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005427672863572469,
+              "p10_p90_width": 0.07807463096248804,
+              "p90": 0.08350230382606051
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6058389776151226,
+            "calculated_value": -0.6058389776151226,
+            "effective_value": -0.6058389776151226,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.0775858232192157,
+              "p10_p90_width": 0.9535495667679283,
+              "p90": -0.12403625645128735
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.07910357086813109,
+            "calculated_value": 0.07910357086813109,
+            "effective_value": 0.07910357086813109,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.03044311532814381,
+              "p10_p90_width": 0.11743681473736017,
+              "p90": 0.14787993006550398
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 188,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.0244667447283842e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          176.19249787406793,
+          3.5669585261667706e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -0.9999999999999999,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 51,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "54e50a67c3cba6d84c2089639eddcbed13e15106356ac276de66ded2bf77b264",
+        "input_fingerprint": "ee45e92e204ffa090b13eceb9ea1d2f2a66fc7c99768a79ef147c9c11b4a0053",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.28197431579290494,
+        "clean_race_laps": 188,
+        "clean_race_runs": 23,
+        "ess": 2570.719397718767,
+        "ess_fraction": 0.03213399247148459,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7068742581416845
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:51:58.790000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-869b5e2ec3e49131864c",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.03360726635957436,
+            "calculated_value": 0.03360726635957436,
+            "effective_value": 0.03360726635957436,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005776598289342475,
+              "p10_p90_width": 0.08082170672791573,
+              "p90": 0.08659830501725821
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6112982909713625,
+            "calculated_value": -0.6112982909713625,
+            "effective_value": -0.6112982909713625,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.079395127922636,
+              "p10_p90_width": 0.9536161084777277,
+              "p90": -0.1257790194449082
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08364526732423155,
+            "calculated_value": 0.08364526732423155,
+            "effective_value": 0.08364526732423155,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.031781188320962155,
+              "p10_p90_width": 0.1259301924725027,
+              "p90": 0.15771138079346486
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 191,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          3.157652973472648e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          173.67661780526032,
+          5.4841048863545286e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 52,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "57e20d42a8c576f857cea45f646d08572bf66318a676ef26e91745a8e3d968b0",
+        "input_fingerprint": "0cc32b69f72afc06e676d6b4c2fd579cf034d902b34dc2f016891fb567453f88",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.2741230647796171,
+        "clean_race_laps": 191,
+        "clean_race_runs": 22,
+        "ess": 2816.644987747672,
+        "ess_fraction": 0.0352080623468459,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7011456104657394
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:53:23.135000+00:00"
+    },
+    {
+      "analysis_id": "live-retro-analysis-4be3b90a064076d21d33",
+      "compounds": {
+        "HARD": {
+          "compound_delta": {
+            "algorithm_value": 0.0,
+            "calculated_value": 0.0,
+            "effective_value": 0.0,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.0,
+              "p10_p90_width": 0.0,
+              "p90": 0.0
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.0336657787981539,
+            "calculated_value": 0.0336657787981539,
+            "effective_value": 0.0336657787981539,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.005804393363753253,
+              "p10_p90_width": 0.08049171027107295,
+              "p90": 0.0862961036348262
+            }
+          }
+        },
+        "MEDIUM": {
+          "compound_delta": {
+            "algorithm_value": -0.6000083099248418,
+            "calculated_value": -0.6000083099248418,
+            "effective_value": -0.6000083099248418,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": -1.076625072113555,
+              "p10_p90_width": 0.953141513025072,
+              "p90": -0.12348355908848307
+            }
+          },
+          "degradation": {
+            "algorithm_value": 0.08539177927127573,
+            "calculated_value": 0.08539177927127573,
+            "effective_value": 0.08539177927127573,
+            "informed": true,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": "measured",
+            "uncertainty": {
+              "p10": 0.032284285135139465,
+              "p10_p90_width": 0.12749590936599897,
+              "p90": 0.15978019450113845
+            }
+          }
+        },
+        "SOFT": {
+          "compound_delta": {
+            "algorithm_value": -0.31964500240628674,
+            "calculated_value": null,
+            "effective_value": -0.31964500240628674,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          },
+          "degradation": {
+            "algorithm_value": 0.23881396730993304,
+            "calculated_value": null,
+            "effective_value": 0.23881396730993304,
+            "informed": false,
+            "manual_override": {
+              "active": false,
+              "value": null
+            },
+            "support_status": null,
+            "uncertainty": null
+          }
+        }
+      },
+      "eligible_lap_count": 196,
+      "identifiability": {
+        "correction_identifiability_component_names": [
+          "FuelModel",
+          "TrackEvolutionModel"
+        ],
+        "correction_identifiability_condition_number": Infinity,
+        "correction_identifiability_normalized_singular_values": [
+          1.0,
+          2.671274354058424e-16
+        ],
+        "correction_identifiability_parameter_names": [
+          "fuel_rate",
+          "track_rate"
+        ],
+        "correction_identifiability_scope": "local_jacobian",
+        "correction_identifiability_singular_values": [
+          193.25704438877776,
+          5.162425864168725e-14
+        ],
+        "fuel_track_alias": true,
+        "fuel_track_identifiable_combination": "track_rate - fuel_rate",
+        "fuel_track_profiled_correlation": -1.0000000000000002,
+        "fuel_track_profiled_rank": 1,
+        "fuel_track_raw_rank": 2
+      },
+      "leader_lap": 53,
+      "provenance": {
+        "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
+        "config_hash": "13a60f9c1798fc8e746d549ee9c32e76d7a989444049d9e9f137c41cfa29958b",
+        "input_fingerprint": "c83b608e70c9d8ddfac471a899c0ffa730b8ef305b3f8fd0418aee40aca651a6",
+        "manual_override_mode": "algorithm_only"
+      },
+      "quality": {
+        "best_rmse_seconds": 0.28057378803149496,
+        "clean_race_laps": 196,
+        "clean_race_runs": 23,
+        "ess": 2802.045438064822,
+        "ess_fraction": 0.03502556797581027,
+        "numerical_quality_status": "adequate",
+        "sample_count": 80000,
+        "weighted_rmse_seconds": 0.7105598214843887
+      },
+      "session_time_seconds": null,
+      "timestamp": "2026-09-06T14:54:46.551000+00:00"
+    }
+  ],
+  "year": 2026
+}

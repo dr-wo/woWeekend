@@ -1,9 +1,55 @@
 # woWeekend
 
-`woWeekend` is the lightweight orchestration layer for three independently
-invokable race-weekend stages. Numerical analysis remains in `woStrategy`, data
-paths and immutable run storage remain in `woData`, standings remain in
-`woStanding`, and GUI/manual controls remain in `woPlanner`.
+`woWeekend` turns the separate dr-wo packages into a repeatable Formula 1
+race-weekend workflow: qualifying preparation, race preparation, live/replay
+support and post-race review. It owns orchestration and portable reports while
+leaving numerical methods and data contracts with their source packages.
+
+All inputs are public F1 timing, telemetry and tyre information.
+
+## End-to-end workflow
+
+```mermaid
+flowchart LR
+    A[Public timing / telemetry / tyre information]
+    D[woData<br/>identity, ingestion, raw recording,<br/>replay, contracts, provenance]
+    Q[Qualifying Preparation<br/>woWeekend + woStrategy<br/>woPlanner monitor]
+    R[Race Preparation<br/>woStrategy prediction,<br/>search and cutoff envelopes]
+    L[Live / Replay Race Support<br/>woPlanner + woData replay]
+    P[Post-Race<br/>woStrategy Retro/performance<br/>woStanding progression]
+    O[woWeekend reports / figures<br/>immutable run artifacts]
+    A --> D --> Q --> R --> L --> P --> O
+```
+
+Ownership stays explicit: `woData` is the reproducible data and artifact layer;
+`woStrategy` owns performance, tyre and strategy calculations; `woPlanner` owns
+interactive qualifying/race support; `woStanding` owns championship analysis;
+`woWeekend` coordinates those capabilities without duplicating them.
+
+## Canonical weekend example: 2026-R13
+
+[Browse the compact 2026-R13 example](examples/2026-R13/) for the exact
+Race Preparation and historical Post-Race outputs selected from immutable local
+runs, including assumptions, strategy rows, degradation cutoffs, live-MC history,
+Retro comparison and known limitations.
+
+<p>
+  <img src="examples/2026-R13/assets/race_preparation_cutoff_rules_compliant.png" alt="2026-R13 rules-compliant degradation cutoff envelope" width="49%">
+  <img src="examples/2026-R13/assets/post_race_live_mc_degradation_evolution.png" alt="2026-R13 historical replay live tyre-model evolution" width="49%">
+</p>
+
+The Race Preparation example completed successfully. The Post-Race example is
+historical replay validation and is intentionally marked `PARTIAL`: every
+implemented component succeeded, while Event-Aware Hindsight Optimum remains
+unavailable because the deterministic SC/VSC counterfactual API has not yet
+been extracted from `woPlanner`.
+
+## Operator interface
+
+The three preparation/review stages are independently invokable. Numerical
+analysis remains in `woStrategy`, data paths and immutable run storage remain in
+`woData`, standings remain in `woStanding`, and GUI/manual controls remain in
+`woPlanner`.
 
 ```bash
 woweekend-quali --event 2026-07 --config qualifying.json
@@ -128,3 +174,6 @@ Future maintainers and AI development agents should start with
 [docs/AI_DEVELOPMENT_GUIDE.md](docs/AI_DEVELOPMENT_GUIDE.md). It describes the
 repository boundaries, workflow/data flow, deterministic artifacts, test
 strategy, and the assumptions and compromises behind the current design.
+
+This project is developed extensively with coding agents. The guide is durable
+engineering context, not hidden implementation history.

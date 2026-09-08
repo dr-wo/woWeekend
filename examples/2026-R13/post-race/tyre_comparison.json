@@ -1,0 +1,144 @@
+{
+  "compounds": [
+    {
+      "available": true,
+      "compound": "SOFT",
+      "degradation": {
+        "pre_race": 0.23881396730993304,
+        "pre_race_uncertainty": null,
+        "prediction_minus_retro": -0.011641581381405253,
+        "retro_estimate": 0.2504555486913383,
+        "retro_uncertainty": 0.16111193858765588
+      },
+      "identifiability": {
+        "pre_race": null,
+        "retro": true
+      },
+      "performance_delta": {
+        "pre_race": -0.31964500240628674,
+        "pre_race_uncertainty": null,
+        "prediction_minus_retro": 0.031904506413841016,
+        "retro_estimate": -0.35154950882012775,
+        "retro_uncertainty": 0.480407772436875
+      }
+    },
+    {
+      "available": true,
+      "compound": "MEDIUM",
+      "degradation": {
+        "pre_race": 0.22371939517977465,
+        "pre_race_uncertainty": null,
+        "prediction_minus_retro": 0.14824234313835405,
+        "retro_estimate": 0.0754770520414206,
+        "retro_uncertainty": 0.05518320674102974
+      },
+      "identifiability": {
+        "pre_race": null,
+        "retro": true
+      },
+      "performance_delta": {
+        "pre_race": 0.0,
+        "pre_race_uncertainty": null,
+        "prediction_minus_retro": 0.0,
+        "retro_estimate": 0.0,
+        "retro_uncertainty": 0.34664297090281837
+      }
+    },
+    {
+      "available": true,
+      "compound": "HARD",
+      "degradation": {
+        "pre_race": 0.15033970038173766,
+        "pre_race_uncertainty": null,
+        "prediction_minus_retro": 0.11696269403147436,
+        "retro_estimate": 0.0333770063502633,
+        "retro_uncertainty": 0.0378627259845871
+      },
+      "identifiability": {
+        "pre_race": null,
+        "retro": true
+      },
+      "performance_delta": {
+        "pre_race": 0.3337454833569559,
+        "pre_race_uncertainty": null,
+        "prediction_minus_retro": 0.11081063708729111,
+        "retro_estimate": 0.2229348462696648,
+        "retro_uncertainty": 0.0
+      }
+    }
+  ],
+  "reference_compound": "MEDIUM",
+  "retro_is_estimate_not_ground_truth": true,
+  "retro_provenance": {
+    "artifact_directory": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R",
+    "execution": {
+      "executed_rounds": [
+        13
+      ],
+      "monte_carlo_executed": true,
+      "producer_called": true,
+      "use_cached_monte_carlo": false
+    },
+    "metadata": {
+      "baseline_group": "team",
+      "cache_schema": 2,
+      "clean_lap_noise_sigma": 0.5,
+      "clean_mean_time_delta_behind_seconds": 1.0,
+      "clean_mean_time_delta_seconds": 2.5,
+      "compound_degradation_bounds": {},
+      "compound_delta_bounds": {},
+      "compound_delta_reference": "HARD",
+      "default_compound_degradation_bounds": [
+        0.0,
+        0.5
+      ],
+      "default_compound_delta_bounds": [
+        -1.2,
+        0.5
+      ],
+      "degradation_order_track_temperature": 15.0,
+      "dry_compounds": [
+        "SOFT",
+        "MEDIUM",
+        "HARD"
+      ],
+      "fuel_rate_bounds": [
+        0.0,
+        0.1
+      ],
+      "fuel_ref": 0.0,
+      "lap_compound_overrides": [],
+      "limit_negative_track_correction": true,
+      "min_clean_air_laps": 4,
+      "quick_lap_threshold": 1.1,
+      "race_lap_ref": null,
+      "sample_count": 80000,
+      "sampling_strategy": "latin-hypercube",
+      "team_baseline_mode": "direct-team",
+      "team_variation_absolute_min": 0.005,
+      "team_variation_fraction": 0.5,
+      "track_rate_bounds": [
+        -0.05,
+        0.05
+      ],
+      "track_temperature": null,
+      "traffic_combination_mode": "compatibility_min",
+      "traffic_evaluator_version": "unified-traffic-v2",
+      "treat_stint_as_whole": false,
+      "tyre_age_mode": "stint",
+      "tyre_age_ref": 0.0,
+      "weight_effective_sample_count": 20,
+      "weight_strategy": "gaussian",
+      "wet_lap_proportion_skip_threshold": 0.5
+    },
+    "owner": "woStrategy",
+    "producer": "run_race_performance_review",
+    "source_files": {
+      "metadata": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/race_performance_2026_13_R_metadata.json",
+      "pit": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/race_performance_2026_13_R_pit_loss_summary.csv",
+      "quality": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/race_performance_2026_13_R_sample_diagnostics.csv",
+      "teams": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/race_performance_2026_13_R_team_baseline_summary.csv",
+      "tyre": "<WODATA_ROOT>/wostrategy/race_performance_review/schema_v1/year=2026/round=13/session=R/tyre_information.csv"
+    }
+  }
+}

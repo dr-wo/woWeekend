@@ -1,0 +1,94 @@
+{
+  "config": "config.resolved.json",
+  "event": "2026-13",
+  "generated_at": "2026-09-06T18:38:31.870845+00:00",
+  "git_commits": {},
+  "inputs": {},
+  "output_provenance": {
+    "empirical_pit_loss": {
+      "overrides": {},
+      "owner": "woStrategy"
+    },
+    "event_aware_hindsight_optimum": {
+      "substitute_used": false
+    },
+    "live_mc_history": {
+      "full_race_retro_is_separate": true,
+      "mode": "algorithm_only",
+      "model_config": {
+        "path": "<WODATA_ROOT>/wostrategy/weekend_model/schema_v1/year=2026/round=13/model_config.json",
+        "producer_api": "wostrategy.script.pre_race_analysis.run_from_script_config",
+        "reason": "valid and fresh",
+        "round_number": 13,
+        "season": 2026,
+        "sessions": [
+          "FP1",
+          "FP2",
+          "FP3"
+        ],
+        "status": "reused"
+      },
+      "owner": "woPlanner/woStrategy"
+    },
+    "pre_race_artifacts": {
+      "recomputed": false,
+      "selection": "final_usable_before_race_start"
+    },
+    "qualifying_performance": {
+      "overrides": {},
+      "owner": "woStrategy"
+    },
+    "qualifying_performance_tracker": {
+      "overrides": {},
+      "owner": "woStrategy"
+    },
+    "race_performance": {
+      "overrides": {},
+      "owner": "woStrategy"
+    },
+    "race_performance_tracker": {
+      "overrides": {},
+      "owner": "woStrategy"
+    },
+    "retro_green_optimum": {
+      "owner": "woStrategy",
+      "uses_actual_event_timeline": false
+    },
+    "retro_tyre_estimate": {
+      "overrides": {},
+      "owner": "woStrategy"
+    },
+    "standings": {
+      "overrides": {},
+      "owner": "woStanding"
+    }
+  },
+  "outputs": {
+    "empirical_pit_loss": "SUCCESS",
+    "event_aware_hindsight_optimum": "UNAVAILABLE",
+    "live_mc_history": "SUCCESS",
+    "pit_loss_resolution": "SUCCESS",
+    "pre_race_artifacts": "SUCCESS",
+    "qualifying_performance": "SUCCESS",
+    "qualifying_performance_tracker": "SUCCESS",
+    "race_performance": "SUCCESS",
+    "race_performance_tracker": "SUCCESS",
+    "retro_green_optimum": "SUCCESS",
+    "retro_tyre_estimate": "SUCCESS",
+    "standings": "SUCCESS",
+    "tyre_comparison": "SUCCESS"
+  },
+  "package_versions": {
+    "wodata": "0.1.0",
+    "woplanner": "0.1.0",
+    "wostanding": "0.1.0",
+    "wostrategy": "0.1.0",
+    "woweekend": "0.1.0"
+  },
+  "run_id": "20260906T183831.870845Z-ff2dcac268",
+  "status": "PARTIAL",
+  "warnings": [
+    "event_aware_hindsight_optimum: Deterministic SC/VSC counterfactual API is not yet extracted from woPlanner."
+  ],
+  "workflow": "post_race"
+}
