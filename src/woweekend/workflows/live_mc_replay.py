@@ -190,6 +190,16 @@ def reconstruct_live_mc_history(
         "calculation_options": options,
         "manual_override_history_available": bool(override_events),
         "update_attempts": attempts,
+        "initial_state": {
+            "leader_lap": 0,
+            "compounds": {
+                compound: {"degradation": {
+                    "effective_value": baseline.get(("degradation", compound)),
+                    "effective_source": "base",
+                }}
+                for compound in ("SOFT", "MEDIUM", "HARD")
+            },
+        },
         "updates": updates,
         "provenance": {
             "replay_mode": mode,
@@ -455,14 +465,30 @@ def _history_update(
         if str(row.get("source_scope", "aggregate")).upper() == "AGGREGATE"
     }
     quality = dict(summary.manifest.get("sampler_quality") or {})
-    observed = {str(value).upper() for value in quality.get("observed_compounds", ())}
+    # Use the same coordinate resolver as the live strategy display. Raw MC
+    # rows need not include compounds without direct race evidence.
+    resolved = {
+        row["compound"]: row
+        for row in OfflineAnalysisService().strategy_assumptions(
+            summary,
+            baseline_degradation={c: v for (p, c), v in baseline.items() if p == "degradation"},
+            baseline_compound_delta={c: v for (p, c), v in baseline.items() if p == "compound_delta"},
+        )
+    }
     compounds = {}
     for compound in ("SOFT", "MEDIUM", "HARD"):
         values = {}
         for parameter in ("degradation", "compound_delta"):
             row = parameter_map.get((parameter, compound))
             calculated = None if row is None else float(row["median"])
-            algorithm_value = calculated if compound in observed else baseline.get((parameter, compound))
+            live_row = resolved.get(compound, {})
+            source = (
+                live_row.get("degradation_source", "base")
+                if parameter == "degradation"
+                else "live_direct" if live_row.get("compound_delta_source") == "race_evidence"
+                else "base"
+            )
+            algorithm_value = live_row.get(parameter, baseline.get((parameter, compound)))
             manual_value = manual_values.get((parameter, compound)) if manual_active else None
             effective = (
                 manual_value
@@ -482,7 +508,11 @@ def _history_update(
                     "p90": float(row["p90"]),
                     "p10_p90_width": float(row["p90"]) - float(row["p10"]),
                 },
-                "informed": compound in observed and row is not None,
+                "source": source,
+                "effective_source": "manual_override" if mode == "operational" and manual_value is not None else source,
+                "anchor_compound": live_row.get("degradation_anchor_compound") if parameter == "degradation" else None,
+                "initial_ratio_to_medium": live_row.get("degradation_initial_ratio_to_medium") if parameter == "degradation" else None,
+                "informed": source == "live_direct",
                 "support_status": None if row is None else row.get("support_status"),
             }
         compounds[compound] = values
@@ -569,24 +599,28 @@ def plot_live_mc_history(
     degradation_path = destination / "live_mc_degradation_evolution.png"
     quality_path = destination / "live_mc_model_quality_evolution.png"
 
+    degradation_updates = ([history["initial_state"]] if history.get("initial_state") else []) + updates
     figure, axis = plt.subplots(figsize=(10, 5.5))
     for compound in ("SOFT", "MEDIUM", "HARD"):
-        points = [
-            (
+        points = []
+        for update in degradation_updates:
+            value = update["compounds"][compound]["degradation"]
+            points.append((
                 int(update["leader_lap"]),
-                update["compounds"][compound]["degradation"]["algorithm_value"],
-                bool(update["compounds"][compound]["degradation"]["informed"]),
-            )
-            for update in updates
-            if update["compounds"][compound]["degradation"]["algorithm_value"] is not None
-        ]
-        for informed, style in ((False, "--"), (True, "-")):
-            selected = [point for point in points if point[2] is informed]
-            if selected:
+                value.get("effective_value"),
+                value.get("effective_source", value.get("source", "unknown")),
+            ))
+        # Mask other states instead of joining disjoint periods of evidence.
+        for source, style in (("base", ":"), ("live_derived", "--"),
+                              ("live_direct", "-"), ("manual_override", "-."),
+                              ("unknown", ":")):
+            if any(point[2] == source and point[1] is not None for point in points):
                 axis.plot(
-                    [point[0] for point in selected], [point[1] for point in selected],
-                    style, marker="o", color=colours[compound],
-                    label=f"{compound} ({'informed' if informed else 'assumed'})",
+                    [point[0] for point in points],
+                    [point[1] if point[2] == source and point[1] is not None else np.nan
+                     for point in points],
+                    linestyle=style, marker="o", color=colours[compound],
+                    label=f"{compound} ({source})",
                 )
         retro = dict(retro_tyre_estimate.get("compounds") or {}).get(compound, {})
         if isinstance(retro, Mapping) and retro.get("degradation_seconds_per_lap") is not None:

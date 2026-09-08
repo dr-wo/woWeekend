@@ -249,6 +249,13 @@ passes each eligible snapshot to
 The full-race Retro output is shown as a separate endpoint and is never used as
 historical lap input.
 
+History coordinates must pass through `OfflineAnalysisService.strategy_assumptions`,
+the shared live resolver. Do not replace an unobserved compound with its prior:
+it may have a `live_derived` estimate. Preserve raw `calculated_value` separately
+from resolved `algorithm_value` and override-aware `effective_value`. Plot the
+latter using `effective_source`, not the direct-evidence `informed` flag.
+The [R13 regression notes](LIVE_MC_DEGRADATION_HISTORY.md) document this boundary.
+
 Before replay, Post calls the same shared woStrategy prerequisite API used by
 Race Preparation. Missing or stale historical configs are generated
 automatically through the canonical `pre_race_analysis` implementation. Replay

@@ -105,6 +105,13 @@ effective values. The compact `live_mc_history.json` artifact and two English
 evolution figures are included in the report bundle when replay succeeds;
 replay failure does not stop other Post components.
 
+Degradation history uses woPlanner's shared live compound resolver. The figure
+plots effective values with dotted `base`, dashed `live_derived`, and solid
+`live_direct` lines; recorded operational overrides use `manual_override`.
+Compounds without direct evidence can therefore evolve through the initial
+degradation ratios. See [the R13 report fix](docs/LIVE_MC_DEGRADATION_HISTORY.md)
+for the data contract and regression coverage.
+
 The validation, legacy compatibility boundary, and deliberate freshness/runtime
 compromises are documented in
 [docs/LIVE_MC_MODEL_CONFIG_PREREQUISITE.md](docs/LIVE_MC_MODEL_CONFIG_PREREQUISITE.md).

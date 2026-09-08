@@ -29,6 +29,7 @@ def _summary(lap: int = 12):
                     "p10": value - .02,
                     "p90": value + .02,
                     "support_status": "measured",
+                    "usable_lap_count": 20,
                     "weighted_rmse": .42,
                 }
             )
@@ -65,12 +66,12 @@ def test_operational_override_does_not_change_calculated_history() -> None:
     manual = {("degradation", "SOFT"): .9}
     algorithm = _history_update(
         summary=_summary(), leader_lap=12, timestamp="2026-01-01T00:00:00+00:00",
-        result=result, baseline={}, mode="algorithm_only", manual_active=True,
+        result=result, baseline={(r["parameter"], r["compound"]): r["median"] for r in _summary().parameters}, mode="algorithm_only", manual_active=True,
         manual_values=manual,
     )
     operational = _history_update(
         summary=_summary(), leader_lap=12, timestamp="2026-01-01T00:00:00+00:00",
-        result=result, baseline={}, mode="operational", manual_active=True,
+        result=result, baseline={(r["parameter"], r["compound"]): r["median"] for r in _summary().parameters}, mode="operational", manual_active=True,
         manual_values=manual,
     )
     first = algorithm["compounds"]["SOFT"]["degradation"]
@@ -100,7 +101,7 @@ def test_plots_are_english_and_prioritised_in_twenty_file_bundle(tmp_path: Path)
         _history_update(
             summary=_summary(lap), leader_lap=lap,
             timestamp=f"2026-01-01T00:{lap:02d}:00+00:00", result=result,
-            baseline={}, mode="algorithm_only", manual_active=False, manual_values={},
+            baseline={(r["parameter"], r["compound"]): r["median"] for r in _summary().parameters}, mode="algorithm_only", manual_active=False, manual_values={},
         )
         for lap in (10, 12, 14)
     ]
@@ -119,3 +120,74 @@ def test_plots_are_english_and_prioritised_in_twenty_file_bundle(tmp_path: Path)
     )
     assert all((bundle / "figures" / path.name).is_file() for path in figures)
     assert sum(path.is_file() for path in bundle.rglob("*")) <= 20
+
+
+def test_r13_live_sources_values_and_plot_survive_history_roundtrip(tmp_path, monkeypatch):
+    import json
+    import numpy as np
+    from matplotlib.figure import Figure
+
+    baseline = {
+        (parameter, compound): value
+        for compound, deg, delta in (("SOFT", .24, -.4), ("MEDIUM", .20, 0), ("HARD", .15, .3))
+        for parameter, value in (("degradation", deg), ("compound_delta", delta))
+    }
+    result = SimpleNamespace(analysis_id="r13", eligible_lap_count=40, sample_count=500)
+    updates = []
+    for lap, direct in ((16, {}), (17, {"MEDIUM": .215}),
+                        (18, {"MEDIUM": .351, "HARD": .219}),
+                        (19, {"MEDIUM": .345, "HARD": .207})):
+        summary = _summary(lap)
+        summary.manifest["sampler_quality"].update(
+            architecture="live-retro", observed_compounds=list(direct)
+        )
+        # The live sampler emits no SOFT row at all in R13.
+        summary.parameters = tuple(
+            dict(row, median=direct[row["compound"]] if row["parameter"] == "degradation"
+                 else row["median"])
+            for row in summary.parameters if row["compound"] in direct
+        )
+        updates.append(_history_update(
+            summary=summary, leader_lap=lap, timestamp="2026-01-01T00:00:00Z",
+            result=result, baseline=baseline, mode="algorithm_only",
+            manual_active=False, manual_values={},
+        ))
+    history = json.loads(json.dumps({"updates": updates}))
+    for compound, expected in {
+        "SOFT": ["base", "live_derived", "live_derived", "live_derived"],
+        "MEDIUM": ["base", "live_direct", "live_direct", "live_direct"],
+        "HARD": ["base", "live_derived", "live_direct", "live_direct"],
+    }.items():
+        assert [u["compounds"][compound]["degradation"]["source"] for u in history["updates"]] == expected
+    for update in history["updates"]:
+        soft, medium, hard = [update["compounds"][c]["degradation"] for c in ("SOFT", "MEDIUM", "HARD")]
+        assert soft["effective_value"] >= medium["effective_value"] >= hard["effective_value"]
+        assert soft["effective_value"] == pytest.approx(medium["effective_value"] * 1.2)
+        assert soft["calculated_value"] is None
+        assert soft["informed"] is False
+    assert updates[1]["compounds"]["HARD"]["degradation"]["algorithm_value"] == pytest.approx(.215 * .75)
+    assert updates[2]["compounds"]["SOFT"]["degradation"]["anchor_compound"] == "MEDIUM"
+
+    figures = []
+    original = Figure.savefig
+    def capture(figure, *args, **kwargs):
+        figures.append(figure)
+        return original(figure, *args, **kwargs)
+    monkeypatch.setattr(Figure, "savefig", capture)
+    plot_live_mc_history(history, figures_dir=tmp_path, retro_tyre_estimate={})
+    lines = {line.get_label(): line for line in figures[0].axes[0].lines}
+    assert not any("assumed" in label or "informed" in label for label in lines)
+    assert lines["SOFT (base)"].get_linestyle() == ":"
+    assert lines["SOFT (live_derived)"].get_linestyle() == "--"
+    assert lines["HARD (live_direct)"].get_linestyle() == "-"
+    np.testing.assert_allclose(lines["SOFT (live_derived)"].get_ydata(),
+                               [np.nan, .258, .4212, .414], equal_nan=True)
+    np.testing.assert_allclose(lines["HARD (live_derived)"].get_ydata(),
+                               [np.nan, .16125, np.nan, np.nan], equal_nan=True)
+    # Operational figures must use the effective override, not algorithm_value.
+    value = history["updates"][2]["compounds"]["SOFT"]["degradation"]
+    value.update(effective_value=.9, effective_source="manual_override")
+    plot_live_mc_history(history, figures_dir=tmp_path, retro_tyre_estimate={})
+    lines = {line.get_label(): line for line in figures[2].axes[0].lines}
+    assert lines["SOFT (manual_override)"].get_ydata()[2] == .9
+    assert np.isnan(lines["SOFT (live_derived)"].get_ydata()[2])
