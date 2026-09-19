@@ -73,6 +73,21 @@ no manual tyre-model overrides, so the cached pre-race tyre prediction remains
 the source of compound performance and degradation values.
 The checked-in qualifying config uses a 5% push-lap threshold.
 
+Race Preparation requires the separate canonical pre-race tyre prediction
+before it creates a run or performs downstream preparation. If that event
+artifact is missing, complete the owning workflow first from `woStrategy`:
+
+```bash
+PYTHONPATH=../woData/src:src python -m wostrategy.script.tyre_prediction_pipeline --year 2026
+```
+
+Preview-image extraction remains an explicit operator/Codex step; Race
+Preparation does not invoke an image/API extractor. The complete-manual fallback
+remains available by supplying both tyre fields for SOFT, MEDIUM, and HARD under
+`tyre_prediction.manual_override`. Canonical and complete-manual values may use
+any common additive performance baseline; the shared operational boundary
+validates them and normalizes MEDIUM to zero before downstream work.
+
 Regenerate presentation artifacts without rerunning deterministic analysis:
 
 ```bash

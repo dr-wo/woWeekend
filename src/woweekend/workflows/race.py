@@ -13,9 +13,13 @@ from wodata.contracts import StrategySearchState
 from wodata.events import resolve_race_distance
 from wostrategy.algorithm.exact_strategy_search import StrategyModel, StrategyRules, search_best_compound_sequences
 from wostrategy.analysis.degradation_cutoff import calculate_degradation_cutoffs
-from wostrategy.analysis.pre_race_tyre_prediction import get_pre_race_tyre_prediction
+from wostrategy.analysis.pre_race_tyre_prediction import load_pre_race_tyre_prediction_source
 from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
-from wostrategy.model.tyre_prediction import PreRaceTyrePrediction, TyreCompoundPrediction
+from wostrategy.model.tyre_prediction import (
+    PreRaceTyrePrediction,
+    TyreCompoundPrediction,
+    canonicalize_operational_tyre_prediction,
+)
 
 from woweekend.artifacts.models import ComponentResult
 from woweekend.config.common import resolved_dict
@@ -24,11 +28,25 @@ from woweekend.reports.bundle import create_report_bundle
 from .common import create_run, finish_run, resolve_workflow_event
 
 
+class RacePreparationPrerequisiteError(RuntimeError):
+    """Raised before run creation when a pre-race input is missing or unusable."""
+
+
 def _strategy_dict(results):
     return [{"rank": item.rank, "compounds": list(item.plan.compounds), "pit_laps": list(item.plan.pit_laps), "cost": item.remaining_cost, "delta_to_best": item.delta_to_best, "formatted_strategy": item.formatted_strategy} for item in results]
 
 
-def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = get_pre_race_tyre_prediction, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None):
+def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = load_pre_race_tyre_prediction_source, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None):
+    identity = resolve_workflow_event(
+        event, config, include_race_distance=False,
+        **({"resolver": event_resolver} if event_resolver is not None else {}),
+    )
+    tyre, automatic_tyre, tyre_load_warning = _resolve_operational_tyre_prediction(
+        identity=identity,
+        config=config,
+        tyre_provider=tyre_provider,
+        tyre_refresh=tyre_refresh,
+    )
     metadata = resolve_workflow_event(
         event, config, include_race_distance=True,
         **({"resolver": event_resolver} if event_resolver is not None else {}),
@@ -113,31 +131,24 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         finish_run(run, components, status_override="FAILED")
         return run
     components["pit_loss"] = ComponentResult("SUCCESS", {"green": {**asdict(resolved.pit_loss.green), "effective_total": resolved.pit_loss.green.effective_total}, "sc_vsc": {**asdict(resolved.pit_loss.sc_vsc), "effective_total": resolved.pit_loss.sc_vsc.effective_total}, "source": "explicit_argument" if pit_loss_total is not None or pit_in_s3 is not None or pit_out_s1 is not None else "config"})
-    try:
-        tyre = tyre_provider(season=metadata.season, round_number=metadata.round_number, data_root=resolved.data_root, refresh=tyre_refresh)
-        tyre_data = tyre.to_dict() if hasattr(tyre, "to_dict") else dict(tyre)
-        run.save_json("tyre_prediction", tyre_data)
-        components["tyre_prediction"] = ComponentResult("SUCCESS", tyre_data, provenance={"owner": "woStrategy", "api": "get_pre_race_tyre_prediction"})
-    except Exception as exc:
-        try:
-            tyre = _manual_only_tyre_prediction(
-                resolved.tyre_prediction.manual_override,
-                event=metadata.event_name,
-                season=metadata.season,
-                round_number=metadata.round_number,
-            )
-        except ValueError:
-            components["tyre_prediction"] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}")
-            finish_run(run, components, status_override="FAILED")
-            return run
-        tyre_data = tyre.to_dict()
-        run.save_json("tyre_prediction", tyre_data)
+    tyre_data = tyre.to_dict() if hasattr(tyre, "to_dict") else dict(tyre)
+    run.save_json("tyre_prediction", tyre_data)
+    if tyre_load_warning is not None:
         components["tyre_prediction"] = ComponentResult(
             "SUCCESS", tyre_data,
-            warnings=[f"Automatic tyre prediction unavailable; complete manual override used ({type(exc).__name__}: {exc})."],
+            warnings=[tyre_load_warning],
             provenance={"source": "complete_manual_fallback", "automatic_load_attempted": True},
         )
-    effective_tyre = _effective_tyre_prediction(tyre, resolved.tyre_prediction.manual_override)
+    else:
+        components["tyre_prediction"] = ComponentResult(
+            "SUCCESS", tyre_data,
+            provenance={"owner": "woStrategy", "api": "get_pre_race_tyre_prediction"},
+        )
+    effective_tyre = _effective_tyre_prediction(
+        tyre,
+        resolved.tyre_prediction.manual_override,
+        automatic_tyre=automatic_tyre,
+    )
     run.save_json("tyre_prediction.effective", effective_tyre)
     components["effective_tyre_prediction"] = ComponentResult("SUCCESS", effective_tyre)
     fp_evidence = _report_fp_evidence(
@@ -187,10 +198,11 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
             components[name] = ComponentResult("SUCCESS", output, warnings=cutoff_warnings, provenance={"owner": "woStrategy"})
         except Exception as exc:
             components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}")
-    if _has_manual_override(resolved.tyre_prediction.manual_override) and tyre.provider != "complete_manual_fallback":
+    if (_has_manual_override(resolved.tyre_prediction.manual_override)
+            and automatic_tyre is not None):
         try:
             appendix = _automatic_baseline_appendix(
-                tyre=tyre, state=state,
+                tyre=automatic_tyre, state=state,
                 pit_loss=resolved.pit_loss.green.effective_total,
                 max_stops=resolved.max_stops, result_count=resolved.result_count,
                 cutoff_config=resolved.degradation_cutoff,
@@ -215,44 +227,144 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
     return run
 
 
-def _effective_tyre_prediction(tyre, overrides):
-    automatic_available = tyre.provider != "complete_manual_fallback"
+def _resolve_operational_tyre_prediction(
+    *, identity, config, tyre_provider, tyre_refresh,
+):
+    automatic_tyre = None
+    automatic_source = None
+    source_error = None
+    try:
+        automatic_source = tyre_provider(
+            season=identity.season,
+            round_number=identity.round_number,
+            data_root=config.data_root,
+            refresh=tyre_refresh,
+        )
+        automatic_tyre = canonicalize_operational_tyre_prediction(
+            automatic_source,
+            expected_season=identity.season,
+            expected_round_number=identity.round_number,
+            expected_event_id=identity.event_id,
+        )
+    except Exception as exc:
+        source_error = exc
+
+    try:
+        if automatic_tyre is None:
+            candidate = _manual_only_tyre_prediction(
+                config.tyre_prediction.manual_override,
+                event=identity.event_id,
+                season=identity.season,
+                round_number=identity.round_number,
+            )
+            effective = canonicalize_operational_tyre_prediction(
+                candidate,
+                expected_season=identity.season,
+                expected_round_number=identity.round_number,
+                expected_event_id=identity.event_id,
+            )
+        elif not _has_manual_override(config.tyre_prediction.manual_override):
+            effective = automatic_tyre
+        else:
+            candidate = _source_prediction_with_overrides(
+                automatic_source,
+                config.tyre_prediction.manual_override,
+            )
+            effective = canonicalize_operational_tyre_prediction(
+                candidate,
+                expected_season=identity.season,
+                expected_round_number=identity.round_number,
+                expected_event_id=identity.event_id,
+            )
+    except Exception as fallback_error:
+        provider_detail = (
+            f"{type(source_error).__name__}: {source_error}"
+            if source_error is not None else "canonical artifact loaded"
+        )
+        raise RacePreparationPrerequisiteError(
+            f"Cannot prepare {identity.event_name} ({identity.event_id}, round "
+            f"{identity.round_number}): the canonical pre-race tyre prediction "
+            "is missing or unusable. Complete the woStrategy tyre-prediction "
+            "prerequisite first with `PYTHONPATH=../woData/src:src python -m "
+            f"wostrategy.script.tyre_prediction_pipeline --year {identity.season}`. "
+            "This workflow will not invoke image/API extraction automatically. "
+            "Alternatively, the documented complete-manual fallback remains "
+            "available: provide performance_delta_to_medium and "
+            "degradation_seconds_per_lap for SOFT, MEDIUM, and HARD under "
+            f"tyre_prediction.manual_override. Provider result: {provider_detail}. "
+            f"Resolved input error: {type(fallback_error).__name__}: {fallback_error}"
+        ) from (source_error or fallback_error)
+
+    warning = None
+    if automatic_tyre is None:
+        warning = (
+            "Automatic tyre prediction unavailable or unusable; complete manual "
+            f"override used ({type(source_error).__name__}: {source_error})."
+        )
+    return effective, automatic_tyre, warning
+
+
+def _source_prediction_with_overrides(source_tyre, overrides):
+    """Return a copied SOURCE/RAW-gauge prediction with specified replacements."""
     compounds = {}
-    for compound, automatic in tyre.compounds.items():
+    for compound, source_value in source_tyre.compounds.items():
+        override = overrides.get(compound)
+        performance = getattr(override, "performance_delta_to_medium", None)
+        degradation = getattr(override, "degradation_seconds_per_lap", None)
+        compounds[compound] = replace(
+            source_value,
+            performance_delta_to_medium=(
+                source_value.performance_delta_to_medium
+                if performance is None else performance
+            ),
+            degradation_seconds_per_lap=(
+                source_value.degradation_seconds_per_lap
+                if degradation is None else degradation
+            ),
+        )
+    return replace(source_tyre, compounds=compounds)
+
+
+def _effective_tyre_prediction(tyre, overrides, *, automatic_tyre=None):
+    automatic_available = automatic_tyre is not None
+    compounds = {}
+    for compound, effective in tyre.compounds.items():
+        automatic = (
+            automatic_tyre.compounds[compound] if automatic_available else None
+        )
         override = overrides.get(compound)
         performance_override = getattr(override, "performance_delta_to_medium", None)
         degradation_override = getattr(override, "degradation_seconds_per_lap", None)
         compounds[compound] = {
             "performance_delta_to_medium": {
                 "automatic_value": automatic.performance_delta_to_medium if automatic_available else None,
-                "effective_value": automatic.performance_delta_to_medium if performance_override is None else performance_override,
+                "effective_value": effective.performance_delta_to_medium,
                 "source": _automatic_source_family(tyre) if performance_override is None else "manual_override",
                 "human_source": _human_source(tyre, performance_override is not None),
-                "uncertainty": automatic.performance_uncertainty,
+                "uncertainty": effective.performance_uncertainty,
             },
             "degradation_seconds_per_lap": {
                 "automatic_value": automatic.degradation_seconds_per_lap if automatic_available else None,
-                "effective_value": automatic.degradation_seconds_per_lap if degradation_override is None else degradation_override,
+                "effective_value": effective.degradation_seconds_per_lap,
                 "source": _automatic_source_family(tyre) if degradation_override is None else "manual_override",
                 "human_source": _human_source(tyre, degradation_override is not None),
-                "uncertainty": automatic.degradation_uncertainty,
+                "uncertainty": effective.degradation_uncertainty,
             },
             "prediction_domain_status": (
-                "inside_observed_descriptor_domain" if automatic.identifiable
+                "inside_observed_descriptor_domain" if effective.identifiable
                 else "descriptor_boundary_or_outside_observed_domain"
             ),
-            "diagnostics": dict(automatic.diagnostics),
+            "diagnostics": dict(effective.diagnostics),
         }
-    if abs(compounds["MEDIUM"]["performance_delta_to_medium"]["effective_value"]) > 1e-12:
-        raise ValueError("Effective MEDIUM performance delta must remain zero")
     return {
         "reference_compound": "MEDIUM",
-        "automatic_artifact_id": tyre.artifact_id if automatic_available else None,
+        "automatic_artifact_id": automatic_tyre.artifact_id if automatic_available else None,
         "manual_fallback_artifact_id": None if automatic_available else tyre.artifact_id,
-        "automatic_source_family": _automatic_source_family(tyre) if automatic_available else None,
-        "automatic_model_version": tyre.model_version,
-        "automatic_generated_at": tyre.generated_at,
-        "automatic_provenance": dict(tyre.provenance),
+        "automatic_source_family": _automatic_source_family(automatic_tyre) if automatic_available else None,
+        "automatic_model_version": automatic_tyre.model_version if automatic_available else None,
+        "automatic_generated_at": automatic_tyre.generated_at if automatic_available else None,
+        "automatic_provenance": dict(automatic_tyre.provenance) if automatic_available else {},
+        "operational_provenance": dict(tyre.provenance),
         "compounds": compounds,
     }
 
@@ -478,23 +590,14 @@ def _report_fp_evidence(*, season: int, round_number: int, data_root, tyre):
 
 def _manual_only_tyre_prediction(overrides, *, event: str, season: int, round_number: int):
     compounds = {}
-    missing = []
     for compound in ("SOFT", "MEDIUM", "HARD"):
         override = overrides.get(compound)
         performance = getattr(override, "performance_delta_to_medium", None)
         degradation = getattr(override, "degradation_seconds_per_lap", None)
-        if performance is None or degradation is None:
-            missing.append(compound)
-            continue
         compounds[compound] = TyreCompoundPrediction(
             performance_delta_to_medium=performance,
             degradation_seconds_per_lap=degradation,
             diagnostics={"source": "manual_only_fallback"},
-        )
-    if missing:
-        raise ValueError(
-            "Automatic tyre prediction is unavailable and the manual fallback is incomplete for: "
-            + ", ".join(missing)
         )
     return PreRaceTyrePrediction(
         event=event,

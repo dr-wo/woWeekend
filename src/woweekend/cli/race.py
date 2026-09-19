@@ -13,8 +13,11 @@ def main() -> None:
     raw, config = resolve_action(args, RaceConfig, workflow="race_preparation")
     if config is None:
         return
-    from woweekend.workflows.race import run_race
-    run = run_race(config, event=args.event, input_config=raw, pit_loss_total=args.pit_loss_total, pit_in_s3=args.pit_in_s3, pit_out_s1=args.pit_out_s1)
+    from woweekend.workflows.race import RacePreparationPrerequisiteError, run_race
+    try:
+        run = run_race(config, event=args.event, input_config=raw, pit_loss_total=args.pit_loss_total, pit_in_s3=args.pit_in_s3, pit_out_s1=args.pit_out_s1)
+    except RacePreparationPrerequisiteError as exc:
+        cli.error(str(exc))
     print(run.path)
 
 

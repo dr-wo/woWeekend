@@ -1,16 +1,22 @@
+import json
 from pathlib import Path
+
+import pytest
 
 from wodata.events import EventMetadata
 from wostrategy.model.tyre_prediction import PreRaceTyrePrediction, TyreCompoundPrediction
 from wodata.artifacts import write_weekend_model_config
 from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from woweekend.config.race import RaceConfig
-from woweekend.workflows.race import run_race
+from woweekend.workflows.race import RacePreparationPrerequisiteError, run_race
 
 
 def _tyres(**kwargs):
     return PreRaceTyrePrediction(
-        event="event", season=2026, round_number=1, reference_compound="MEDIUM",
+        event=f"{kwargs.get('season', 2026):04d}-{kwargs.get('round_number', 7):02d}",
+        season=kwargs.get("season", 2026),
+        round_number=kwargs.get("round_number", 7),
+        reference_compound="MEDIUM",
         compounds={
             "SOFT": TyreCompoundPrediction(-0.4, 0.2, 0.1, 0.03),
             "MEDIUM": TyreCompoundPrediction(0.0, 0.1, 0.1, 0.02),
@@ -20,12 +26,58 @@ def _tyres(**kwargs):
     )
 
 
+def _arbitrary_baseline_tyres(**kwargs):
+    tyre = _tyres(**kwargs)
+    return PreRaceTyrePrediction(
+        event=tyre.event,
+        season=tyre.season,
+        round_number=tyre.round_number,
+        reference_compound="MEDIUM",
+        compounds={
+            "SOFT": TyreCompoundPrediction(-0.2, 0.2),
+            "MEDIUM": TyreCompoundPrediction(0.3, 0.1),
+            "HARD": TyreCompoundPrediction(0.8, 0.05),
+        },
+        generated_at=tyre.generated_at,
+        provider="test",
+        artifact_id="arbitrary-baseline",
+    )
+
+
 def _ensure(**kwargs):
     return {
         "status": "reused",
         "path": str(Path(kwargs["data_root"]) / "model_config.json"),
         "producer_api": "test",
     }
+
+
+def _write_canonical_tyre_prediction(root: Path) -> None:
+    path = (
+        root / "wostrategy/tyre_prediction/schema_v1/year=2026/predictions/"
+        "round=7/prediction.json"
+    )
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({
+        "season": 2026,
+        "round": 7,
+        "event": "Test Grand Prix",
+        "prediction_timestamp": "2026-01-01T00:00:00+00:00",
+        "model": "test",
+        "prediction_fingerprint": "canonical-test-artifact",
+        "compound_allocation": {"SOFT": "C5", "MEDIUM": "C4", "HARD": "C3"},
+        "compounds": {
+            "C5": {"compound_role": "SOFT", "performance_mean": -0.4,
+                   "performance_std": 0.1, "degradation_mean": 0.2,
+                   "degradation_std": 0.03},
+            "C4": {"compound_role": "MEDIUM", "performance_mean": 0.0,
+                   "performance_std": 0.1, "degradation_mean": 0.1,
+                   "degradation_std": 0.02},
+            "C3": {"compound_role": "HARD", "performance_mean": 0.3,
+                   "performance_std": 0.1, "degradation_mean": 0.05,
+                   "degradation_std": 0.01},
+        },
+    }))
 
 
 def _event(*args, **kwargs):
@@ -63,7 +115,361 @@ def test_race_produces_both_strategy_modes_and_cutoffs(tmp_path: Path) -> None:
     assert run.load_json("strategy_unrestricted")
     compliant = run.load_json("strategy_rules_compliant")
     assert compliant and len(set(compliant[0]["compounds"])) >= 2
-    assert "primary_1_to_2" in run.load_json("cutoff_rules_compliant")
+    unrestricted = run.load_json("cutoff_unrestricted")
+    compliant_cutoff = run.load_json("cutoff_rules_compliant")
+    assert "primary_0_to_1" in unrestricted
+    assert unrestricted["cutoff_table"][0]["display_label"] == "0→1"
+    assert "primary_1_to_2" in compliant_cutoff
+    assert compliant_cutoff["primary_0_to_1"] is None
+    assert compliant_cutoff["primary_0_to_1_status"] == "unavailable_rules_compliant"
+    assert compliant_cutoff["cutoff_table"][0]["cutoff_medium_degradation"] is None
+
+
+def test_missing_tyre_prediction_fails_before_run_or_downstream_work(tmp_path: Path) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    downstream_calls = []
+
+    def ensure(**kwargs):
+        downstream_calls.append(kwargs)
+        return _ensure(**kwargs)
+
+    with pytest.raises(RacePreparationPrerequisiteError) as caught:
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            model_config_ensurer=ensure, event_resolver=_event,
+        )
+
+    message = str(caught.value)
+    assert "Test Grand Prix (2026-07, round 7)" in message
+    assert "canonical pre-race tyre prediction" in message
+    assert "wostrategy.script.tyre_prediction_pipeline --year 2026" in message
+    assert "complete-manual fallback" in message
+    assert downstream_calls == []
+    assert not list(tmp_path.rglob("manifest.json"))
+    assert not list(tmp_path.rglob("report_bundle.*"))
+
+
+def test_invalid_tyre_fails_before_race_distance_enrichment(tmp_path: Path) -> None:
+    raw = RaceConfig.template()
+    raw.update({"data_root": str(tmp_path)})
+    resolver_calls = []
+
+    def resolver(*args, include_race_distance, **kwargs):
+        resolver_calls.append(include_race_distance)
+        if include_race_distance:
+            raise AssertionError("race-distance enrichment must not run")
+        return _distance_event()
+
+    def incomplete(**kwargs):
+        return PreRaceTyrePrediction(
+            event="2026-07", season=2026, round_number=7,
+            reference_compound="MEDIUM",
+            compounds={"MEDIUM": TyreCompoundPrediction(0.0, 0.1)},
+            generated_at="now", provider="test", artifact_id="incomplete",
+        )
+
+    with pytest.raises(RacePreparationPrerequisiteError, match="SOFT, HARD"):
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            tyre_provider=incomplete, model_config_ensurer=_ensure,
+            event_resolver=resolver,
+        )
+
+    assert resolver_calls == [False]
+    assert not list(tmp_path.rglob("manifest.json"))
+
+
+def test_medium_only_canonical_artifact_is_rejected_before_run(tmp_path: Path) -> None:
+    _write_canonical_tyre_prediction(tmp_path)
+    path = (
+        tmp_path / "wostrategy/tyre_prediction/schema_v1/year=2026/predictions/"
+        "round=7/prediction.json"
+    )
+    payload = json.loads(path.read_text())
+    payload["compound_allocation"] = {"MEDIUM": "C4"}
+    payload["compounds"] = {"C4": payload["compounds"]["C4"]}
+    path.write_text(json.dumps(payload))
+    raw = RaceConfig.template()
+    raw.update({"data_root": str(tmp_path)})
+
+    with pytest.raises(RacePreparationPrerequisiteError, match="SOFT, HARD"):
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            model_config_ensurer=_ensure, event_resolver=_event,
+        )
+
+    assert not list(tmp_path.rglob("manifest.json"))
+
+
+@pytest.mark.parametrize(
+    ("compounds", "reason"),
+    [
+        ({"MEDIUM": TyreCompoundPrediction(0.0, 0.1)}, "SOFT, HARD"),
+        ({"MEDIUM": TyreCompoundPrediction(0.0, 0.1),
+          "HARD": TyreCompoundPrediction(0.3, 0.05)}, "SOFT"),
+        ({"SOFT": TyreCompoundPrediction(-0.3, 0.2),
+          "MEDIUM": TyreCompoundPrediction(0.0, 0.1)}, "HARD"),
+        ({"SOFT": TyreCompoundPrediction(float("nan"), 0.2),
+          "MEDIUM": TyreCompoundPrediction(0.0, 0.1),
+          "HARD": TyreCompoundPrediction(0.3, 0.05)}, "must be finite"),
+        ({"SOFT": TyreCompoundPrediction(-0.3, 0.2),
+          "MEDIUM": TyreCompoundPrediction(0.0, float("inf")),
+          "HARD": TyreCompoundPrediction(0.3, 0.05)}, "must be finite"),
+        ({"SOFT": TyreCompoundPrediction(-0.3, 0.2),
+          "MEDIUM": TyreCompoundPrediction(0.0, 0.1),
+          "HARD": TyreCompoundPrediction(0.3, -0.05)}, "cannot be negative"),
+    ],
+)
+def test_unusable_canonical_input_fails_before_run(
+    tmp_path: Path, compounds, reason,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"data_root": str(tmp_path)})
+
+    def provider(**kwargs):
+        return PreRaceTyrePrediction(
+            event="2026-07", season=2026, round_number=7,
+            reference_compound="MEDIUM", compounds=compounds,
+            generated_at="now", provider="test", artifact_id="invalid",
+        )
+
+    with pytest.raises(RacePreparationPrerequisiteError, match=reason):
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            tyre_provider=provider, model_config_ensurer=_ensure,
+            event_resolver=_event,
+        )
+    assert not list(tmp_path.rglob("manifest.json"))
+
+
+def test_wrong_event_tyre_input_is_prerequisite_failure(tmp_path: Path) -> None:
+    raw = RaceConfig.template()
+    raw.update({"data_root": str(tmp_path)})
+
+    def wrong_event(**kwargs):
+        tyre = _tyres(**kwargs)
+        return PreRaceTyrePrediction(
+            event="2025-01", season=2025, round_number=1,
+            reference_compound=tyre.reference_compound,
+            compounds=tyre.compounds, generated_at=tyre.generated_at,
+            provider=tyre.provider, artifact_id=tyre.artifact_id,
+        )
+
+    with pytest.raises(RacePreparationPrerequisiteError, match="season 2025"):
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            tyre_provider=wrong_event, model_config_ensurer=_ensure,
+            event_resolver=_event,
+        )
+    assert not list(tmp_path.rglob("manifest.json"))
+
+
+def test_arbitrary_canonical_baseline_is_normalized_once_downstream(tmp_path: Path) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_arbitrary_baseline_tyres, model_config_ensurer=_ensure,
+        event_resolver=_event,
+    )
+    effective = run.load_json("tyre_prediction.effective")["compounds"]
+    values = {
+        compound: row["performance_delta_to_medium"]["effective_value"]
+        for compound, row in effective.items()
+    }
+    assert values == pytest.approx({"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.5})
+    assert run.load_json("tyre_prediction")["provenance"][
+        "operational_normalization"
+    ]["input_medium_performance_baseline"] == pytest.approx(0.3)
+    assert run.load_json("strategy_unrestricted")
+
+
+@pytest.mark.parametrize(
+    ("compound", "override", "expected", "baseline"),
+    [
+        ("MEDIUM", 0.3, {"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.5}, 0.3),
+        ("MEDIUM", 0.4, {"SOFT": -0.6, "MEDIUM": 0.0, "HARD": 0.4}, 0.4),
+        ("SOFT", -0.1, {"SOFT": -0.4, "MEDIUM": 0.0, "HARD": 0.5}, 0.3),
+        ("HARD", 0.9, {"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.6}, 0.3),
+    ],
+)
+def test_partial_performance_override_is_applied_in_source_gauge(
+    tmp_path: Path, compound, override, expected, baseline,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    raw["tyre_prediction"]["manual_override"][compound][
+        "performance_delta_to_medium"
+    ] = override
+    source = _arbitrary_baseline_tyres(season=2026, round_number=7)
+    original = {
+        key: value.performance_delta_to_medium
+        for key, value in source.compounds.items()
+    }
+
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=lambda **kwargs: source, model_config_ensurer=_ensure,
+        event_resolver=_event,
+    )
+    saved = run.load_json("tyre_prediction")
+    effective = run.load_json("tyre_prediction.effective")["compounds"]
+    values = {
+        key: value["performance_delta_to_medium"]["effective_value"]
+        for key, value in effective.items()
+    }
+    automatic = {
+        key: value["performance_delta_to_medium"]["automatic_value"]
+        for key, value in effective.items()
+    }
+
+    assert values == pytest.approx(expected)
+    assert automatic == pytest.approx({"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.5})
+    assert saved["provenance"]["operational_normalization"][
+        "input_medium_performance_baseline"
+    ] == pytest.approx(baseline)
+    assert {
+        key: value.performance_delta_to_medium
+        for key, value in source.compounds.items()
+    } == original
+
+
+def test_degradation_only_override_preserves_raw_performance_baseline(
+    tmp_path: Path,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    raw["tyre_prediction"]["manual_override"]["HARD"][
+        "degradation_seconds_per_lap"
+    ] = 0.07
+    source = _arbitrary_baseline_tyres(season=2026, round_number=7)
+
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=lambda **kwargs: source, model_config_ensurer=_ensure,
+        event_resolver=_event,
+    )
+    saved = run.load_json("tyre_prediction")
+    effective = run.load_json("tyre_prediction.effective")["compounds"]
+    performance = {
+        key: value["performance_delta_to_medium"]["effective_value"]
+        for key, value in effective.items()
+    }
+    degradation = {
+        key: value["degradation_seconds_per_lap"]["effective_value"]
+        for key, value in effective.items()
+    }
+
+    assert performance == pytest.approx({"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.5})
+    assert degradation == pytest.approx({"SOFT": 0.2, "MEDIUM": 0.1, "HARD": 0.07})
+    assert saved["provenance"]["operational_normalization"][
+        "input_medium_performance_baseline"
+    ] == pytest.approx(0.3)
+    assert source.compounds["HARD"].degradation_seconds_per_lap == 0.05
+
+
+def test_complete_manual_arbitrary_baseline_uses_same_operational_contract(
+    tmp_path: Path,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    for compound, performance, degradation in (
+        ("SOFT", -0.2, 0.2), ("MEDIUM", 0.3, 0.1), ("HARD", 0.8, 0.05),
+    ):
+        raw["tyre_prediction"]["manual_override"][compound] = {
+            "performance_delta_to_medium": performance,
+            "degradation_seconds_per_lap": degradation,
+        }
+
+    def missing(**kwargs):
+        raise FileNotFoundError("missing")
+
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=missing, model_config_ensurer=_ensure,
+        event_resolver=_event,
+    )
+    effective = run.load_json("tyre_prediction.effective")["compounds"]
+    values = {
+        compound: row["performance_delta_to_medium"]["effective_value"]
+        for compound, row in effective.items()
+    }
+    assert values == pytest.approx({"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.5})
+    assert run.load_json("tyre_prediction")["provenance"][
+        "operational_normalization"
+    ]["input_medium_performance_baseline"] == pytest.approx(0.3)
+
+
+def test_incomplete_manual_fallback_uses_shared_required_field_validation(
+    tmp_path: Path,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"data_root": str(tmp_path)})
+    for compound, performance, degradation in (
+        ("SOFT", -0.2, 0.2), ("MEDIUM", 0.3, 0.1), ("HARD", 0.8, None),
+    ):
+        raw["tyre_prediction"]["manual_override"][compound] = {
+            "performance_delta_to_medium": performance,
+            "degradation_seconds_per_lap": degradation,
+        }
+
+    with pytest.raises(
+        RacePreparationPrerequisiteError,
+        match="HARD degradation_seconds_per_lap is required",
+    ):
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            tyre_provider=lambda **kwargs: (_ for _ in ()).throw(FileNotFoundError()),
+            model_config_ensurer=_ensure, event_resolver=_event,
+        )
+    assert not list(tmp_path.rglob("manifest.json"))
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "reason"),
+    [
+        ("performance_delta_to_medium", float("nan"), "must be finite"),
+        ("performance_delta_to_medium", float("inf"), "must be finite"),
+        ("degradation_seconds_per_lap", -0.01, "cannot be negative"),
+    ],
+)
+def test_complete_manual_invalid_numeric_value_fails_before_run(
+    tmp_path: Path, field, value, reason,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"data_root": str(tmp_path)})
+    for compound, performance, degradation in (
+        ("SOFT", -0.2, 0.2), ("MEDIUM", 0.3, 0.1), ("HARD", 0.8, 0.05),
+    ):
+        raw["tyre_prediction"]["manual_override"][compound] = {
+            "performance_delta_to_medium": performance,
+            "degradation_seconds_per_lap": degradation,
+        }
+    raw["tyre_prediction"]["manual_override"]["SOFT"][field] = value
+
+    with pytest.raises(RacePreparationPrerequisiteError, match=reason):
+        run_race(
+            RaceConfig.parse(raw), event="2026-07", input_config=raw,
+            tyre_provider=lambda **kwargs: (_ for _ in ()).throw(FileNotFoundError()),
+            model_config_ensurer=_ensure, event_resolver=_event,
+        )
+    assert not list(tmp_path.rglob("manifest.json"))
+
+
+def test_existing_canonical_tyre_prediction_proceeds_normally(tmp_path: Path) -> None:
+    _write_canonical_tyre_prediction(tmp_path)
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        model_config_ensurer=_ensure, event_resolver=_event,
+    )
+
+    assert run.load_json("manifest")["status"] == "SUCCESS"
+    assert run.load_json("tyre_prediction")["artifact_id"] == "canonical-test-artifact"
+    assert (run.path / "report_bundle.zh-CN.engineering").is_dir()
 
 
 def test_race_preparation_generates_missing_live_model_config(tmp_path: Path) -> None:

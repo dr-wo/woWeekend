@@ -23,6 +23,18 @@ def test_generated_config_validates() -> None:
     RaceConfig.parse(RaceConfig.template())
 
 
+def test_manual_tyre_input_allows_arbitrary_medium_baseline() -> None:
+    raw = RaceConfig.template()
+    raw["tyre_prediction"]["manual_override"]["MEDIUM"][
+        "performance_delta_to_medium"
+    ] = 0.3
+    config = RaceConfig.parse(raw)
+    assert (
+        config.tyre_prediction.manual_override["MEDIUM"].performance_delta_to_medium
+        == 0.3
+    )
+
+
 def test_whole_pit_loss_is_supported_without_sector_split() -> None:
     config = RaceConfig.parse(RaceConfig.template())
     assert config.pit_loss.green.effective_total == 20.5

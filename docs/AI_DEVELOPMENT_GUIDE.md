@@ -140,6 +140,24 @@ that the offline orchestration reproduced every operational UI interaction.
 `run_race` resolves race distance, pit loss, tyre inputs, exact strategies, and
 degradation cutoff envelopes.
 
+Before creating an immutable run, it preflights the event-specific canonical
+pre-race tyre prediction. A missing artifact stops with the event identity and
+the owning `wostrategy.script.tyre_prediction_pipeline` command. Race
+Preparation never starts preview-image/API extraction itself. A complete manual
+SOFT/MEDIUM/HARD override remains the only documented fallback.
+
+The preflight uses woStrategy's shared operational tyre contract for both cache
+and complete-manual sources. Source values may have any common additive
+performance baseline. The boundary validates event identity, complete dry-compound
+coverage, finite required values, and non-negative degradation, then subtracts
+the MEDIUM value once. The saved Race Preparation tyre artifacts are resolved
+operational representations with MEDIUM=0; the producer's raw prediction file is
+not rewritten.
+Partial manual overrides are replacements in the source/raw gauge: they are
+applied to an immutable copy of the raw prediction before the effective result
+is validated and normalized. The separately retained automatic/reference result
+is independently normalized from the same untouched raw source.
+
 Race Preparation also calls
 `wostrategy.analysis.ensure_pre_race_model_config` before strategy products are
 calculated. A valid/fresh event config is reused; otherwise the shared API runs
@@ -150,10 +168,12 @@ auditable.
 The tyre flow is:
 
 ```text
-canonical pre-race tyre artifact
-       + optional per-value manual overlays
+raw canonical pre-race tyre artifact (source gauge)
+       + optional per-value manual replacements (same source gauge)
        ↓
-effective MEDIUM-reference tyre model
+shared validation + one MEDIUM-baseline normalization
+       ↓
+effective operational MEDIUM-reference tyre model
        ↓
 unrestricted and rules-compliant exact searches
        ↓
@@ -172,7 +192,8 @@ Assumptions and compromises:
 - The rules-compliant mode currently represents the dry-compound diversity rule;
   it is not a complete FIA sporting-rules engine.
 - The adaptive cutoff scan may extend an automatic lower bound toward zero to
-  find a positive 1→2 crossing. A user-supplied lower bound is treated as hard.
+  find positive 0→1 and 1→2 crossings. A user-supplied lower bound is treated as
+  hard. Rules-compliant output marks zero-stop and 0→1 as unavailable.
 
 ## Post-Race dependency graph
 

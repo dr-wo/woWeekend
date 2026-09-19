@@ -10,6 +10,10 @@ def test_bundle_has_required_files_and_limit(tmp_path: Path) -> None:
     assert len(files) <= 20
     assert {path.name for path in files} >= {"CHATGPT_PROMPT.md", "REPORT_INSTRUCTION.md", "report_context.json", "analysis_results.json", "figure_manifest.json"}
     assert not any("telemetry" in path.name.lower() for path in files)
+    instruction = (bundle / "REPORT_INSTRUCTION.md").read_text()
+    assert "render the supplied `cutoff_table` rows" in instruction
+    assert "0→1" in instruction
+    assert "`N/A`" in instruction
 
 
 def test_report_only_uses_saved_outputs(tmp_path: Path) -> None:

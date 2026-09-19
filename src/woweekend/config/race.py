@@ -96,9 +96,6 @@ class TyrePredictionConfig:
             compound: CompoundTyreOverride.parse(raw.get(compound), path=f"tyre_prediction.manual_override.{compound}")
             for compound in ("SOFT", "MEDIUM", "HARD")
         }
-        medium = overrides["MEDIUM"].performance_delta_to_medium
-        if medium is not None and abs(medium) > 1e-12:
-            raise ValueError("MEDIUM performance_delta_to_medium must remain 0")
         return cls(overrides)
 
 
