@@ -9,7 +9,12 @@ from wodata.event_operational import (
     read_event_operational_inputs,
     write_event_operational_inputs,
 )
-from wostrategy.model.tyre_prediction import PreRaceTyrePrediction, TyreCompoundPrediction
+from wostrategy.model.tyre_prediction import (
+    RELATIVE_PERFORMANCE_FRAME,
+    PreRaceTyrePrediction,
+    TyreCompoundPrediction,
+    canonicalize_operational_tyre_prediction,
+)
 from wodata.artifacts import write_weekend_model_config
 from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from woweekend.config.race import RaceConfig
@@ -17,6 +22,7 @@ from woweekend.workflows.race import (
     RacePreparationPrerequisiteError,
     _load_previous_season_empirical_vsc,
     _load_previous_season_operational_inputs,
+    _source_prediction_with_overrides,
     run_race,
 )
 from wodata.weekend_runs import WeekendRunStore
@@ -52,6 +58,38 @@ def _arbitrary_baseline_tyres(**kwargs):
         generated_at=tyre.generated_at,
         provider="test",
         artifact_id="arbitrary-baseline",
+    )
+
+
+def _hard_reference_tyres(**kwargs):
+    tyre = _tyres(**kwargs)
+    return PreRaceTyrePrediction(
+        event=tyre.event, season=tyre.season, round_number=tyre.round_number,
+        reference_compound="HARD",
+        compounds={
+            "SOFT": TyreCompoundPrediction(-.5, .2),
+            "MEDIUM": TyreCompoundPrediction(-.2, .1),
+            "HARD": TyreCompoundPrediction(0.0, .05),
+        },
+        generated_at=tyre.generated_at, provider="test",
+        artifact_id="hard-reference", performance_frame=RELATIVE_PERFORMANCE_FRAME,
+        reference_declared=True, formal_relative_output=True,
+    )
+
+
+def _medium_reference_tyres(**kwargs):
+    tyre = _tyres(**kwargs)
+    return PreRaceTyrePrediction(
+        event=tyre.event, season=tyre.season, round_number=tyre.round_number,
+        reference_compound="MEDIUM",
+        compounds={
+            "SOFT": TyreCompoundPrediction(-.3, .2),
+            "MEDIUM": TyreCompoundPrediction(0.0, .1),
+            "HARD": TyreCompoundPrediction(.3, .05),
+        },
+        generated_at=tyre.generated_at, provider="test",
+        artifact_id="medium-reference", performance_frame=RELATIVE_PERFORMANCE_FRAME,
+        reference_declared=True, formal_relative_output=True,
     )
 
 
@@ -342,6 +380,15 @@ def test_partial_performance_override_is_applied_in_source_gauge(
     assert saved["provenance"]["operational_normalization"][
         "input_medium_performance_baseline"
     ] == pytest.approx(baseline)
+    assert saved["provenance"]["partial_override"] == {
+        "merge_frame": source.performance_frame,
+        "source_reference_compound": source.reference_compound,
+        "reference_reinferred_after_merge": False,
+        "normalized_before_merge": False,
+    }
+    assert saved["provenance"]["operational_normalization"][
+        "normalization_count"
+    ] == 1
     assert {
         key: value.performance_delta_to_medium
         for key, value in source.compounds.items()
@@ -382,6 +429,80 @@ def test_degradation_only_override_preserves_raw_performance_baseline(
     assert source.compounds["HARD"].degradation_seconds_per_lap == 0.05
 
 
+def test_partial_override_inherits_declared_source_reference_without_reinference(
+    tmp_path: Path,
+) -> None:
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    raw["tyre_prediction"]["manual_override"]["HARD"][
+        "performance_delta_to_medium"
+    ] = .1
+
+    run = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_hard_reference_tyres, model_config_ensurer=_ensure,
+        event_resolver=_event,
+    )
+    saved = run.load_json("tyre_prediction")
+    values = {
+        compound: row["performance_delta_to_medium"]
+        for compound, row in saved["compounds"].items()
+    }
+
+    assert values == pytest.approx({"SOFT": -.3, "MEDIUM": 0.0, "HARD": .3})
+    normalization = saved["provenance"]["operational_normalization"]
+    assert normalization["source_reference_compound"] == "HARD"
+    assert normalization["source_reference_selection_rule"] == "declared"
+    assert saved["provenance"]["partial_override"][
+        "reference_reinferred_after_merge"
+    ] is False
+
+
+def test_partial_medium_override_roundtrip_is_explicit_non_formal_intermediate():
+    source = _medium_reference_tyres(season=2026, round_number=7)
+    override = type("Override", (), {
+        "performance_delta_to_medium": .1,
+        "degradation_seconds_per_lap": None,
+    })()
+    intermediate = _source_prediction_with_overrides(
+        source, {"MEDIUM": override}
+    )
+
+    assert intermediate.reference_compound == "MEDIUM"
+    assert intermediate.performance_frame == RELATIVE_PERFORMANCE_FRAME
+    assert intermediate.formal_relative_output is False
+    assert {
+        name: item.performance_delta_to_medium
+        for name, item in intermediate.compounds.items()
+    } == {"SOFT": -.3, "MEDIUM": .1, "HARD": .3}
+    state = intermediate.provenance["intermediate_state"]
+    assert state["formal_relative_output"] is False
+    assert state["reference_zero_required"] is False
+    assert state["normalization_applied"] is False
+
+    roundtrip = PreRaceTyrePrediction.from_dict(
+        json.loads(json.dumps(intermediate.to_dict()))
+    )
+    assert roundtrip.reference_compound == "MEDIUM"
+    assert roundtrip.formal_relative_output is False
+    assert roundtrip.provenance["intermediate_state"] == state
+    assert roundtrip.compounds == intermediate.compounds
+
+    operational = canonicalize_operational_tyre_prediction(
+        roundtrip,
+        expected_season=2026,
+        expected_round_number=7,
+        expected_event_id="2026-07",
+    )
+    assert {
+        name: item.performance_delta_to_medium
+        for name, item in operational.compounds.items()
+    } == pytest.approx({"SOFT": -.4, "MEDIUM": 0.0, "HARD": .2})
+    assert operational.provenance["operational_normalization"][
+        "normalization_count"
+    ] == 1
+
+
 def test_complete_manual_arbitrary_baseline_uses_same_operational_contract(
     tmp_path: Path,
 ) -> None:
@@ -412,6 +533,9 @@ def test_complete_manual_arbitrary_baseline_uses_same_operational_contract(
     assert run.load_json("tyre_prediction")["provenance"][
         "operational_normalization"
     ]["input_medium_performance_baseline"] == pytest.approx(0.3)
+    assert run.load_json("tyre_prediction")["provenance"][
+        "operational_normalization"
+    ]["source_reference_selection_rule"] == "no_zero_default_medium"
 
 
 def test_incomplete_manual_fallback_uses_shared_required_field_validation(

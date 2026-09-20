@@ -37,6 +37,7 @@ def _summary(lap: int = 12):
         manifest={
             "input_fingerprint": f"through-lap-{lap}",
             "config_hash": "config",
+            "semantics": {"contract": "canonical_pace_semantics_v1"},
             "sampler_quality": {
                 "observed_compounds": ("SOFT", "MEDIUM", "HARD"),
                 "ess": 125.0,
@@ -80,6 +81,7 @@ def test_operational_override_does_not_change_calculated_history() -> None:
     assert first["effective_value"] == pytest.approx(.22)
     assert second["effective_value"] == pytest.approx(.9)
     assert second["manual_override"]["active"] is True
+    assert operational["semantics"]["contract"] == "canonical_pace_semantics_v1"
 
 
 def test_historical_override_message_is_replayable() -> None:

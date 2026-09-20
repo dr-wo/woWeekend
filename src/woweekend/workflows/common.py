@@ -39,7 +39,13 @@ def component(call: Callable[[], Any], *, provenance: dict[str, Any] | None = No
 def finish_run(run, components: dict[str, ComponentResult], *, status_override: str | None = None) -> dict[str, object]:
     results = {name: item.to_dict() for name, item in components.items()}
     run.save_json("analysis_results", results)
-    manifest = build_manifest(workflow=run.workflow, event=run.event, run_id=run.run_id, components=components)
+    manifest = build_manifest(
+        workflow=run.workflow,
+        event=run.event,
+        run_id=run.run_id,
+        components=components,
+        run_path=run.path,
+    )
     if status_override is not None:
         manifest["status"] = status_override.upper()
     run.save_manifest(manifest)

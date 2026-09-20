@@ -8,6 +8,12 @@ owned and whether `woWeekend` may call, extend, or must first extract an API.
 
 The description reflects the repository state on 2026-08-29.
 
+For pace/tyre artifact semantics, reference handling, uncertainty labels, and
+run provenance, also read
+[`../../woData/CANONICAL_PACE_CONTRACT.md`](../../woData/CANONICAL_PACE_CONTRACT.md).
+`woWeekend` preserves that contract at orchestration boundaries and does not
+reimplement the numerical models.
+
 ## Purpose and non-goals
 
 `woWeekend` turns the existing `dr-wo` analysis packages into three repeatable,
@@ -297,6 +303,18 @@ Assumptions:
 - a replay is complete only when its leader/tyre coverage reaches race distance;
 - fragmented local recordings may be merged only after event/session identity
   validation.
+
+Replay provenance separates immutable artifact identity from calculation
+identity. Full resolved-config and pre-race-tyre artifact hashes cover their
+complete contents, including descriptive metadata. The
+`effective_replay_configuration_and_control_inputs_v1` fingerprint instead
+covers the actual resolved configuration/control objects captured by
+`OfflineAnalysisService`, numeric event/mode context, effective tyre values, and
+behavior-affecting manual events. Descriptive input-source provenance, locator
+paths, and timestamps do not enter that fingerprint; the source provenance is
+retained separately. The fingerprint also does not identify the observation
+stream, sample bank, or complete historical as-run state. This remains a cutoff
+reconstruction, not a complete historical as-run claim.
 
 Compromises:
 

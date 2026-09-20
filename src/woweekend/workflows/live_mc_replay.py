@@ -28,6 +28,10 @@ from woplanner.analysis.service import (
     leader_lap_snapshots,
 )
 from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
+from woweekend.artifacts.manifest import (
+    replay_provenance,
+    resolved_model_config_provenance,
+)
 
 
 REPLAY_MODES = frozenset({"algorithm_only", "operational"})
@@ -91,6 +95,13 @@ def reconstruct_live_mc_history(
     if analysis_options:
         options.update(dict(analysis_options))
     service = analysis_service_factory(data_root)
+    effective_model_config = None
+    if hasattr(service, "live_model_config"):
+        effective_model_config = service.live_model_config(year, round_number, "R")
+    model_config_provenance = resolved_model_config_provenance(
+        model_config_provenance,
+        effective_model_config,
+    )
     snapshots = _chronological_snapshots(replay.messages)
     baseline = _pre_race_coordinates(pre_race_tyre)
     manual_state: dict[tuple[str, str], float] = {}
@@ -166,6 +177,31 @@ def reconstruct_live_mc_history(
             "Complete replay produced no successful live tyre-MC updates; " + detail
         )
 
+    captured_calculation = getattr(service, "last_live_calculation_inputs", None)
+    if not isinstance(captured_calculation, Mapping):
+        # Compatibility for injected/legacy services. Production services
+        # expose the objects captured at their actual consumption boundary.
+        captured_calculation = {
+            "architecture": str(options.get("race_baseline_architecture", "retro")),
+            "analysis_options": dict(options),
+            "model_config": dict(effective_model_config or {}),
+            "capture_status": "compatibility_fallback_service_did_not_expose_boundary",
+        }
+    effective_calculation_inputs = {
+        "event": {
+            "year": int(year),
+            "round_number": int(round_number),
+            "total_laps": int(total_laps),
+        },
+        "mode": mode,
+        "service_resolved_calculation": dict(captured_calculation),
+        "pre_race_tyre_values": _serializable_coordinates(baseline),
+        "effective_manual_override_events": (
+            _serializable_override_events(override_events)
+            if mode == "operational" else []
+        ),
+    }
+
     payload = {
         "schema_version": 1,
         "year": int(year),
@@ -201,12 +237,13 @@ def reconstruct_live_mc_history(
             },
         },
         "updates": updates,
-        "provenance": {
-            "replay_mode": mode,
-            "calculation_api": "OfflineAnalysisService.recalculate_from_live_snapshot",
-            "snapshot_api": "woplanner.analysis.service.leader_lap_snapshots",
-            "model_config": model_config_provenance,
-        },
+        "provenance": replay_provenance(
+            mode=mode,
+            model_config=model_config_provenance,
+            calculation_options=options,
+            pre_race_tyre=pre_race_tyre,
+            effective_calculation_inputs=effective_calculation_inputs,
+        ),
     }
     figures = plot_live_mc_history(
         payload,
@@ -455,6 +492,26 @@ def _pre_race_coordinates(payload: Mapping[str, Any]) -> dict[tuple[str, str], f
     return output
 
 
+def _serializable_coordinates(
+    coordinates: Mapping[tuple[str, str], float],
+) -> dict[str, dict[str, float]]:
+    output: dict[str, dict[str, float]] = {}
+    for (parameter, compound), value in sorted(coordinates.items()):
+        output.setdefault(compound, {})[parameter] = float(value)
+    return output
+
+
+def _serializable_override_events(events) -> list[dict[str, Any]]:
+    return [
+        {
+            "message_index": int(index),
+            "active": bool(active),
+            "values": _serializable_coordinates(values),
+        }
+        for index, active, values in events
+    ]
+
+
 def _history_update(
     *, summary, leader_lap, timestamp, session_time_seconds=None, result, baseline, mode,
     manual_active, manual_values
@@ -543,6 +600,7 @@ def _history_update(
             key: value for key, value in quality.items()
             if "identif" in str(key) or str(key).startswith("fuel_track_")
         },
+        "semantics": dict(summary.manifest.get("semantics") or {}),
         "provenance": {
             "input_fingerprint": summary.manifest.get("input_fingerprint"),
             "config_hash": summary.manifest.get("config_hash"),

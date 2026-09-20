@@ -22,9 +22,11 @@ from wostrategy.analysis.degradation_cutoff import calculate_degradation_cutoffs
 from wostrategy.analysis.pre_race_tyre_prediction import load_pre_race_tyre_prediction_source
 from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from wostrategy.model.tyre_prediction import (
+    COMMON_GAUGE_FRAME,
     PreRaceTyrePrediction,
     TyreCompoundPrediction,
     canonicalize_operational_tyre_prediction,
+    select_source_performance_reference,
 )
 
 from woweekend.artifacts.models import ComponentResult
@@ -505,7 +507,21 @@ def _resolve_operational_tyre_prediction(
 
 
 def _source_prediction_with_overrides(source_tyre, overrides):
-    """Return a copied SOURCE/RAW-gauge prediction with specified replacements."""
+    """Merge fields in the source gauge; the caller normalizes exactly once."""
+    provenance = dict(source_tyre.provenance)
+    selection = provenance.get("source_reference_selection")
+    if not isinstance(selection, dict):
+        reference, rule, zero_candidates = select_source_performance_reference(
+            source_tyre.compounds,
+            declared_reference=(
+                source_tyre.reference_compound
+                if source_tyre.reference_declared is True else None
+            ),
+        )
+        selection = {"rule": rule, "zero_candidates": list(zero_candidates)}
+        provenance["source_reference_selection"] = selection
+    else:
+        reference = source_tyre.reference_compound
     compounds = {}
     for compound, source_value in source_tyre.compounds.items():
         override = overrides.get(compound)
@@ -522,7 +538,27 @@ def _source_prediction_with_overrides(source_tyre, overrides):
                 if degradation is None else degradation
             ),
         )
-    return replace(source_tyre, compounds=compounds)
+    provenance["partial_override"] = {
+        "merge_frame": source_tyre.performance_frame,
+        "source_reference_compound": source_tyre.reference_compound,
+        "reference_reinferred_after_merge": False,
+        "normalized_before_merge": False,
+    }
+    provenance["intermediate_state"] = {
+        "kind": "partial_override_merged_in_source_gauge",
+        "performance_frame": source_tyre.performance_frame,
+        "reference_compound": reference,
+        "formal_relative_output": False,
+        "reference_zero_required": False,
+        "normalization_applied": False,
+    }
+    return replace(
+        source_tyre,
+        reference_compound=reference,
+        compounds=compounds,
+        provenance=provenance,
+        formal_relative_output=False,
+    )
 
 
 def _effective_tyre_prediction(tyre, overrides, *, automatic_tyre=None):
@@ -558,6 +594,12 @@ def _effective_tyre_prediction(tyre, overrides, *, automatic_tyre=None):
         }
     return {
         "reference_compound": "MEDIUM",
+        "performance_semantics": dict(
+            tyre.provenance.get("performance_semantics", {})
+        ),
+        "degradation_semantics": dict(
+            tyre.provenance.get("degradation_semantics", {})
+        ),
         "automatic_artifact_id": automatic_tyre.artifact_id if automatic_available else None,
         "manual_fallback_artifact_id": None if automatic_available else tyre.artifact_id,
         "automatic_source_family": _automatic_source_family(automatic_tyre) if automatic_available else None,
@@ -799,14 +841,25 @@ def _manual_only_tyre_prediction(overrides, *, event: str, season: int, round_nu
             degradation_seconds_per_lap=degradation,
             diagnostics={"source": "manual_only_fallback"},
         )
+    reference, selection_rule, zero_candidates = select_source_performance_reference(
+        compounds
+    )
     return PreRaceTyrePrediction(
         event=event,
         season=season,
         round_number=round_number,
-        reference_compound="MEDIUM",
+        reference_compound=reference,
         compounds=compounds,
         generated_at="manual_input",
         provider="complete_manual_fallback",
         artifact_id=f"manual-{season}-{round_number:02d}",
-        provenance={"automatic_load_attempted": True},
+        provenance={
+            "automatic_load_attempted": True,
+            "source_reference_selection": {
+                "rule": selection_rule,
+                "zero_candidates": list(zero_candidates),
+            },
+        },
+        performance_frame=COMMON_GAUGE_FRAME,
+        reference_declared=False,
     )
