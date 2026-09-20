@@ -7,10 +7,16 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
-from wodata import get_data_root
+from wodata import (
+    event_identity_from_metadata,
+    find_event_operational_inputs_by_identity,
+    get_data_root,
+    write_event_operational_inputs,
+)
 from wodata.artifacts import weekend_model_root
 from wodata.contracts import StrategySearchState
 from wodata.events import resolve_race_distance
+from wodata.weekend_runs import WeekendRunStore, weekend_runs_root
 from wostrategy.algorithm.exact_strategy_search import StrategyModel, StrategyRules, search_best_compound_sequences
 from wostrategy.analysis.degradation_cutoff import calculate_degradation_cutoffs
 from wostrategy.analysis.pre_race_tyre_prediction import load_pre_race_tyre_prediction_source
@@ -130,7 +136,63 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         components["pit_loss"] = ComponentResult("FAILED", error="Missing required green pit loss: provide either one total value or both pit_in_s3 and pit_out_s1.")
         finish_run(run, components, status_override="FAILED")
         return run
-    components["pit_loss"] = ComponentResult("SUCCESS", {"green": {**asdict(resolved.pit_loss.green), "effective_total": resolved.pit_loss.green.effective_total}, "sc_vsc": {**asdict(resolved.pit_loss.sc_vsc), "effective_total": resolved.pit_loss.sc_vsc.effective_total}, "source": "explicit_argument" if pit_loss_total is not None or pit_in_s3 is not None or pit_out_s1 is not None else "config"})
+    pit_loss_output = {
+        state: {**asdict(value), "effective_total": value.effective_total}
+        for state, value in (
+            ("green", resolved.pit_loss.green),
+            ("sc", resolved.pit_loss.sc),
+            ("vsc", resolved.pit_loss.vsc),
+            ("sc_vsc", resolved.pit_loss.sc_vsc),
+        )
+    }
+    pit_loss_output.update({
+        "source": (
+            "explicit_argument"
+            if pit_loss_total is not None or pit_in_s3 is not None or pit_out_s1 is not None
+            else "current_event_config"
+        ),
+        "legacy_sc_vsc_is_not_separate_sc_or_vsc": True,
+    })
+    components["pit_loss"] = ComponentResult("SUCCESS", pit_loss_output)
+    history_values = {
+        "season": metadata.season,
+        "round_number": metadata.round_number,
+        "total_laps": total_laps,
+        "green_pit_loss": resolved.pit_loss.green.effective_total,
+        "event_identity": event_identity_from_metadata(metadata),
+        "source": "woWeekend race preparation resolved configuration",
+        "updated_via": "woWeekend race-distance finalization",
+        "data_root": resolved.data_root,
+    }
+    for key, value in (
+        ("sc_pit_loss", resolved.pit_loss.sc.effective_total),
+        ("vsc_pit_loss", resolved.pit_loss.vsc.effective_total),
+        ("legacy_sc_vsc_pit_loss", resolved.pit_loss.sc_vsc.effective_total),
+    ):
+        if value is not None:
+            history_values[key] = value
+    try:
+        history_path = write_event_operational_inputs(**history_values)
+    except Exception as exc:
+        components["event_operational_history"] = ComponentResult(
+            "FAILED",
+            error=f"{type(exc).__name__}: {exc}",
+            provenance={"owner": "woWeekend race preparation"},
+        )
+        finish_run(run, components, status_override="FAILED")
+        return run
+    components["event_operational_history"] = ComponentResult(
+        "SUCCESS",
+        {
+            "path": str(history_path),
+            "total_laps": total_laps,
+            "event_identity": event_identity_from_metadata(metadata),
+        },
+        provenance={
+            "owner": "woWeekend race preparation",
+            "history_resolved_race_distance": False,
+        },
+    )
     tyre_data = tyre.to_dict() if hasattr(tyre, "to_dict") else dict(tyre)
     run.save_json("tyre_prediction", tyre_data)
     if tyre_load_warning is not None:
@@ -220,11 +282,149 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
             components["automatic_model_without_manual_override"] = ComponentResult(
                 "FAILED", error=f"{type(exc).__name__}: {exc}",
             )
+    historical_vsc = _load_previous_season_empirical_vsc(
+        metadata=metadata, data_root=resolved.data_root,
+    )
+    run.save_json("historical_empirical_vsc_context", historical_vsc)
+    components["historical_empirical_vsc_context"] = ComponentResult(
+        "SUCCESS",
+        historical_vsc,
+        provenance={"operational_input": False, "report_context_only": True},
+    )
+    historical_operational = _load_previous_season_operational_inputs(
+        metadata=metadata, data_root=resolved.data_root,
+    )
+    run.save_json("historical_operational_inputs_context", historical_operational)
+    components["historical_operational_inputs_context"] = ComponentResult(
+        "SUCCESS",
+        historical_operational,
+        provenance={
+            "semantic_role": "prior_event_operational_assumptions",
+            "current_calculation_input": False,
+            "report_context_only": True,
+        },
+    )
     manifest = finish_run(run, components)
-    context = {"warnings": manifest["warnings"], "tyre_uncertainty_retained": True, "strategy_central_values_only": True}
+    context = {
+        "warnings": manifest["warnings"],
+        "tyre_uncertainty_retained": True,
+        "strategy_central_values_only": True,
+        "previous_season_empirical_vsc": historical_vsc,
+        "previous_season_operational_inputs": historical_operational,
+        "historical_empirical_values_affect_current_calculations": False,
+        "historical_operational_values_affect_current_calculations": False,
+    }
     run.save_json("report_context", context)
     create_report_bundle(run_path=run.path, workflow=run.workflow, event=metadata.event_id, context=context, results={name: item.to_dict() for name, item in components.items()}, figures=figures, language=resolved.report.language, template=resolved.report.template)
     return run
+
+
+def _load_previous_season_operational_inputs(*, metadata, data_root) -> dict[str, Any]:
+    """Load prior-season operational assumptions as report-only context."""
+    identity = {
+        "event_name": metadata.event_name,
+        "official_event_name": metadata.official_event_name,
+        "country": metadata.country,
+        "location": metadata.location,
+    }
+    common = {
+        "semantic_role": "prior_event_operational_assumptions",
+        "current_calculation_input": False,
+        "report_context_only": True,
+        "empirical_observation": False,
+    }
+    if not (metadata.country and metadata.location):
+        return {
+            "status": "unavailable",
+            "reason": "stable country/location identity unavailable",
+            **common,
+        }
+    try:
+        record = find_event_operational_inputs_by_identity(
+            season=metadata.season - 1,
+            event_identity=identity,
+            data_root=data_root,
+        )
+    except ValueError as exc:
+        return {"status": "unavailable", "reason": str(exc), **common}
+    if record is None:
+        return {
+            "status": "unavailable",
+            "reason": "no previous-season same-circuit operational history",
+            **common,
+        }
+    return {
+        "status": "available",
+        "source_event": record.get("event_id"),
+        "match": {
+            "country": metadata.country,
+            "location": metadata.location,
+        },
+        "operational": record.get("operational", {}),
+        "source_provenance": record.get("provenance", {}),
+        "source_updated_at": record.get("updated_at"),
+        **common,
+    }
+
+
+def _load_previous_season_empirical_vsc(*, metadata, data_root) -> dict[str, Any]:
+    """Load prior-season same-circuit evidence without feeding calculations."""
+    identity = (metadata.country, metadata.location)
+    if not all(identity):
+        return {
+            "status": "unavailable",
+            "reason": "stable country/location identity unavailable",
+            "operational_input": False,
+        }
+    root = weekend_runs_root(data_root)
+    previous_prefix = f"event={metadata.season - 1:04d}-"
+    if not root.exists():
+        return {
+            "status": "unavailable",
+            "reason": "no previous-season post-race artifacts",
+            "operational_input": False,
+        }
+    for event_directory in sorted(root.glob(f"{previous_prefix}*")):
+        event_id = event_directory.name.removeprefix("event=")
+        try:
+            runs = WeekendRunStore.list_runs(
+                event=event_id, workflow="post_race", data_root=data_root,
+            )
+        except Exception:
+            continue
+        for prior_run in reversed(runs):
+            try:
+                prior_metadata = prior_run.load_json("event.metadata")
+                if (prior_metadata.get("country"), prior_metadata.get("location")) != identity:
+                    continue
+                empirical = prior_run.load_json("empirical_pit_loss")
+                vsc = empirical.get("vsc", {})
+                if not isinstance(vsc, dict) or vsc.get("status") != "available":
+                    return {
+                        "status": "unavailable",
+                        "reason": "previous-season event has no valid VSC pit-stop sample",
+                        "source_event": event_id,
+                        "sample_count": 0,
+                        "operational_input": False,
+                    }
+                return {
+                    "status": "available",
+                    "value": float(vsc["total"]),
+                    "source_event": event_id,
+                    "sample_count": int(vsc.get("sample_count", 0)),
+                    "samples": list(vsc.get("samples", [])),
+                    "source_run_id": prior_run.run_id,
+                    "match": {"country": identity[0], "location": identity[1]},
+                    "operational_input": False,
+                    "report_context_only": True,
+                }
+            except (FileNotFoundError, KeyError, TypeError, ValueError):
+                continue
+    return {
+        "status": "unavailable",
+        "reason": "no previous-season same-circuit empirical VSC artifact",
+        "operational_input": False,
+    }
 
 
 def _resolve_operational_tyre_prediction(

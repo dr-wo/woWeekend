@@ -75,6 +75,8 @@ For a race-preparation report, use these explicit sections:
 3. `Automatic model baseline`: explain the selected P0/D0 or other supplied source, including whether Pirelli affected allocation, descriptors, or both.
 4. `Automatic model result without manual override`: include this appendix only when the deterministic component is supplied; do not substitute FP diagnostic values.
 5. `Degradation cutoffs`: render the supplied `cutoff_table` rows, including 0→1, 1→2, and 2→3. Show an unavailable 0→1 value as `N/A` with its supplied status; never infer a crossing from the figure or sweep.
+6. `Historical VSC evidence`: when `previous_season_empirical_vsc` is available, report its empirical value, source event and sample support as context only. Explicitly state that it did not populate or alter current-event operational inputs. When unavailable, preserve the supplied reason.
+7. `Prior-event operational assumptions`: report `previous_season_operational_inputs` separately from empirical VSC evidence. Label these as the values previously adopted by the operator, not observations, and state that they did not populate or alter current-event calculations. When unavailable, preserve the supplied reason.
 
 Preserve `(default)` in human-facing fallback/default source labels. Explicitly report freshness warnings without implying that FP modified production inputs.
 """

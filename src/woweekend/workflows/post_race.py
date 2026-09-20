@@ -51,7 +51,11 @@ def _uncertainty(row: Mapping[str, Any], effective_key: str, legacy_key: str):
 def resolve_retro_pit_loss(*, empirical: Mapping[str, Any], saved_pre_race_config: Mapping[str, Any]) -> dict[str, Any]:
     pre = dict(saved_pre_race_config.get("pit_loss", {}))
     output = {}
-    for output_key, empirical_key, pre_key in (("GREEN", "normal", "green"), ("SC/VSC", "sc_vsc", "sc_vsc")):
+    for output_key, empirical_key, pre_key in (
+        ("GREEN", "normal", "green"),
+        ("SC", "sc", "sc"),
+        ("VSC", "vsc", "vsc"),
+    ):
         row = empirical.get(empirical_key)
         if isinstance(row, Mapping) and row.get("sample_count", 0) and row.get("total") is not None:
             output[output_key] = {"value": float(row["total"]), "pit_in_s3": row.get("pit_in_s3"), "pit_out_s1": row.get("pit_out_s1"), "source": "race_empirical_median", "sample_count": int(row["sample_count"])}
@@ -65,6 +69,16 @@ def resolve_retro_pit_loss(*, empirical: Mapping[str, Any], saved_pre_race_confi
             output[output_key] = {"value": float(pit_in) + float(pit_out), "pit_in_s3": float(pit_in), "pit_out_s1": float(pit_out), "source": "pre_race_fallback", "sample_count": 0}
         else:
             output[output_key] = {"value": None, "source": "unavailable", "sample_count": 0}
+    legacy = pre.get("sc_vsc", {}) if isinstance(pre.get("sc_vsc", {}), Mapping) else {}
+    legacy_total = legacy.get("effective_total", legacy.get("total"))
+    if legacy_total is None and legacy.get("pit_in_s3") is not None and legacy.get("pit_out_s1") is not None:
+        legacy_total = float(legacy["pit_in_s3"]) + float(legacy["pit_out_s1"])
+    output["LEGACY_SC_VSC"] = {
+        "value": None if legacy_total is None else float(legacy_total),
+        "source": "legacy_pre_race_context" if legacy_total is not None else "unavailable",
+        "sample_count": 0,
+        "not_separate_sc_or_vsc": True,
+    }
     return output
 
 
@@ -113,6 +127,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
     except Exception as exc:
         pre_tyre, pre_config = {}, {}
         components["pre_race_artifacts"] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}")
+    operational_total_laps = pre_config.get("resolved_total_laps") or metadata.total_laps
     # Retro MC is deliberately first: all downstream tyre comparison and
     # retrospective strategy outputs are gated on this fresh canonical result.
     calls = {
@@ -135,6 +150,10 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
             output = _jsonable(output)
             if name == "retro_tyre_estimate":
                 _validate_retro_mc_output(output)
+            elif name == "empirical_pit_loss":
+                output = _normalize_empirical_pit_loss(
+                    output, season=metadata.season, round_number=metadata.round_number,
+                )
             components[name] = ComponentResult("SUCCESS", output, provenance={"owner": "woStanding" if name == "standings" else "woStrategy", "overrides": overrides})
         except Exception as exc:
             components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}", provenance={"overrides": overrides})
@@ -143,7 +162,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
         live_provider = _default_live_mc_history
     model_config_output = None
     model_config_error = None
-    if pre_tyre and metadata.total_laps is not None:
+    if pre_tyre and operational_total_laps is not None:
         try:
             ensured = model_config_ensurer(
                 season=metadata.season,
@@ -178,7 +197,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
         components["live_mc_history"] = ComponentResult(
             "FAILED", error="The saved pre-race tyre prediction is required for live replay."
         )
-    elif metadata.total_laps is None:
+    elif operational_total_laps is None:
         components["live_mc_history"] = ComponentResult(
             "FAILED", error="The scheduled race distance is required for replay completeness."
         )
@@ -194,7 +213,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
             live_output = live_provider(
                 season=metadata.season,
                 round_number=metadata.round_number,
-                total_laps=metadata.total_laps,
+                total_laps=operational_total_laps,
                 data_root=config.data_root,
                 mode=config.live_replay.mode,
                 pre_race_tyre=pre_tyre,
@@ -239,9 +258,19 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
     empirical_value = empirical.output if empirical and empirical.status == "SUCCESS" and isinstance(empirical.output, Mapping) else {}
     pit_resolution = resolve_retro_pit_loss(empirical=empirical_value, saved_pre_race_config=pre_config)
     components["pit_loss_resolution"] = ComponentResult("SUCCESS" if any(item["value"] is not None for item in pit_resolution.values()) else "FAILED", pit_resolution, error=None if any(item["value"] is not None for item in pit_resolution.values()) else "No empirical or saved pre-race pit loss is available.")
+    operational_snapshot = {
+        "semantic_role": "current_event_operational_snapshot",
+        "source": "saved_pre_race_config.resolved",
+        "pit_loss": dict(pre_config.get("pit_loss", {})),
+        "post_race_empirical_can_overwrite": False,
+    }
+    components["operational_pit_loss_snapshot"] = ComponentResult(
+        "SUCCESS" if pre_config else "UNAVAILABLE", operational_snapshot,
+        error=None if pre_config else "Saved pre-race operational config is unavailable.",
+    )
     if (
         retro and retro.status == "SUCCESS" and isinstance(retro.output, Mapping)
-        and metadata.total_laps is not None
+        and operational_total_laps is not None
         and pit_resolution["GREEN"]["value"] is not None
     ):
         try:
@@ -249,14 +278,14 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
             if provider is not None:
                 green = provider(
                     retro_tyre_estimate=retro.output,
-                    total_laps=metadata.total_laps,
+                    total_laps=operational_total_laps,
                     green_pit_loss=pit_resolution["GREEN"]["value"],
                 )
             else:
                 from wostrategy.analysis.retro_strategy import calculate_retro_green_optimum
                 green = calculate_retro_green_optimum(
                     retro_tyre_estimate=retro.output,
-                    total_laps=metadata.total_laps,
+                    total_laps=operational_total_laps,
                     green_pit_loss=pit_resolution["GREEN"]["value"],
                 )
             if isinstance(green, Mapping):
@@ -290,11 +319,47 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
             "Final full-race Retro MC",
         ],
         "full_race_retro_is_separate_from_live_replay": True,
+        "operational_pit_loss_snapshot": operational_snapshot,
+        "empirical_pit_loss_is_evidence_only": True,
     }
     run.save_json("report_context", context)
     figures = tuple((run.path / "figures").glob("*")) if (run.path / "figures").exists() else ()
     create_report_bundle(run_path=run.path, workflow=run.workflow, event=metadata.event_id, context=context, results={name: item.to_dict() for name, item in components.items()}, figures=figures, language=config.report.language, template=config.report.template)
     return run
+
+
+def _normalize_empirical_pit_loss(
+    value: object, *, season: int, round_number: int,
+) -> dict[str, Any]:
+    output = dict(value) if isinstance(value, Mapping) else {}
+    for state in ("normal", "sc", "vsc"):
+        row = output.get(state)
+        if not isinstance(row, Mapping) or not row.get("sample_count") or row.get("total") is None:
+            output[state] = {
+                "status": "unavailable",
+                "reason": "insufficient_evidence",
+                "sample_count": 0,
+                "samples": [],
+                "statistic": "median",
+            }
+        else:
+            resolved = dict(row)
+            resolved.update({
+                "status": "available",
+                "sample_count": int(row["sample_count"]),
+                "samples": list(row.get("samples", [])),
+                "statistic": str(row.get("statistic", "median")),
+            })
+            output[state] = resolved
+    provenance = dict(output.get("provenance", {})) if isinstance(output.get("provenance"), Mapping) else {}
+    provenance.update({
+        "semantic_role": "post_race_empirical_evidence_only",
+        "operational_input": False,
+        "season": int(season),
+        "round_number": int(round_number),
+    })
+    output["provenance"] = provenance
+    return output
 
 
 def _default_live_mc_history(

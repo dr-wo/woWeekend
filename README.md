@@ -68,9 +68,10 @@ woweekend-race --validate-config race.json
 ```
 
 The repository also keeps current operator configs under `configs/`. The
-current race config is a 53-lap setup with a 23-second green-state pit loss and
-no manual tyre-model overrides, so the cached pre-race tyre prediction remains
-the source of compound performance and degradation values.
+current race config is the editable event-specific source; its race distance
+and pit-loss values must be read from the file rather than inferred from older
+run artifacts. With no manual tyre-model overrides, the cached pre-race tyre
+prediction remains the source of compound performance and degradation values.
 The checked-in qualifying config uses a 5% push-lap threshold.
 
 Race Preparation requires the separate canonical pre-race tyre prediction
@@ -134,18 +135,52 @@ The validation, legacy compatibility boundary, and deliberate freshness/runtime
 compromises are documented in
 [docs/LIVE_MC_MODEL_CONFIG_PREREQUISITE.md](docs/LIVE_MC_MODEL_CONFIG_PREREQUISITE.md).
 
-Pit loss can be supplied as one whole value; no S3/S1 split is required:
+`configs/race.json` is the editable current-event operational source for race
+distance and pit loss. Pit loss can be supplied as one whole value; no S3/S1
+split is required:
 
 ```json
 {
   "pit_loss": {
     "green": {"total": 20.5},
-    "sc_vsc": {"total": 11.3}
+    "sc": {"total": 15.0},
+    "vsc": {"total": 11.3},
+    "sc_vsc": {"total": null}
   }
 }
 ```
 
-For either state, use `total` or the `pit_in_s3` + `pit_out_s1` pair, never both.
+For each state, use `total` or the `pit_in_s3` + `pit_out_s1` pair, never both.
+`sc_vsc` is retained only to read legacy combined evidence; it is never copied
+into the separate operational SC and VSC values. Planner reads this file and
+writes it only when **Apply pit losses** is pressed. The same Apply operation
+replaces the latest event-scoped operational-history record under
+`woData/woweekend/event_operational_inputs/schema_v1/year=YYYY/round=RR/`.
+That history is a durable mirror, not a second editable source. Changing the
+current config to the next event does not erase the completed event's record.
+
+The four persistence roles are intentionally distinct: `configs/race.json` is
+the editable current operational config; a run's `config.resolved.json` is its
+immutable input snapshot; the woData event record preserves the latest/final
+operational assumptions adopted for that event; and Post-Race run artifacts
+contain empirical observations. Prior-event operational assumptions and
+empirical evidence may both appear in a future report, in separately labelled
+sections, but neither can populate current calculations or Planner fields.
+When a stable same-circuit identity is unavailable or ambiguous the report says
+so instead of guessing from a display name.
+
+An explicit `race.total_laps` is authoritative. When it is null, Race Preparation
+uses the existing canonical race-distance chain and records the resolved result
+in both that run's immutable `config.resolved.json` and the durable woData event
+record. The history writer receives this already-resolved value; it does not run
+another session lookup, and successful resolution does not require rewriting the
+editable null in `configs/race.json`.
+
+Post-Race empirical pit-loss evidence remains separate from operational history.
+For example, an event may retain an operational VSC assumption of `12.0 s` and a
+supported post-race empirical VSC result of `11.8 s`. A future report may show
+both as separately labelled previous-event context, but neither auto-fills or
+becomes the next event's operational VSC input.
 
 ## Degradation cutoff scan
 

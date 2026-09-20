@@ -10,10 +10,14 @@
   "pit_loss": {
     "_help": {
       "green": "Normal GREEN-state pit loss.",
-      "sc_vsc": "Combined SC/VSC pit loss in V1.",
+      "sc": "Manually resolved Safety Car pit loss. Null means unresolved.",
+      "vsc": "Manually resolved Virtual Safety Car pit loss. Null means unresolved.",
+      "sc_vsc": "Legacy combined SC/VSC evidence only; it is not a resolved SC or VSC value.",
       "input_forms": "For each state provide either total, or both pit_in_s3 and pit_out_s1. Units are seconds. Split total equals S3 + S1; mixing forms is rejected."
     },
     "green": {"total": 23, "pit_in_s3": null, "pit_out_s1": null},
+    "sc": {"total": null, "pit_in_s3": null, "pit_out_s1": null},
+    "vsc": {"total": null, "pit_in_s3": null, "pit_out_s1": null},
     "sc_vsc": {"total": 8.9, "pit_in_s3": null, "pit_out_s1": null}
   },
   "strategy": {

@@ -4,11 +4,22 @@ from pathlib import Path
 import pytest
 
 from wodata.events import EventMetadata
+from wodata.event_operational import (
+    find_event_operational_inputs_by_identity,
+    read_event_operational_inputs,
+    write_event_operational_inputs,
+)
 from wostrategy.model.tyre_prediction import PreRaceTyrePrediction, TyreCompoundPrediction
 from wodata.artifacts import write_weekend_model_config
 from wostrategy.analysis.pre_race_model_config import ensure_pre_race_model_config
 from woweekend.config.race import RaceConfig
-from woweekend.workflows.race import RacePreparationPrerequisiteError, run_race
+from woweekend.workflows.race import (
+    RacePreparationPrerequisiteError,
+    _load_previous_season_empirical_vsc,
+    _load_previous_season_operational_inputs,
+    run_race,
+)
+from wodata.weekend_runs import WeekendRunStore
 
 
 def _tyres(**kwargs):
@@ -82,7 +93,7 @@ def _write_canonical_tyre_prediction(root: Path) -> None:
 
 def _event(*args, **kwargs):
     return EventMetadata(
-        "2026-07", 2026, 7, "Test Grand Prix", None, None, None,
+        "2026-07", 2026, 7, "Test Grand Prix", None, "Testland", "Test Circuit",
         "conventional", False, ("Practice 1", "Qualifying", "Race"),
         "2026-01-02T12:00:00+00:00", 6, "test",
     )
@@ -92,7 +103,8 @@ def _distance_event(*, scheduled=None, session=None):
     return EventMetadata(
         event_id="2026-07", season=2026, round_number=7,
         event_name="Test Grand Prix", official_event_name=None,
-        country=None, location=None, event_format="conventional", is_sprint=False,
+        country="Testland", location="Test Circuit",
+        event_format="conventional", is_sprint=False,
         session_names=("Practice 1", "Qualifying", "Race"),
         race_start="2026-01-02T12:00:00+00:00",
         total_laps=scheduled if scheduled is not None else session,
@@ -627,20 +639,61 @@ def test_scheduled_event_laps_are_used_and_recorded(tmp_path: Path) -> None:
         "scan_min": 0.05, "scan_max": 0.15,
         "coarse_step": 0.05, "refine_tolerance": 0.01,
     }
+    write_event_operational_inputs(
+        season=2026,
+        round_number=7,
+        green_pit_loss=20.5,
+        vsc_pit_loss=12.0,
+        event_identity={"country": "Testland", "location": "Test Circuit"},
+        data_root=tmp_path,
+    )
     run = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres,
         model_config_ensurer=_ensure,
-        event_resolver=lambda *args, **kwargs: _distance_event(scheduled=6),
+        event_resolver=lambda *args, **kwargs: _distance_event(scheduled=57),
     )
     resolved = run.load_json("config.resolved")
     assert resolved["total_laps"] is None
-    assert resolved["resolved_total_laps"] == 6
+    assert resolved["resolved_total_laps"] == 57
     assert resolved["total_laps_source"] == "event_metadata"
     distance = run.load_json("race_distance")
     assert distance["source"] == "event_metadata"
     assert distance["source_detail"] == "test_metadata"
-    assert distance["total_laps"] == 6
+    assert distance["total_laps"] == 57
+    history = read_event_operational_inputs(
+        season=2026, round_number=7, data_root=tmp_path,
+    )
+    assert history["operational"]["race"]["total_laps"] == 57
+    assert history["operational"]["pit_loss"]["vsc"]["total"] == 12.0
+    assert history["event_identity"] == {
+        "country": "Testland",
+        "event_name": "Test Grand Prix",
+        "location": "Test Circuit",
+    }
+    history_component = run.load_json("analysis_results")["event_operational_history"]
+    assert history_component["status"] == "SUCCESS"
+    assert history_component["provenance"]["history_resolved_race_distance"] is False
+    historical = find_event_operational_inputs_by_identity(
+        season=2026,
+        event_identity={"country": "Testland", "location": "Test Circuit"},
+        data_root=tmp_path,
+    )
+    assert historical is not None
+    assert historical["operational"]["race"]["total_laps"] == 57
+
+    write_event_operational_inputs(
+        season=2026,
+        round_number=7,
+        vsc_pit_loss=11.5,
+        data_root=tmp_path,
+    )
+    updated = read_event_operational_inputs(
+        season=2026, round_number=7, data_root=tmp_path,
+    )
+    assert updated["operational"]["race"]["total_laps"] == 57
+    assert updated["operational"]["pit_loss"]["green"]["total"] == 20.5
+    assert updated["operational"]["pit_loss"]["vsc"]["total"] == 11.5
 
 
 def test_manual_race_laps_override_event_metadata(tmp_path: Path) -> None:
@@ -657,6 +710,10 @@ def test_manual_race_laps_override_event_metadata(tmp_path: Path) -> None:
     assert distance["source"] == "manual_override"
     assert distance["source_detail"] == "race.total_laps"
     assert distance["total_laps"] == 5
+    history = read_event_operational_inputs(
+        season=2026, round_number=7, data_root=tmp_path,
+    )
+    assert history["operational"]["race"]["total_laps"] == 5
 
 
 def test_session_laps_are_used_after_scheduled_metadata(tmp_path: Path) -> None:
@@ -696,3 +753,112 @@ def test_missing_all_race_lap_sources_fails_without_mutating_prior_run(tmp_path:
     )
     assert recovered.run_id != failed.run_id
     assert (failed.path / "manifest.json").read_bytes() == before
+
+
+def test_previous_season_vsc_is_report_context_only(tmp_path: Path) -> None:
+    write_event_operational_inputs(
+        season=2025, round_number=9, total_laps=57,
+        green_pit_loss=24.2, sc_pit_loss=None, vsc_pit_loss=12.0,
+        event_identity={"country": "Testland", "location": "Test Circuit"},
+        data_root=tmp_path,
+    )
+    prior = WeekendRunStore.create(
+        event="2025-09", workflow="post_race", data_root=tmp_path,
+        generated_at="2025-06-01T12:00:00+00:00",
+    )
+    prior.save_json("event.metadata", {"country": "Testland", "location": "Test Circuit"})
+    prior.save_json("empirical_pit_loss", {
+        "vsc": {
+            "status": "available", "total": 11.8, "sample_count": 2,
+            "samples": [{"driver": "AAA", "pit_in_lap": 20, "pit_out_lap": 21}],
+        }
+    })
+    current = EventMetadata(
+        event_id="2026-07", season=2026, round_number=7,
+        event_name="Renamed Event", official_event_name=None,
+        country="Testland", location="Test Circuit", event_format="conventional",
+        is_sprint=False, session_names=("Race",), race_start=None,
+        total_laps=6, total_laps_source="test",
+    )
+
+    context = _load_previous_season_empirical_vsc(metadata=current, data_root=tmp_path)
+    operational_context = _load_previous_season_operational_inputs(
+        metadata=current, data_root=tmp_path,
+    )
+
+    assert context["value"] == 11.8
+    assert context["source_event"] == "2025-09"
+    assert context["operational_input"] is False
+    assert operational_context["operational"]["pit_loss"]["vsc"]["total"] == 12.0
+    assert operational_context["empirical_observation"] is False
+
+    raw = RaceConfig.template()
+    raw.update({"total_laps": 6, "result_count": 2, "data_root": str(tmp_path)})
+    raw["pit_loss"]["vsc"] = {"total": 13.0}
+    first = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_tyres, model_config_ensurer=_ensure,
+        event_resolver=lambda *args, **kwargs: current,
+    )
+    write_event_operational_inputs(
+        season=2025, round_number=9, total_laps=57,
+        green_pit_loss=24.2, sc_pit_loss=None, vsc_pit_loss=10.0,
+        event_identity={"country": "Testland", "location": "Test Circuit"},
+        data_root=tmp_path,
+    )
+    revised_prior = WeekendRunStore.create(
+        event="2025-09", workflow="post_race", data_root=tmp_path,
+        generated_at="2025-06-02T12:00:00+00:00",
+    )
+    revised_prior.save_json(
+        "event.metadata", {"country": "Testland", "location": "Test Circuit"}
+    )
+    revised_prior.save_json("empirical_pit_loss", {
+        "vsc": {"status": "available", "total": 9.9, "sample_count": 1,
+                "samples": [{"driver": "BBB", "pit_in_lap": 30, "pit_out_lap": 31}]}
+    })
+    second = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_tyres, model_config_ensurer=_ensure,
+        event_resolver=lambda *args, **kwargs: current,
+    )
+
+    assert first.load_json("strategy_unrestricted") == second.load_json("strategy_unrestricted")
+    assert second.load_json("config.resolved")["pit_loss"]["vsc"]["total"] == 13.0
+    assert second.load_json("historical_empirical_vsc_context")["value"] == 9.9
+    historical_operational = second.load_json("historical_operational_inputs_context")
+    assert historical_operational["operational"]["pit_loss"]["vsc"]["total"] == 10.0
+    assert historical_operational["current_calculation_input"] is False
+    assert historical_operational["empirical_observation"] is False
+
+
+def test_real_r14_migration_record_is_discoverable_by_production_history_loader() -> None:
+    data_root = Path(__file__).resolve().parents[2] / "woData"
+    future_metadata = EventMetadata(
+        event_id="2027-14",
+        season=2027,
+        round_number=14,
+        event_name="Spanish Grand Prix",
+        official_event_name=None,
+        country="Spain",
+        location="Madrid",
+        event_format="conventional",
+        is_sprint=False,
+        session_names=("Race",),
+        race_start=None,
+        total_laps=None,
+        total_laps_source=None,
+    )
+
+    context = _load_previous_season_operational_inputs(
+        metadata=future_metadata,
+        data_root=data_root,
+    )
+
+    assert context["status"] == "available"
+    assert context["source_event"] == "2026-14"
+    assert context["operational"]["race"]["total_laps"] == 57
+    assert context["operational"]["pit_loss"]["green"]["total"] == 24.2
+    assert context["operational"]["pit_loss"]["sc"]["total"] is None
+    assert context["operational"]["pit_loss"]["vsc"]["total"] is None
+    assert context["operational"]["pit_loss"]["legacy_sc_vsc"]["total"] == 13.0

@@ -21,7 +21,21 @@ def test_comparison_is_precomputed() -> None:
 def test_pit_loss_uses_median_then_saved_fallback() -> None:
     output = resolve_retro_pit_loss(empirical={"normal": {"sample_count": 2, "total": 20.8, "pit_in_s3": 10.5, "pit_out_s1": 10.3}}, saved_pre_race_config={"pit_loss": {"green": {"pit_in_s3": 10, "pit_out_s1": 10}, "sc_vsc": {"pit_in_s3": 5.8, "pit_out_s1": 5.5}}})
     assert output["GREEN"]["source"] == "race_empirical_median"
-    assert output["SC/VSC"]["source"] == "pre_race_fallback"
+    assert output["SC"]["source"] == "unavailable"
+    assert output["VSC"]["source"] == "unavailable"
+    assert output["LEGACY_SC_VSC"]["source"] == "legacy_pre_race_context"
+    assert output["LEGACY_SC_VSC"]["not_separate_sc_or_vsc"] is True
+
+
+def test_empirical_vsc_is_separate_from_operational_vsc() -> None:
+    saved = {"pit_loss": {"vsc": {"total": 13.0}}}
+    output = resolve_retro_pit_loss(
+        empirical={"vsc": {"sample_count": 2, "total": 11.8}},
+        saved_pre_race_config=saved,
+    )
+
+    assert output["VSC"]["value"] == 11.8
+    assert saved["pit_loss"]["vsc"]["total"] == 13.0
 
 
 def _event(*args, **kwargs):
@@ -46,7 +60,10 @@ def _pre_race_run(root: Path):
             "HARD": {"performance_delta_to_medium": 0.3, "degradation_seconds_per_lap": 0.05},
         }
     })
-    run.save_json("config.resolved", {"pit_loss": {"green": {"total": 20.0}}})
+    run.save_json("config.resolved", {
+        "resolved_total_laps": 6,
+        "pit_loss": {"green": {"total": 20.0}, "vsc": {"total": 13.0}},
+    })
     run.save_manifest({"status": "SUCCESS"})
     return run
 
@@ -125,6 +142,10 @@ def test_post_generates_missing_historical_prerequisite_then_replays(tmp_path: P
     manifest = run.load_json("manifest")
     provenance = manifest["output_provenance"]["live_mc_history"]["model_config"]
     assert provenance["status"] == "generated"
+    empirical = run.load_json("empirical_pit_loss")
+    assert empirical["vsc"]["status"] == "unavailable"
+    assert empirical["vsc"]["sample_count"] == 0
+    assert empirical["provenance"]["operational_input"] is False
 
 
 def test_post_model_config_generation_failure_is_isolated(tmp_path: Path) -> None:
@@ -183,7 +204,12 @@ def test_post_dependencies_share_fresh_retro_and_trackers_cover_season(tmp_path:
             "included_rounds": [1, 2, 3], "relative_team_performance": [{"Race": 1}],
         },
         "empirical_pit_loss": lambda **kwargs: {
-            "normal": {"sample_count": 2, "total": 19.0, "pit_in_s3": 9.0, "pit_out_s1": 10.0}
+            "normal": {"sample_count": 2, "total": 19.0, "pit_in_s3": 9.0, "pit_out_s1": 10.0},
+            "vsc": {
+                "sample_count": 2, "total": 11.8, "pit_in_s3": 4.8,
+                "pit_out_s1": 7.0,
+                "samples": [{"driver": "AAA", "pit_in_lap": 20, "pit_out_lap": 21}],
+            },
         },
         "retro_green_optimum": lambda **kwargs: green_inputs.append(kwargs["retro_tyre_estimate"]) or {"strategies": [{"rank": 1}]},
         "live_mc_history": live_history,
@@ -203,6 +229,10 @@ def test_post_dependencies_share_fresh_retro_and_trackers_cover_season(tmp_path:
     assert run.load_json("qualifying_performance_tracker")["requested_rounds"] == [1, 2, 3]
     assert run.load_json("race_performance_tracker")["requested_rounds"] == [1, 2, 3]
     assert run.load_json("live_mc_history")["mode"] == "algorithm_only"
+    assert run.load_json("empirical_pit_loss")["vsc"]["total"] == 11.8
+    operational = run.load_json("operational_pit_loss_snapshot")
+    assert operational["pit_loss"]["vsc"]["total"] == 13.0
+    assert operational["post_race_empirical_can_overwrite"] is False
     bundle = next(run.path.glob("report_bundle.*"))
     assert (bundle / "figures" / "live_mc_degradation_evolution.png").exists()
     assert (bundle / "figures" / "live_mc_model_quality_evolution.png").exists()
