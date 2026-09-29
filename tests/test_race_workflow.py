@@ -22,6 +22,7 @@ from woweekend.workflows.race import (
     RacePreparationPrerequisiteError,
     _load_previous_season_empirical_vsc,
     _load_previous_season_operational_inputs,
+    _report_temperature_context,
     _source_prediction_with_overrides,
     run_race,
 )
@@ -716,7 +717,38 @@ def test_practice_evidence_is_deterministic_and_report_facing(tmp_path: Path) ->
     assert evidence["source_family"] == "fp_diagnostic"
     assert evidence["production_strategy_inputs_modified"] is False
     assert [row["status"] for row in evidence["sessions"]] == ["unavailable"] * 3
+    assert all(
+        row["temperature_context"]["status"] == "unavailable_no_tyre_evidence"
+        for row in evidence["sessions"]
+    )
     assert "physically identifiable" in evidence["confounding"][1]
+
+
+def test_report_adapter_does_not_reconstruct_legacy_or_stale_temperature():
+    legacy = _report_temperature_context(
+        None, analysis_id="fp2-current", model_available=True,
+        model_created_at="2026-09-26T12:00:00+00:00",
+    )
+    assert legacy["status"] == "legacy_provenance_unavailable"
+    stale = _report_temperature_context(
+        {"temperature_context": {
+            "status": "available", "analysis_id": "fp2-old",
+            "model_created_at": "2026-09-26T12:00:00+00:00",
+            "compound_contexts": [{"compound": "MEDIUM"}],
+        }},
+        analysis_id="fp2-current",
+        model_created_at="2026-09-26T12:00:00+00:00",
+        model_available=True,
+    )
+    assert stale["status"] == "stale_provenance_unavailable"
+    assert "compound_contexts" not in stale
+    unbound = _report_temperature_context(
+        {"temperature_context": {"status": "available"}},
+        analysis_id="fp2-current",
+        model_created_at="2026-09-26T12:00:00+00:00",
+        model_available=True,
+    )
+    assert unbound["status"] == "unavailable_unbound_provenance"
 
 
 def test_cutoff_output_includes_supported_fp_medium_markers(tmp_path: Path) -> None:
@@ -744,16 +776,84 @@ def test_cutoff_output_includes_supported_fp_medium_markers(tmp_path: Path) -> N
         })
     raw = RaceConfig.template()
     raw.update({"total_laps": 6, "data_root": str(tmp_path)})
+    baseline = run_race(
+        RaceConfig.parse(raw), event="2026-07", input_config=raw,
+        tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event,
+    )
+    unchanged_products = {
+        name: baseline.load_json(name)
+        for name in (
+            "tyre_prediction.effective",
+            "strategy_unrestricted",
+            "strategy_rules_compliant",
+            "cutoff_unrestricted",
+            "cutoff_rules_compliant",
+        )
+    }
+    (root / "fp_tyre_evidence_report.json").write_text(json.dumps({
+        "report_fingerprint": "fp-report-with-temperature",
+        "production_strategy_inputs_modified": False,
+        "temperature_context_contract": {
+            "version": 1,
+            "scope": "session_compound_supporting_laps",
+            "reporting_only": True,
+        },
+        "sessions": [{
+            "session": "FP2",
+            "temperature_context": {
+                "status": "partial",
+                "analysis_id": "fp2-analysis",
+                "model_created_at": "2026-01-01T01:00:00+00:00",
+                "coverage": {
+                    "evidence_laps": 2,
+                    "air_temp_laps": 1,
+                    "track_temp_laps": 2,
+                },
+                "compound_contexts": [{
+                    "compound": "MEDIUM",
+                    "evidence_lap_count": 2,
+                    "evidence_run_count": 1,
+                    "supporting_laps": [
+                        {"run_id": "FP2:a:1", "lap_number": 10,
+                         "air_temp_c": 25.0, "track_temp_c": 39.0},
+                        {"run_id": "FP2:a:1", "lap_number": 11,
+                         "air_temp_c": None, "track_temp_c": 40.0},
+                    ],
+                    "air_temp_c": {"status": "partial", "available_laps": 1,
+                                   "missing_laps": 1, "minimum": 25.0,
+                                   "maximum": 25.0, "unit": "degC",
+                                   "recorded_zero_observed": False},
+                    "track_temp_c": {"status": "available", "available_laps": 2,
+                                     "missing_laps": 0, "minimum": 39.0,
+                                     "maximum": 40.0, "unit": "degC",
+                                     "recorded_zero_observed": False},
+                }],
+            },
+        }],
+    }), encoding="utf-8")
     run = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres, model_config_ensurer=_ensure, event_resolver=_event,
     )
+    for name, baseline_product in unchanged_products.items():
+        assert run.load_json(name) == baseline_product
     cutoff = run.load_json("cutoff_rules_compliant")
     marker = cutoff["fp_diagnostic_medium_markers"][0]
     assert marker["session"] == "FP2"
     assert marker["medium_degradation"] == .08
     assert marker["production_input"] is False
     assert "not fully separable" in cutoff["fp_marker_limitation"]
+    practice = run.load_json("practice_tyre_evidence")
+    fp2 = next(row for row in practice["sessions"] if row["session"] == "FP2")
+    assert practice["temperature_context_contract"]["version"] == 1
+    assert fp2["temperature_context"]["coverage"] == {
+        "evidence_laps": 2,
+        "air_temp_laps": 1,
+        "track_temp_laps": 2,
+    }
+    assert fp2["temperature_context"]["compound_contexts"][0][
+        "supporting_laps"
+    ][0]["lap_number"] == 10
 
 
 def test_scheduled_event_laps_are_used_and_recorded(tmp_path: Path) -> None:

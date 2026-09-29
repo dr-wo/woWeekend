@@ -74,6 +74,16 @@ run artifacts. With no manual tyre-model overrides, the cached pre-race tyre
 prediction remains the source of compound performance and degradation values.
 The checked-in qualifying config uses a 5% push-lap threshold.
 
+Race Preparation reports the supporting FP tyre evidence with AirTemp and
+TrackTemp ranges and coverage by session and compound when report v2 provenance
+is available. This context comes from the actual supporting laps and runs and
+is reporting-only; it does not alter the tyre model, Monte Carlo results or
+strategy search. The report adapter accepts context only when its `analysis_id`
+and `model_created_at` match the current persisted model instance. Missing,
+legacy, unbound or stale provenance is shown explicitly as unavailable. Expert
+CSV temperature sampling cadence may be unknown, and a recorded zero remains
+visible and flagged.
+
 Race Preparation requires the separate canonical pre-race tyre prediction
 before it creates a run or performs downstream preparation. If that event
 artifact is missing, complete the owning workflow first from `woStrategy`:

@@ -71,7 +71,7 @@ def _instruction(language: str, template: str, workflow: str = "") -> str:
 For a race-preparation report, use these explicit sections:
 
 1. `Tyre inputs used for strategy`: lead with effective values and their exact source family. Manual overrides, when present, drive all primary conclusions.
-2. `Practice evidence`: report the supplied FP1/FP2/FP3 coordinates, support and structural-identifiability labels. State that FP is diagnostic-only and distinguish a posterior coordinate from a physically identifiable measurement.
+2. `Practice evidence`: report the supplied FP1/FP2/FP3 coordinates, support and structural-identifiability labels. Associate supplied AirTemp and TrackTemp ranges with their session/compound evidence, preserve independent coverage and unusual recorded-zero flags, and state explicitly when legacy provenance is unavailable. Do not reconstruct missing temperature context. State that FP is diagnostic-only and distinguish a posterior coordinate from a physically identifiable measurement.
 3. `Automatic model baseline`: explain the selected P0/D0 or other supplied source, including whether Pirelli affected allocation, descriptors, or both.
 4. `Automatic model result without manual override`: include this appendix only when the deterministic component is supplied; do not substitute FP diagnostic values.
 5. `Degradation cutoffs`: render the supplied `cutoff_table` rows, including 0→1, 1→2, and 2→3. Show an unavailable 0→1 value as `N/A` with its supplied status; never infer a crossing from the figure or sweep.

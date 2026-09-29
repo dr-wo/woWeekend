@@ -343,6 +343,15 @@ a figure manifest, and selected images. Numerical JSON is authoritative; images
 are presentation aids. Raw telemetry and large reusable MC tables remain outside
 the bundle.
 
+For Race Preparation, render FP AirTemp and TrackTemp only from the supplied
+`practice_tyre_evidence` temperature context for supporting sessions and
+compounds. Preserve separate field coverage and recorded-zero flags, and state
+when legacy, missing, unbound or stale provenance makes context unavailable.
+The source FP report v2 binds context to `analysis_id` plus
+`model_created_at`; expert CSV sampling cadence can be unknown. Report
+instructions must not infer weather from current filters or present this
+reporting context as an input to tyre modelling, Monte Carlo or strategy search.
+
 The hard limit is 20 files. Five structural files are reserved, leaving at most
 15 images. Image ordering is deterministic, with live-MC evolution figures
 prioritized before alphabetical fallback. Season tracker figures and normalized

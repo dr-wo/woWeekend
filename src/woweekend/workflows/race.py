@@ -747,16 +747,31 @@ def _report_fp_evidence(*, season: int, round_number: int, data_root, tyre):
     root = weekend_model_root(season, round_number, get_data_root(data_root))
     report_path = root / "fp_tyre_evidence_report.json"
     report = json.loads(report_path.read_text(encoding="utf-8")) if report_path.is_file() else {}
+    report_sessions = {
+        str(row.get("session", "")).upper(): row
+        for row in report.get("sessions", ())
+    }
     sessions = []
     timestamps = []
     for session in ("FP1", "FP2", "FP3"):
         directory = root / "sessions" / session
         parameters_path = directory / "latest_parameters.csv"
         manifest_path = directory / "manifest.json"
-        if not parameters_path.is_file():
-            sessions.append({"session": session, "status": "unavailable", "quantities": {}})
-            continue
         manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
+        temperature_context = _report_temperature_context(
+            report_sessions.get(session),
+            analysis_id=manifest.get("analysis_id"),
+            model_created_at=manifest.get("created_at"),
+            model_available=parameters_path.is_file(),
+        )
+        if not parameters_path.is_file():
+            sessions.append({
+                "session": session,
+                "status": "unavailable",
+                "quantities": {},
+                "temperature_context": temperature_context,
+            })
+            continue
         created_at = manifest.get("created_at")
         if created_at:
             timestamps.append(str(created_at))
@@ -794,6 +809,7 @@ def _report_fp_evidence(*, season: int, round_number: int, data_root, tyre):
         sessions.append({
             "session": session, "status": "available", "analysis_id": manifest.get("analysis_id"),
             "calculated_at": created_at, "quantities": quantities,
+            "temperature_context": temperature_context,
         })
     latest_fp = max(timestamps, key=lambda value: _as_utc(value)) if timestamps else None
     prediction_time = tyre.generated_at
@@ -801,6 +817,11 @@ def _report_fp_evidence(*, season: int, round_number: int, data_root, tyre):
         "source_family": "fp_diagnostic",
         "report_status": "diagnostic_only",
         "production_strategy_inputs_modified": bool(report.get("production_strategy_inputs_modified", False)),
+        "temperature_context_contract": report.get("temperature_context_contract", {
+            "version": 0,
+            "status": "legacy_report_without_temperature_context",
+            "reporting_only": True,
+        }),
         "artifact": {
             "path": str(report_path) if report_path.is_file() else None,
             "artifact_id": report.get("report_fingerprint"),
@@ -828,6 +849,57 @@ def _report_fp_evidence(*, season: int, round_number: int, data_root, tyre):
         "limitations": report.get("limitations", []),
         "performance_note": report.get("performance_note"),
     }
+
+
+def _report_temperature_context(
+    report_session, *, analysis_id, model_available, model_created_at=None
+):
+    if not model_available:
+        return {
+            "status": "unavailable_no_tyre_evidence",
+            "reason": "No current persisted tyre-evidence artifact exists for this session.",
+            "analysis_id": analysis_id,
+        }
+    if not analysis_id or not model_created_at:
+        return {
+            "status": "unavailable_unbound_provenance",
+            "reason": "The current model manifest lacks analysis_id or created_at.",
+            "analysis_id": analysis_id,
+        }
+    if not report_session or "temperature_context" not in report_session:
+        return {
+            "status": "legacy_provenance_unavailable",
+            "reason": (
+                "The source report does not persist supporting-lap temperature provenance; "
+                "current filters were not used to reconstruct it."
+            ),
+            "analysis_id": analysis_id,
+        }
+    context = dict(report_session["temperature_context"])
+    context_analysis_id = context.get("analysis_id")
+    context_created_at = context.get("model_created_at")
+    if not context_analysis_id or not context_created_at:
+        return {
+            "status": "unavailable_unbound_provenance",
+            "reason": (
+                "Persisted temperature provenance lacks analysis_id or model_created_at; "
+                "it was not attached to the current evidence."
+            ),
+            "analysis_id": analysis_id,
+        }
+    if context_analysis_id != analysis_id or context_created_at != model_created_at:
+        return {
+            "status": "stale_provenance_unavailable",
+            "reason": (
+                "Persisted temperature provenance belongs to a different model artifact instance; "
+                "it was not attached to the current evidence."
+            ),
+            "analysis_id": analysis_id,
+            "temperature_context_analysis_id": context_analysis_id,
+            "model_created_at": model_created_at,
+            "temperature_context_model_created_at": context_created_at,
+        }
+    return context
 
 
 def _manual_only_tyre_prediction(overrides, *, event: str, season: int, round_number: int):
