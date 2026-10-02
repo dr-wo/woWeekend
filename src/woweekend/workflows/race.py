@@ -16,6 +16,7 @@ from wodata import (
 from wodata.artifacts import weekend_model_root
 from wodata.contracts import StrategySearchState
 from wodata.events import resolve_race_distance
+from wodata.interruption_history import load_history
 from wodata.weekend_runs import WeekendRunStore, weekend_runs_root
 from wostrategy.algorithm.exact_strategy_search import StrategyModel, StrategyRules, search_best_compound_sequences
 from wostrategy.analysis.degradation_cutoff import calculate_degradation_cutoffs
@@ -284,6 +285,15 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
             components["automatic_model_without_manual_override"] = ComponentResult(
                 "FAILED", error=f"{type(exc).__name__}: {exc}",
             )
+    interruption_history = load_history(metadata.season, metadata.round_number, resolved.data_root)
+    run.save_json("historical_interruptions", interruption_history)
+    components["historical_interruptions"] = ComponentResult(
+        "SUCCESS", interruption_history,
+        warnings=([interruption_history.get("reason", "Historical selection incomplete")]
+                  if interruption_history["status"] != "available" else []),
+        provenance={"owner": "woStrategy", "canonical_store": "woData/wostrategy/interruption_history/schema_v1",
+                    "report_context_only": True, "current_calculation_input": False},
+    )
     historical_vsc = _load_previous_season_empirical_vsc(
         metadata=metadata, data_root=resolved.data_root,
     )
@@ -311,6 +321,7 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         "warnings": manifest["warnings"],
         "tyre_uncertainty_retained": True,
         "strategy_central_values_only": True,
+        "historical_interruptions": interruption_history,
         "previous_season_empirical_vsc": historical_vsc,
         "previous_season_operational_inputs": historical_operational,
         "historical_empirical_values_affect_current_calculations": False,

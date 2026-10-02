@@ -29,13 +29,21 @@ def create_report_bundle(
         Path(value) for value in figures
         if Path(value).exists() and Path(value).suffix.lower() in image_suffixes
     ], key=lambda path: (0 if path.name.startswith("live_mc_") else 1, path.name))
-    if len(figure_paths) + 5 > MAX_BUNDLE_FILES:
-        figure_paths = figure_paths[: MAX_BUNDLE_FILES - 5]
+    base_files = 6 if workflow == "race_preparation" else 5
+    if len(figure_paths) + base_files > MAX_BUNDLE_FILES:
+        figure_paths = figure_paths[: MAX_BUNDLE_FILES - base_files]
     (root / "figures").mkdir(parents=True)
     _write(root / "CHATGPT_PROMPT.md", _prompt(language))
     _write(root / "REPORT_INSTRUCTION.md", _instruction(language, template, workflow))
     _json(root / "report_context.json", {**dict(context), "workflow": workflow, "event": event, "language": language, "template": template})
     _json(root / "analysis_results.json", results)
+    if workflow == "race_preparation":
+        from wodata.interruption_history import unavailable_history
+        from wostrategy.analysis.interruption_history import history_markdown
+        history = context.get("historical_interruptions")
+        if not isinstance(history, Mapping):
+            history = unavailable_history(0, 0, "Historical interruption context unavailable in this legacy run")
+        _write(root / "HISTORICAL_INTERRUPTION_CONTEXT.md", history_markdown(history))
     manifest = []
     for source in figure_paths:
         destination = root / "figures" / source.name
@@ -77,6 +85,8 @@ For a race-preparation report, use these explicit sections:
 5. `Degradation cutoffs`: render the supplied `cutoff_table` rows, including 0→1, 1→2, and 2→3. Show an unavailable 0→1 value as `N/A` with its supplied status; never infer a crossing from the figure or sweep.
 6. `Historical VSC evidence`: when `previous_season_empirical_vsc` is available, report its empirical value, source event and sample support as context only. Explicitly state that it did not populate or alter current-event operational inputs. When unavailable, preserve the supplied reason.
 7. `Prior-event operational assumptions`: report `previous_season_operational_inputs` separately from empirical VSC evidence. Label these as the values previously adopted by the operator, not observations, and state that they did not populate or alter current-event calculations. When unavailable, preserve the supplied reason.
+
+8. `Historical Safety Car / Red Flag context`: include the supplied `HISTORICAL_INTERRUPTION_CONTEXT.md` table and `historical_interruptions` values. Show editions, SC periods/ranges, Red Flag occurrences/laps and unavailable coverage. Pure VSC is excluded. SC ranges cover laps active for any portion; withdrawal exactly at a lap boundary excludes the next lap. Red Flags use entry laps. Preserve minimum counts, uncertain fragments and unavailable laps; only affirmative TrackStatus integrity supports confirmed zeros. Preserve “No event observed; coverage unproven” when integrity is unknown. This is descriptive context only and does not alter strategy inputs.
 
 Preserve `(default)` in human-facing fallback/default source labels. Explicitly report freshness warnings without implying that FP modified production inputs.
 """
