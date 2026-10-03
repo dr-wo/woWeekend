@@ -42,10 +42,11 @@ def resolve_action(args, config_type: Type[Any], *, workflow: str):
         draft = getattr(args, "report_draft", None)
         bundle = run.path / f"report_bundle.{language}.engineering"
         if draft:
-            from woweekend.reports.finalize import finalize_pre_race_report
+            from woweekend.reports.finalize import finalize_pre_race_report, finalize_post_race_report
             if not bundle.exists():
                 bundle = regenerate_report_bundle(run_path=run.path, language=language)
-            output = finalize_pre_race_report(bundle_path=bundle, draft_path=draft)
+            finalize = finalize_post_race_report if workflow == "post_race" else finalize_pre_race_report
+            output = finalize(bundle_path=bundle, draft_path=draft)
         else:
             output = regenerate_report_bundle(run_path=run.path, language=language)
         print(output)

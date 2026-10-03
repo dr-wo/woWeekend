@@ -113,6 +113,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
     providers.setdefault("qualifying_performance_tracker", lambda **kwargs: _default_qualifying_performance_tracker(run.path, **kwargs))
     providers.setdefault("race_performance", lambda **kwargs: review()["race_performance"])
     providers.setdefault("race_performance_tracker", lambda **kwargs: _default_race_performance_tracker(run.path, data_root=config.data_root, **kwargs))
+    providers.setdefault("bsf_junction_reference", lambda **kwargs: _default_bsf_junction_reference(run.path, data_root=config.data_root, **kwargs))
     providers.setdefault("retro_tyre_estimate", lambda **kwargs: review()["retro_tyre_estimate"])
     providers.setdefault("empirical_pit_loss", lambda **kwargs: review()["empirical_pit_loss"])
     components: dict[str, ComponentResult] = {}
@@ -137,6 +138,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
         "qualifying_performance_tracker": ({"season": metadata.season, "round_number": metadata.round_number}, dict(config.qualifying_performance.overrides)),
         "race_performance": ({"season": metadata.season, "round_number": metadata.round_number}, dict(config.race_performance.overrides)),
         "race_performance_tracker": ({"season": metadata.season, "round_number": metadata.round_number}, dict(config.race_performance.overrides)),
+        "bsf_junction_reference": ({"season": metadata.season, "round_number": metadata.round_number}, {}),
         "empirical_pit_loss": ({"season": metadata.season, "round_number": metadata.round_number}, {}),
     }
     for name, (base, overrides) in calls.items():
@@ -146,6 +148,8 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
             components[name] = ComponentResult("FAILED", error=message)
             continue
         try:
+            if name == "bsf_junction_reference" and components["race_performance"].status != "SUCCESS":
+                raise ValueError("Current canonical race-performance producer unavailable; BSF companion unavailable")
             output = provider(**base, **overrides)
             output = _jsonable(output)
             if name == "retro_tyre_estimate":
@@ -154,9 +158,9 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
                 output = _normalize_empirical_pit_loss(
                     output, season=metadata.season, round_number=metadata.round_number,
                 )
-            components[name] = ComponentResult("SUCCESS", output, provenance={"owner": "woStanding" if name == "standings" else "woStrategy", "overrides": overrides})
+            components[name] = ComponentResult("SUCCESS", output, provenance={"owner": "woStanding" if name == "standings" else "woStrategy", "overrides": overrides, **({"experimental_companion": True, "failure_isolated": True} if name == "bsf_junction_reference" else {})})
         except Exception as exc:
-            components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}", provenance={"overrides": overrides})
+            components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}", provenance={"overrides": overrides, **({"experimental_companion": True, "failure_isolated": True, "substitute_used": False} if name == "bsf_junction_reference" else {})})
     live_provider = providers.get("live_mc_history")
     if live_provider is None and not custom_providers_supplied:
         live_provider = _default_live_mc_history
@@ -321,6 +325,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
         "full_race_retro_is_separate_from_live_replay": True,
         "operational_pit_loss_snapshot": operational_snapshot,
         "empirical_pit_loss_is_evidence_only": True,
+        "bsf_junction_reference": components["bsf_junction_reference"].to_dict(),
     }
     run.save_json("report_context", context)
     figures = tuple((run.path / "figures").glob("*")) if (run.path / "figures").exists() else ()
@@ -520,6 +525,18 @@ def _default_race_performance_tracker(
         ],
         "method": "wostrategy.script.race_performance_review.run_race_performance_review + plot_race_performance_results",
     }
+
+
+def _default_bsf_junction_reference(
+    run_path, *, season, round_number, data_root, **_kwargs,
+):
+    from wostrategy.analysis.bsf_junction.workflow import generate_bsf_season
+
+    return generate_bsf_season(
+        season=season, round_number=round_number, data_root=data_root,
+        output_dir=Path(run_path) / "bsf_junction_reference",
+        figures_dir=Path(run_path) / "figures",
+    )
 
 
 def _validate_retro_mc_output(output: Any) -> None:

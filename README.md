@@ -112,6 +112,47 @@ the recovered record lacks race distance or tyre metadata. Every leader-lap
 cut is passed to woPlanner's existing live recalculation service; Post does not
 contain another MC implementation.
 
+Post-Race also runs the frozen `projected_mean` **BSF Junction Engineering
+Reference** immediately after canonical race-performance tracker processing.
+It consumes the already persisted canonical producer inputs. The run stores
+`bsf_junction_reference/bsf_junction_reference.current.csv`,
+`bsf_junction_reference.season.csv` and `bsf_junction_reference.season.json`.
+The separate event cache in woData retains source hashes, full methodology,
+limitations, P/F/N flags and score-path provenance. Completed historical BSF
+events require compatible numerical kernels and approved source identities.
+The closed 2026 R1–R15 set can rebuild only from verified originals (R15 uses
+the original range=1–15 bank); newer producer files cannot replace it.
+Missing histories are explicitly listed and shown as
+unavailable cells. A current-event failure marks this optional component FAILED
+and the overall run PARTIAL, preserving successful canonical outputs and report
+generation. No substitute is supplied.
+
+The three run figures are `bsf_junction_reference_mercedes.png`,
+`bsf_junction_reference_minus_canonical.png` and
+`bsf_junction_reference_support.png`. The authoring bundle reserves both primary
+tracker attachments and includes `BSF_JUNCTION_REFERENCE.md` with its saved
+caption/caveats. Report instructions place this fragment immediately after the
+existing canonical long-run tracker section and before its existing next section.
+The normal authoring step still supplies the report prose; deterministic final
+assembly preserves that prose and inserts/replaces only this companion section:
+
+```bash
+woweekend-post --event 2026-15 --report-only RUN_ID --language en-GB --report-draft authored_report.md
+```
+
+Final assembly uses the successful saved component and figure manifest as the
+only authority for BSF images. Failed/unavailable companions remove old BSF
+sections and images throughout the authored draft, including supplementary
+diagnostics, while preserving unrelated figures. Only references in the final
+assembled report are copied, and assembly provenance is recorded. It never
+recalculates either estimator. BSF is an
+experimental companion/reference, not a second authoritative ranking. P means
+projected support, F canonical fallback and N prior-only completion. P is not a
+confidence grade; N has no performance-axis marker. Negative BSF values are
+faster than Mercedes in seconds/lap. This is not equal-fuel, age-zero or pure car
+performance. The full frozen method/input contract and limitations are documented
+in woStrategy's “BSF Junction Engineering Reference companion” workflow section.
+
 Race Preparation now ensures woPlanner's event-specific live-MC
 `model_config.json` exists by reusing woStrategy's canonical pre-race producer.
 Post repeats that inexpensive validation and automatically generates a missing

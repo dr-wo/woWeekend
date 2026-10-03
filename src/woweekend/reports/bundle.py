@@ -29,7 +29,19 @@ def create_report_bundle(
         Path(value) for value in figures
         if Path(value).exists() and Path(value).suffix.lower() in image_suffixes
     ], key=lambda path: (0 if workflow == "race_preparation" and path.name.startswith("traffic_history_") else 1 if path.name.startswith("live_mc_") else 2, path.name))
-    base_files = 7 if workflow == "race_preparation" else 5
+    if workflow == "post_race":
+        bsf = results.get("bsf_junction_reference", context.get("bsf_junction_reference")) or {}
+        if bsf.get("status") != "SUCCESS":
+            figure_paths = [p for p in figure_paths if not p.name.startswith("bsf_junction_reference_")]
+        # Reserve both adjacent trackers before applying the attachment budget.
+        canonical = [p for p in figure_paths if p.name == "race_performance_tracker_team_baseline.png"]
+        companion = [p for p in figure_paths if p.name == "bsf_junction_reference_mercedes.png"]
+        preferred = canonical + companion
+        figure_paths = preferred + [p for p in figure_paths if p not in preferred]
+        # PNGs are the authoring assets; vector exports remain in the run directory.
+        figure_paths = [p for p in figure_paths if not (
+            p.name.startswith("bsf_junction_reference_") and p.suffix == ".svg")]
+    base_files = 7 if workflow == "race_preparation" else 6 if workflow == "post_race" else 5
     if len(figure_paths) + base_files > MAX_BUNDLE_FILES:
         figure_paths = figure_paths[: MAX_BUNDLE_FILES - base_files]
     (root / "figures").mkdir(parents=True)
@@ -37,6 +49,12 @@ def create_report_bundle(
     _write(root / "REPORT_INSTRUCTION.md", _instruction(language, template, workflow))
     _json(root / "report_context.json", {**dict(context), "workflow": workflow, "event": event, "language": language, "template": template})
     _json(root / "analysis_results.json", results)
+    if workflow == "post_race":
+        from .bsf_junction import bsf_markdown
+        _write(root / "BSF_JUNCTION_REFERENCE.md", bsf_markdown(
+            results.get("bsf_junction_reference", context.get("bsf_junction_reference")),
+            [Path("figures") / path.name for path in figure_paths],
+        ))
     if workflow == "race_preparation":
         from wodata.interruption_history import unavailable_history
         from wostrategy.analysis.interruption_history import history_markdown
@@ -53,7 +71,14 @@ def create_report_bundle(
     for source in figure_paths:
         destination = root / "figures" / source.name
         shutil.copy2(source, destination)
-        manifest.append({"file": f"figures/{source.name}", "purpose": "supplementary deterministic figure", "labels": "English"})
+        entry = {"file": f"figures/{source.name}", "purpose": "supplementary deterministic figure", "labels": "English"}
+        if workflow == "post_race" and source.name == "bsf_junction_reference_mercedes.png":
+            from .bsf_junction import CAPTION, TITLE
+            entry.update(title=TITLE, caption=CAPTION, purpose="experimental BSF companion; canonical remains primary",
+                         placement="immediately after canonical race-performance tracker section")
+        elif workflow == "post_race" and source.name.startswith("bsf_junction_reference_"):
+            entry.update(purpose="optional BSF diagnostic/provenance; not an authoritative ranking")
+        manifest.append(entry)
     _json(root / "figure_manifest.json", {"figures": manifest})
     count = sum(1 for path in root.rglob("*") if path.is_file())
     if count > MAX_BUNDLE_FILES:
@@ -96,7 +121,11 @@ For a race-preparation report, use these explicit sections:
 
 Preserve `(default)` in human-facing fallback/default source labels. Explicitly report freshness warnings without implying that FP modified production inputs.
 """
-    return f"""# Report instruction\n\nGenerate {article} {template} report in `{language}` from the supplied deterministic artifacts. Explain the outputs, structure the narrative, compare supplied pre/post results, preserve supplied caveats and warnings, and integrate useful figures.{race}\n\nNumerical conclusions provided in JSON/CSV are authoritative. Do not derive replacement numerical conclusions from images. Do not recompute tyre degradation, select another strategy, alter cutoff values, determine sporting legality, calculate standings, or calculate unsupplied prediction errors. Clearly retain fallback provenance and unavailable components.\n"""
+    post = "" if workflow != "post_race" else """
+
+Preserve the existing canonical long-run/race-performance tracker and its section exactly; it remains the primary production performance output. Insert the supplied `BSF_JUNCTION_REFERENCE.md` section immediately after that canonical tracker section, before the existing next section. Preserve all other section order and text. Include the supplied BSF figure, compact caption and P/F/N caveats verbatim. Describe BSF only as an experimental companion/reference for inspecting differences from canonical. P is provenance, not confidence; F is canonical fallback; N is numerical completion only and is excluded from the performance axis. Do not create a second authoritative ranking, claim BSF is more accurate, or infer a physical car/driver/fuel decomposition. If unavailable, retain the supplied explicit unavailable section without substituting another figure. The diagnostic and support figures are optional supplementary assets. Final saved-output assembly is available through `woweekend-post --report-only RUN_ID --event YYYY-RR --report-draft PATH`.
+"""
+    return f"""# Report instruction\n\nGenerate {article} {template} report in `{language}` from the supplied deterministic artifacts. Explain the outputs, structure the narrative, compare supplied pre/post results, preserve supplied caveats and warnings, and integrate useful figures.{race}{post}\n\nNumerical conclusions provided in JSON/CSV are authoritative. Do not derive replacement numerical conclusions from images. Do not recompute tyre degradation, select another strategy, alter cutoff values, determine sporting legality, calculate standings, or calculate unsupplied prediction errors. Clearly retain fallback provenance and unavailable components.\n"""
 
 
 def _write(path: Path, text: str) -> None:
