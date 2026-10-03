@@ -412,3 +412,5 @@ run's saved bundle rather than canonical latest history. Output is an immutable
 `final_report.<language>.<template>/pre_race_report.md` with colocated figures and
 assembly provenance. Authoring/numerical review of the other report sections
 continues to follow the existing report-bundle process.
+
+Historical VSC five-year evidence-only policy: [M2](docs/HISTORICAL_VSC_M2.md).

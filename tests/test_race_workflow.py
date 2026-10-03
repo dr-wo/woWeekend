@@ -1019,10 +1019,17 @@ def test_previous_season_vsc_is_report_context_only(tmp_path: Path) -> None:
     raw = RaceConfig.template()
     raw.update({"total_laps": 6, "result_count": 2, "data_root": str(tmp_path)})
     raw["pit_loss"]["vsc"] = {"total": 13.0}
+    history_loads = []
+
+    def missing_history_loader(year, identity):
+        history_loads.append((year, identity["country"], identity["location"]))
+        return {"status": "no_event", "reason": "test schedule has no event"}
+
     first = run_race(
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres, model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: current,
+        historical_vsc_loader=missing_history_loader,
     )
     write_event_operational_inputs(
         season=2025, round_number=9, total_laps=57,
@@ -1045,11 +1052,18 @@ def test_previous_season_vsc_is_report_context_only(tmp_path: Path) -> None:
         RaceConfig.parse(raw), event="2026-07", input_config=raw,
         tyre_provider=_tyres, model_config_ensurer=_ensure,
         event_resolver=lambda *args, **kwargs: current,
+        historical_vsc_loader=missing_history_loader,
     )
 
     assert first.load_json("strategy_unrestricted") == second.load_json("strategy_unrestricted")
     assert second.load_json("config.resolved")["pit_loss"]["vsc"]["total"] == 13.0
-    assert second.load_json("historical_empirical_vsc_context")["value"] == 9.9
+    history = second.load_json("historical_empirical_vsc_context")
+    assert history["year_range"] == [2021, 2025]
+    assert history["years"][-1]["value_seconds"] == 9.9
+    assert history["years"][-1]["operational_input"] is False
+    assert history["candidate_available"] is False
+    assert history["apply_available"] is False
+    assert {item[0] for item in history_loads} == {2021, 2022, 2023, 2024}
     historical_operational = second.load_json("historical_operational_inputs_context")
     assert historical_operational["operational"]["pit_loss"]["vsc"]["total"] == 10.0
     assert historical_operational["current_calculation_input"] is False

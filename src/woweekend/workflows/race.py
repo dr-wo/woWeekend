@@ -33,6 +33,7 @@ from wostrategy.model.tyre_prediction import (
 from woweekend.artifacts.models import ComponentResult
 from woweekend.config.common import resolved_dict
 from woweekend.config.race import RaceConfig
+from woweekend.historical_vsc import query_historical_vsc_evidence
 from woweekend.reports.bundle import create_report_bundle
 from woweekend.reports.historical_traffic import historical_traffic_section
 from .common import create_run, finish_run, resolve_workflow_event
@@ -46,7 +47,7 @@ def _strategy_dict(results):
     return [{"rank": item.rank, "compounds": list(item.plan.compounds), "pit_laps": list(item.plan.pit_laps), "cost": item.remaining_cost, "delta_to_best": item.delta_to_best, "formatted_strategy": item.formatted_strategy} for item in results]
 
 
-def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = load_pre_race_tyre_prediction_source, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None):
+def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = load_pre_race_tyre_prediction_source, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None, historical_vsc_loader=None):
     identity = resolve_workflow_event(
         event, config, include_race_distance=False,
         **({"resolver": event_resolver} if event_resolver is not None else {}),
@@ -295,8 +296,10 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         provenance={"owner": "woStrategy", "canonical_store": "woData/wostrategy/interruption_history/schema_v1",
                     "report_context_only": True, "current_calculation_input": False},
     )
-    historical_vsc = _load_previous_season_empirical_vsc(
+    historical_vsc = query_historical_vsc_evidence(
         metadata=metadata, data_root=resolved.data_root,
+        lookback_years=resolved.historical_vsc.lookback_years,
+        missing_loader=historical_vsc_loader,
     )
     run.save_json("historical_empirical_vsc_context", historical_vsc)
     components["historical_empirical_vsc_context"] = ComponentResult(
@@ -334,7 +337,7 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         "tyre_uncertainty_retained": True,
         "strategy_central_values_only": True,
         "historical_interruptions": interruption_history,
-        "previous_season_empirical_vsc": historical_vsc,
+        "historical_vsc_evidence": historical_vsc,
         "previous_season_operational_inputs": historical_operational,
         "historical_traffic": historical_traffic,
         "historical_empirical_values_affect_current_calculations": False,
@@ -451,6 +454,7 @@ def _load_previous_season_empirical_vsc(*, metadata, data_root) -> dict[str, Any
         "reason": "no previous-season same-circuit empirical VSC artifact",
         "operational_input": False,
     }
+
 
 
 def _resolve_operational_tyre_prediction(

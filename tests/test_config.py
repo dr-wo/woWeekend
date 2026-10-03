@@ -23,6 +23,17 @@ def test_help_keys_are_ignored_and_defaults_resolve() -> None:
     config = RaceConfig.parse(raw)
     assert config.report.language == "zh-CN"
     assert config.degradation_cutoff.scan_min is None
+    assert config.historical_vsc.lookback_years == 5
+
+
+def test_historical_vsc_lookback_is_configurable_and_positive() -> None:
+    raw = RaceConfig.template()
+    raw["historical_vsc"]["lookback_years"] = 3
+    assert RaceConfig.parse(raw).historical_vsc.lookback_years == 3
+
+    raw["historical_vsc"]["lookback_years"] = 0
+    with pytest.raises(ValueError, match="must be >= 1"):
+        RaceConfig.parse(raw)
 
 
 def test_unknown_normal_field_is_rejected_with_suggestion() -> None:

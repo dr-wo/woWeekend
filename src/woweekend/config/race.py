@@ -107,6 +107,21 @@ class TyrePredictionConfig:
 
 
 @dataclass(frozen=True)
+class HistoricalVscConfig:
+    lookback_years: int = 5
+
+    @classmethod
+    def parse(cls, value: object) -> "HistoricalVscConfig":
+        data = clean_mapping(value, path="historical_vsc")
+        reject_unknown(data, {"lookback_years"}, path="historical_vsc")
+        lookback = (
+            5 if "lookback_years" not in data
+            else require_int(data, "lookback_years", path="historical_vsc")
+        )
+        return cls(lookback)
+
+
+@dataclass(frozen=True)
 class RaceConfig:
     season: int | None = None
     round_number: int | None = None
@@ -119,11 +134,12 @@ class RaceConfig:
     degradation_cutoff: CutoffConfig = CutoffConfig()
     data_root: str | None = None
     report: ReportConfig = ReportConfig()
+    historical_vsc: HistoricalVscConfig = HistoricalVscConfig()
 
     @classmethod
     def parse(cls, value: Mapping[str, Any]) -> "RaceConfig":
         data = clean_mapping(value)
-        reject_unknown(data, {"season", "round_number", "total_laps", "race", "session", "max_stops", "result_count", "strategy", "tyre_prediction", "pit_loss", "degradation_cutoff", "data_root", "report"}, path="config")
+        reject_unknown(data, {"season", "round_number", "total_laps", "race", "session", "max_stops", "result_count", "strategy", "tyre_prediction", "pit_loss", "degradation_cutoff", "data_root", "report", "historical_vsc"}, path="config")
         race_data = clean_mapping(data.get("race"), path="race")
         reject_unknown(race_data, {"total_laps"}, path="race")
         strategy_data = clean_mapping(data.get("strategy"), path="strategy")
@@ -141,8 +157,16 @@ class RaceConfig:
         result_count = int(strategy_data.get("result_count", data.get("result_count", 10)))
         if max_stops < 0 or result_count <= 0:
             raise ValueError("strategy.max_stops must be non-negative and result_count positive")
-        return cls(season, round_number, total_laps, session, max_stops, result_count, PitLossConfig.parse(data.get("pit_loss")), TyrePredictionConfig.parse(data.get("tyre_prediction")), CutoffConfig.parse(data.get("degradation_cutoff")), data.get("data_root"), ReportConfig.parse(data.get("report")))
+        return cls(
+            season=season, round_number=round_number, total_laps=total_laps,
+            session=session, max_stops=max_stops, result_count=result_count,
+            pit_loss=PitLossConfig.parse(data.get("pit_loss")),
+            tyre_prediction=TyrePredictionConfig.parse(data.get("tyre_prediction")),
+            degradation_cutoff=CutoffConfig.parse(data.get("degradation_cutoff")),
+            data_root=data.get("data_root"), report=ReportConfig.parse(data.get("report")),
+            historical_vsc=HistoricalVscConfig.parse(data.get("historical_vsc")),
+        )
 
     @staticmethod
     def template() -> dict[str, Any]:
-        return {"_help": "Race/Sprint Race preparation. Event identity comes from --event YYYY-RR. Time values are seconds.", "session": "R", "race": {"_help": {"total_laps": "Normally resolved automatically from canonical event metadata. If unavailable, FastF1 session data may be used when available. Set an integer only to manually override the detected race distance."}, "total_laps": None}, "strategy": {"_help": {"max_stops": "Maximum stop count considered by unrestricted and rules-compliant optimiser runs.", "result_count": "Number of top strategy solutions retained and written per unrestricted or rules-compliant optimiser run. Fixed-stop cutoff envelopes retain only the single best solution per stop count."}, "max_stops": 3, "result_count": 10}, "tyre_prediction": {"_help": {"manual_override": "The current cached pre-race prediction is loaded first. Any non-null value below replaces only that value for this run; remaining values and uncertainty stay automatic."}, "manual_override": {compound: {"performance_delta_to_medium": None, "degradation_seconds_per_lap": None} for compound in ("SOFT", "MEDIUM", "HARD")}}, "pit_loss": {"_help": {"green": "Manually resolved normal GREEN-state pit loss.", "sc": "Manually resolved Safety Car pit loss. Null means unresolved.", "vsc": "Manually resolved Virtual Safety Car pit loss. Null means unresolved.", "sc_vsc": "Legacy combined SC/VSC evidence only. It is never promoted to separate SC and VSC values.", "input_forms": "For each state provide either total, or both pit_in_s3 and pit_out_s1. Units are seconds. Split total equals S3 + S1; mixing both forms is rejected."}, "green": {"total": 20.5, "pit_in_s3": None, "pit_out_s1": None}, "sc": {"total": None, "pit_in_s3": None, "pit_out_s1": None}, "vsc": {"total": None, "pit_in_s3": None, "pit_out_s1": None}, "sc_vsc": {"total": None, "pit_in_s3": None, "pit_out_s1": None}}, "degradation_cutoff": {"_help": {"scan_min": "Minimum MEDIUM degradation in s/lap. Leave null for a prediction-centred automatic range that extends its lower bound toward zero when needed to find a 1→2 cutoff. An explicit value is a hard lower bound.", "scan_max": "Maximum MEDIUM degradation in s/lap; null selects automatic range.", "coarse_step": "Coarse scan step in s/lap; normally leave null.", "refine_tolerance": "Crossing refinement tolerance in s/lap; normally leave null."}, "scan_min": None, "scan_max": None, "coarse_step": None, "refine_tolerance": None}, "data_root": None, "report": {"language": "zh-CN", "template": "engineering"}}
+        return {"_help": "Race/Sprint Race preparation. Event identity comes from --event YYYY-RR. Time values are seconds.", "session": "R", "race": {"_help": {"total_laps": "Normally resolved automatically from canonical event metadata. If unavailable, FastF1 session data may be used when available. Set an integer only to manually override the detected race distance."}, "total_laps": None}, "strategy": {"_help": {"max_stops": "Maximum stop count considered by unrestricted and rules-compliant optimiser runs.", "result_count": "Number of top strategy solutions retained and written per unrestricted or rules-compliant optimiser run. Fixed-stop cutoff envelopes retain only the single best solution per stop count."}, "max_stops": 3, "result_count": 10}, "tyre_prediction": {"_help": {"manual_override": "The current cached pre-race prediction is loaded first. Any non-null value below replaces only that value for this run; remaining values and uncertainty stay automatic."}, "manual_override": {compound: {"performance_delta_to_medium": None, "degradation_seconds_per_lap": None} for compound in ("SOFT", "MEDIUM", "HARD")}}, "pit_loss": {"_help": {"green": "Manually resolved normal GREEN-state pit loss.", "sc": "Manually resolved Safety Car pit loss. Null means unresolved.", "vsc": "Manually resolved Virtual Safety Car pit loss. Null means unresolved.", "sc_vsc": "Legacy combined SC/VSC evidence only. It is never promoted to separate SC and VSC values.", "input_forms": "For each state provide either total, or both pit_in_s3 and pit_out_s1. Units are seconds. Split total equals S3 + S1; mixing both forms is rejected."}, "green": {"total": 20.5, "pit_in_s3": None, "pit_out_s1": None}, "sc": {"total": None, "pit_in_s3": None, "pit_out_s1": None}, "vsc": {"total": None, "pit_in_s3": None, "pit_out_s1": None}, "sc_vsc": {"total": None, "pit_in_s3": None, "pit_out_s1": None}}, "historical_vsc": {"_help": {"lookback_years": "Evidence-only same-circuit seasons to inspect; never populates operational inputs."}, "lookback_years": 5}, "degradation_cutoff": {"_help": {"scan_min": "Minimum MEDIUM degradation in s/lap. Leave null for a prediction-centred automatic range that extends its lower bound toward zero when needed to find a 1→2 cutoff. An explicit value is a hard lower bound.", "scan_max": "Maximum MEDIUM degradation in s/lap; null selects automatic range.", "coarse_step": "Coarse scan step in s/lap; normally leave null.", "refine_tolerance": "Crossing refinement tolerance in s/lap; normally leave null."}, "scan_min": None, "scan_max": None, "coarse_step": None, "refine_tolerance": None}, "data_root": None, "report": {"language": "zh-CN", "template": "engineering"}}

@@ -16,8 +16,17 @@ def main() -> None:
     if config is None:
         return
     from woweekend.workflows.race import RacePreparationPrerequisiteError, run_race
+    from woweekend.historical_vsc import load_single_race_vsc_evidence
     try:
-        run = run_race(config, event=args.event, input_config=raw, pit_loss_total=args.pit_loss_total, pit_in_s3=args.pit_in_s3, pit_out_s1=args.pit_out_s1)
+        run = run_race(
+            config,
+            event=args.event,
+            input_config=raw,
+            pit_loss_total=args.pit_loss_total,
+            pit_in_s3=args.pit_in_s3,
+            pit_out_s1=args.pit_out_s1,
+            historical_vsc_loader=load_single_race_vsc_evidence,
+        )
     except RacePreparationPrerequisiteError as exc:
         cli.error(str(exc))
     print(run.path)
