@@ -47,7 +47,7 @@ def _strategy_dict(results):
     return [{"rank": item.rank, "compounds": list(item.plan.compounds), "pit_laps": list(item.plan.pit_laps), "cost": item.remaining_cost, "delta_to_best": item.delta_to_best, "formatted_strategy": item.formatted_strategy} for item in results]
 
 
-def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = load_pre_race_tyre_prediction_source, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None, historical_vsc_loader=None):
+def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | None = None, pit_loss_total: float | None = None, pit_in_s3: float | None = None, pit_out_s1: float | None = None, tyre_provider: Callable[..., Any] = load_pre_race_tyre_prediction_source, tyre_refresh: Callable[[], object] | None = None, model_config_ensurer: Callable[..., Any] = ensure_pre_race_model_config, event_resolver=None, historical_vsc_loader=None, prerequisites: dict[str, Any] | None = None):
     identity = resolve_workflow_event(
         event, config, include_race_distance=False,
         **({"resolver": event_resolver} if event_resolver is not None else {}),
@@ -79,6 +79,9 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
     run = create_run(event=metadata.event_id, workflow="race_preparation", data_root=resolved.data_root, input_config=input_config or resolved_dict(config), resolved_config=resolved_payload, event_metadata=metadata)
     components: dict[str, ComponentResult] = {}
     figures = []
+    if prerequisites is not None:
+        run.save_json("pre_race_prerequisites", prerequisites)
+        components["pre_race_prerequisites"] = ComponentResult("SUCCESS", prerequisites)
     if total_laps is None:
         components["race_distance"] = ComponentResult(
             "FAILED",

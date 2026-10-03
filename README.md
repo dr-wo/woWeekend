@@ -84,20 +84,78 @@ legacy, unbound or stale provenance is shown explicitly as unavailable. Expert
 CSV temperature sampling cadence may be unknown, and a recorded zero remains
 visible and flagged.
 
-Race Preparation requires the separate canonical pre-race tyre prediction
-before it creates a run or performs downstream preparation. If that event
-artifact is missing, complete the owning workflow first from `woStrategy`:
+After manually downloading/processing the Pirelli preview with Codex, run Race
+Preparation once from the `woWeekend` checkout:
 
 ```bash
-PYTHONPATH=../woData/src:src python -m wostrategy.script.tyre_prediction_pipeline --year 2026
+woweekend-race --event 2026-16 --config configs/race.json
 ```
 
-Preview-image extraction remains an explicit operator/Codex step; Race
-Preparation does not invoke an image/API extractor. The complete-manual fallback
-remains available by supplying both tyre fields for SOFT, MEDIUM, and HARD under
-`tyre_prediction.manual_override`. Canonical and complete-manual values may use
-any common additive performance baseline; the shared operational boundary
-validates them and normalizes MEDIUM to zero before downstream work.
+The command now validates the accepted event JSON at
+`woData/pirelli_preview/year=2026/extracted/round=16.json`, ensures the event's FP
+data, prepares the tyre inputs, and then runs the existing race analysis. Its
+producer path is:
+
+1. `wodata.script.fetch_replay_data.run_fetch_replay_data` downloads/reuses raw FP
+   archives, including telemetry, under `wodata/live_archive/schema_v1/`. Replay
+   building/playback is unnecessary for the tyre model and is disabled here.
+2. `wostrategy.core.pre_race_session_data.load_cached_weekend_sessions` ensures
+   enriched, current-contract laps under `fastf1/session_laps/schema_v1/` using
+   its existing cache-first FastF1 timing/telemetry derivation. The raw replay
+   archive and the enriched analysis cache are distinct existing data products.
+3. `wostrategy.analysis.tyre_prediction_pipeline.run_tyre_prediction_pipeline`
+   uses `processed_previews_only=True`: it rebuilds the descriptor CSV from
+   processed JSONs, reads existing Race Retro summaries, and runs the unchanged
+   prediction model. It never scans/extracts preview images or invokes vision.
+   Its independent historical FP calibration refresh stays in the explicit
+   post-Retro diagnostic workflow (`refresh_fp_calibration=False` here); it is
+   not a production tyre input. Saved causal calibration remains available to
+   the existing FP evidence report, with its normal unavailable status if absent.
+4. `wostrategy.analysis.pre_race_model_config.ensure_pre_race_model_config`
+   ensures the FP evidence and live model config through the canonical
+   `wostrategy.script.pre_race_analysis.run_from_script_config` producer.
+5. The existing `run_race` loads that canonical prediction, applies configured
+   overrides, runs exact strategy search and degradation cutoffs, and creates
+   the portable report bundle. `pre_race_prerequisites.json` records acquisition
+   paths, cache sources, prediction identity and model generation/reuse.
+
+Practice sessions come from the event schedule: conventional events use FP1–FP3;
+sprint events use the practice sessions actually present. Missing required FP
+laps, unaccepted/wrong-event/changed-image Pirelli input, incomplete tyre
+predictions, and unusable FP model evidence stop at their stage before race-run
+creation. The command exits nonzero on failure. Config generation/validation and
+`--report-only` do not acquire data or run prerequisites.
+
+Reruns reuse woData archives and compatible enriched laps, retain fingerprinted
+tyre prediction versions, and reuse fresh FP model artifacts. Each race analysis
+still creates its normal immutable run. The shared data root follows `data_root`,
+`WODATA_ROOT`, `WOSTRATEGY_DATA_ROOT`, then the sibling `woData` checkout.
+
+The human-authored inputs are accepted processed Pirelli JSONs and event-specific
+GREEN pit loss, supplied directly in `pit_loss.green` or through the same
+`woweekend-race` invocation's `--pit-loss-total` / `--pit-in-s3` and `--pit-out-s1`
+options. There is no separate pit-loss preparation command. An explicit
+`race.total_laps` input is needed only when canonical metadata and FastF1 cannot
+resolve the distance. Pirelli download/extraction/processing stays external.
+
+Historical Race Retro summaries and accepted historical Pirelli records are
+accumulated training support from completed events, not a target-event pre-race
+command to run. Their Race evidence cannot be manufactured by another pre-race
+invocation. The orchestrator already extracts observations from saved summaries,
+joins the training data, checks model readiness, and produces the target tyre
+prediction. Insufficient historical support remains a data-quality blocker with
+a clear tyre-stage failure; historical Retro production stays unchanged.
+
+No additional required per-event manual command remains between Pirelli
+processing and `woweekend-race`. Optional Historical Traffic, interruption-history
+acquisition, and historical FP calibration remain their explicit diagnostic
+workflows; they are not required generated prerequisites of this command.
+
+`tyre_prediction.manual_override` continues to override the automatically
+prepared values. Embedded callers of `run_race` also retain the complete-manual
+fallback by supplying both tyre fields for SOFT, MEDIUM, and HARD. Canonical and
+complete-manual values may use any common additive performance baseline; the
+shared operational boundary validates them and normalizes MEDIUM to zero.
 
 Regenerate presentation artifacts without rerunning deterministic analysis:
 

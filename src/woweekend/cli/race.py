@@ -1,12 +1,13 @@
 from __future__ import annotations
 from pathlib import Path
+from dataclasses import replace
 
 from woweekend.config.race import RaceConfig
 from .common import parser, resolve_action
 
 
 def main() -> None:
-    cli = parser("Run Race/Sprint Race preparation independently.")
+    cli = parser("Fetch FP data and run pre-race tyre/race preparation using manually processed Pirelli input.")
     cli.add_argument("--pit-loss-total", type=float, help="Explicit whole GREEN pit loss in seconds; overrides JSON.")
     cli.add_argument("--pit-in-s3", type=float, help="Explicit green pit-in S3 loss (seconds); overrides JSON.")
     cli.add_argument("--pit-out-s1", type=float, help="Explicit green pit-out S1 loss (seconds); overrides JSON.")
@@ -16,20 +17,24 @@ def main() -> None:
     if config is None:
         return
     from woweekend.workflows.race import RacePreparationPrerequisiteError, run_race
+    from woweekend.workflows.race_prerequisites import prepare_race_prerequisites
     from woweekend.historical_vsc import load_single_race_vsc_evidence
     try:
+        prerequisites = prepare_race_prerequisites(config, event=args.event)
+        config = replace(config, data_root=prerequisites["data_root"])
         run = run_race(
-            config,
-            event=args.event,
-            input_config=raw,
-            pit_loss_total=args.pit_loss_total,
-            pit_in_s3=args.pit_in_s3,
-            pit_out_s1=args.pit_out_s1,
+            config, event=args.event, input_config=raw,
+            pit_loss_total=args.pit_loss_total, pit_in_s3=args.pit_in_s3,
+            pit_out_s1=args.pit_out_s1, prerequisites=prerequisites,
+            model_config_ensurer=lambda **kwargs: prerequisites["live_mc_model_config"],
             historical_vsc_loader=load_single_race_vsc_evidence,
         )
     except RacePreparationPrerequisiteError as exc:
         cli.error(str(exc))
     print(run.path)
+    manifest = run.load_json("manifest")
+    if manifest["status"] == "FAILED":
+        cli.error("Race preparation failed: " + "; ".join(manifest.get("warnings", ())))
     if args.report_draft:
         from woweekend.reports.finalize import finalize_pre_race_report
         output = finalize_pre_race_report(
