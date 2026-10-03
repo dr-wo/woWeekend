@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pathlib import Path
 
 from woweekend.config.race import RaceConfig
 from .common import parser, resolve_action
@@ -9,6 +10,7 @@ def main() -> None:
     cli.add_argument("--pit-loss-total", type=float, help="Explicit whole GREEN pit loss in seconds; overrides JSON.")
     cli.add_argument("--pit-in-s3", type=float, help="Explicit green pit-in S3 loss (seconds); overrides JSON.")
     cli.add_argument("--pit-out-s1", type=float, help="Explicit green pit-out S1 loss (seconds); overrides JSON.")
+    cli.add_argument("--report-draft", type=Path, help="Assemble an authored pre-race Markdown report with saved Historical Traffic immediately before Limitations. Also usable with --report-only.")
     args = cli.parse_args()
     raw, config = resolve_action(args, RaceConfig, workflow="race_preparation")
     if config is None:
@@ -19,6 +21,13 @@ def main() -> None:
     except RacePreparationPrerequisiteError as exc:
         cli.error(str(exc))
     print(run.path)
+    if args.report_draft:
+        from woweekend.reports.finalize import finalize_pre_race_report
+        output = finalize_pre_race_report(
+            bundle_path=run.path / f"report_bundle.{config.report.language}.{config.report.template}",
+            draft_path=args.report_draft,
+        )
+        print(output)
 
 
 if __name__ == "__main__":

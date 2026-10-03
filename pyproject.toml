@@ -15,6 +15,7 @@ dependencies = ["wodata", "wostrategy", "wostanding", "woplanner"]
 woweekend-quali = "woweekend.cli.qualifying:main"
 woweekend-race = "woweekend.cli.race:main"
 woweekend-post = "woweekend.cli.post:main"
+woweekend-traffic-history = "woweekend.cli.traffic_history:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/woweekend"]

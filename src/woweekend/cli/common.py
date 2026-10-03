@@ -38,7 +38,16 @@ def resolve_action(args, config_type: Type[Any], *, workflow: str):
             raise SystemExit("--event is required with --report-only")
         event_id, _, _ = parse_event_id(args.event)
         run = WeekendRunStore.load(event=event_id, workflow=workflow, run_id=args.report_only)
-        output = regenerate_report_bundle(run_path=run.path, language=args.language or "zh-CN")
+        language = args.language or "zh-CN"
+        draft = getattr(args, "report_draft", None)
+        bundle = run.path / f"report_bundle.{language}.engineering"
+        if draft:
+            from woweekend.reports.finalize import finalize_pre_race_report
+            if not bundle.exists():
+                bundle = regenerate_report_bundle(run_path=run.path, language=language)
+            output = finalize_pre_race_report(bundle_path=bundle, draft_path=draft)
+        else:
+            output = regenerate_report_bundle(run_path=run.path, language=language)
         print(output)
         return None, None
     if not args.event or not args.config:

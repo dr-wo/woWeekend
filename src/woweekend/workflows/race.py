@@ -34,6 +34,7 @@ from woweekend.artifacts.models import ComponentResult
 from woweekend.config.common import resolved_dict
 from woweekend.config.race import RaceConfig
 from woweekend.reports.bundle import create_report_bundle
+from woweekend.reports.historical_traffic import historical_traffic_section
 from .common import create_run, finish_run, resolve_workflow_event
 
 
@@ -316,6 +317,17 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
             "report_context_only": True,
         },
     )
+    historical_traffic, traffic_figures = historical_traffic_section(
+        circuit=metadata.location or "unknown", target_season=metadata.season,
+        data_root=resolved.data_root, run_path=run.path,
+    )
+    figures.extend(traffic_figures)
+    # Optional descriptive context follows the existing history conventions:
+    # its own available/partial/unavailable status never gates strategy inputs.
+    components["historical_traffic_context"] = ComponentResult(
+        "SUCCESS", historical_traffic,
+        provenance={"operational_input": False, "report_context_only": True},
+    )
     manifest = finish_run(run, components)
     context = {
         "warnings": manifest["warnings"],
@@ -324,6 +336,7 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         "historical_interruptions": interruption_history,
         "previous_season_empirical_vsc": historical_vsc,
         "previous_season_operational_inputs": historical_operational,
+        "historical_traffic": historical_traffic,
         "historical_empirical_values_affect_current_calculations": False,
         "historical_operational_values_affect_current_calculations": False,
     }

@@ -343,3 +343,31 @@ Observed positive events remain confirmed minimums with null exact totals, shown
 exercise confirmed-zero behavior. Report and Planner use the same local artifact
 and formatting; neither acquires data on render/reload. This descriptive context
 never changes strategy, probabilities or operational inputs.
+
+### Historical Traffic in the final pre-race report
+
+Historical traffic uses the existing optional-context convention: explicitly
+prepare it with `woweekend-traffic-history --circuit <calendar Location>
+--target-season <season> --data-root <data_root>`, then run normal race preparation.
+The workflow locates the validated woData artifact, snapshots its context and
+figures, and records reuse/unavailable status. Missing or stale optional history
+renders an explicit unavailable section; report rendering does not prepare it.
+
+The normal bundle includes `HISTORICAL_TRAFFIC_CONTEXT.md`, the three-group
+summary/conclusions and five distribution figures. Its authoring instructions
+place **Historical Traffic immediately before Limitations**. For deterministic
+final assembly of an authored pre-race Markdown draft:
+
+```sh
+woweekend-race --event YYYY-RR --config configs/race.json --report-draft report.md
+# Or assemble from the saved run without repeating preparation/calculation:
+woweekend-race --event YYYY-RR --report-only RUN_ID --language en-GB --report-draft report.md
+```
+
+The existing draft must contain a level-2 Limitations heading (numbered headings
+and “Limitations and provenance” are supported). Final assembly inserts/replaces
+only Historical Traffic, preserves the other authored sections, and reads the
+run's saved bundle rather than canonical latest history. Output is an immutable
+`final_report.<language>.<template>/pre_race_report.md` with colocated figures and
+assembly provenance. Authoring/numerical review of the other report sections
+continues to follow the existing report-bundle process.
