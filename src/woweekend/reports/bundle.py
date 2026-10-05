@@ -30,6 +30,9 @@ def create_report_bundle(
         if Path(value).exists() and Path(value).suffix.lower() in image_suffixes
     ], key=lambda path: (0 if workflow == "race_preparation" and path.name.startswith("traffic_history_") else 1 if path.name.startswith("live_mc_") else 2, path.name))
     if workflow == "post_race":
+        standings = results.get("standings", {})
+        if isinstance(standings, Mapping) and standings.get("status") == "UNAVAILABLE":
+            figure_paths = [p for p in figure_paths if not p.name.startswith("standings_")]
         bsf = results.get("bsf_junction_reference", context.get("bsf_junction_reference")) or {}
         if bsf.get("status") != "SUCCESS":
             figure_paths = [p for p in figure_paths if not p.name.startswith("bsf_junction_reference_")]
@@ -122,6 +125,8 @@ For a race-preparation report, use these explicit sections:
 Preserve `(default)` in human-facing fallback/default source labels. Explicitly report freshness warnings without implying that FP modified production inputs.
 """
     post = "" if workflow != "post_race" else """
+
+If the standings component is UNAVAILABLE, state its supplied current-round results warning explicitly. Omit its tables/projections and standings figures; do not present previous-round totals as current-round standings or describe missing results as zero-point awards.
 
 Preserve the existing canonical long-run/race-performance tracker and its section exactly; it remains the primary production performance output. Insert the supplied `BSF_JUNCTION_REFERENCE.md` section immediately after that canonical tracker section, before the existing next section. Preserve all other section order and text. Include the supplied BSF figure, compact caption and P/F/N caveats verbatim. Describe BSF only as an experimental companion/reference for inspecting differences from canonical. P is provenance, not confidence; F is canonical fallback; N is numerical completion only and is excluded from the performance axis. Do not create a second authoritative ranking, claim BSF is more accurate, or infer a physical car/driver/fuel decomposition. If unavailable, retain the supplied explicit unavailable section without substituting another figure. The diagnostic and support figures are optional supplementary assets. Final saved-output assembly is available through `woweekend-post --report-only RUN_ID --event YYYY-RR --report-draft PATH`.
 """

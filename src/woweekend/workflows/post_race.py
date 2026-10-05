@@ -158,7 +158,12 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
                 output = _normalize_empirical_pit_loss(
                     output, season=metadata.season, round_number=metadata.round_number,
                 )
-            components[name] = ComponentResult("SUCCESS", output, provenance={"owner": "woStanding" if name == "standings" else "woStrategy", "overrides": overrides, **({"experimental_companion": True, "failure_isolated": True} if name == "bsf_junction_reference" else {})})
+            unavailable = (name == "standings" and isinstance(output, Mapping)
+                           and output.get("status") == "UNAVAILABLE")
+            components[name] = ComponentResult(
+                "UNAVAILABLE" if unavailable else "SUCCESS", output,
+                warnings=list(output.get("warnings", [])) if unavailable else [],
+                provenance={"owner": "woStanding" if name == "standings" else "woStrategy", "overrides": overrides, **({"experimental_companion": True, "failure_isolated": True} if name == "bsf_junction_reference" else {})})
         except Exception as exc:
             components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}", provenance={"overrides": overrides, **({"experimental_companion": True, "failure_isolated": True, "substitute_used": False} if name == "bsf_junction_reference" else {})})
     live_provider = providers.get("live_mc_history")
@@ -306,7 +311,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
         provenance={"substitute_used": False},
     )
     for name, item in components.items():
-        if item.status == "SUCCESS":
+        if item.status == "SUCCESS" or (item.status == "UNAVAILABLE" and item.output is not None):
             try:
                 run.save_json(name, item.output)
             except (TypeError, ValueError):
@@ -389,12 +394,24 @@ def _default_live_mc_history(
 
 
 def _default_standings(run_path, *, season: int, round_number: int):
-    from wostanding.script.points_progression import run_points_progression
+    from wostanding.script.points_progression import StandingsUnavailableError, run_points_progression
 
-    result, figures = run_points_progression(
-        year=season, race_range=[1, round_number], include_projection=True,
-        output_path=run_path / "figures" / "standings.png", output_format="png", show=False,
-    )
+    try:
+        result, figures = run_points_progression(
+            year=season, race_range=[1, round_number], include_projection=True,
+            output_path=run_path / "figures" / "standings.png", output_format="png", show=False,
+        )
+    except StandingsUnavailableError as exc:
+        return {
+            "status": "UNAVAILABLE",
+            "reason": "upstream_results_unavailable",
+            "season": season,
+            "round_number": round_number,
+            "missing_session": exc.session_name,
+            "warnings": [str(exc)],
+            "drivers": {"actual": [], "actual_plus_projected": []},
+            "constructors": {"actual": [], "actual_plus_projected": []},
+        }
     return {
         "drivers": {
             "actual": result.driver_points.to_dict("records"),
