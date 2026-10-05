@@ -66,8 +66,8 @@ def test_unavailable_companion_is_explicit_and_does_not_register_stale_plot(tmp_
     assert 'Keep this table and conclusion exactly.' in report.read_text()
 
 
-@pytest.mark.parametrize('bsf_fails',[False,True])
-def test_normal_post_workflow_runs_companion_after_canonical_and_isolates_failure(tmp_path,bsf_fails):
+@pytest.mark.parametrize('bsf_status', ['available', 'degraded_input', 'failed'])
+def test_normal_post_workflow_runs_companion_after_canonical_and_isolates_failure(tmp_path,bsf_status):
     pre = _pre_race_run(tmp_path)
     raw = PostRaceConfig.template()
     raw.update(data_root=str(tmp_path),pre_race_run_id=pre.run_id)
@@ -81,9 +81,11 @@ def test_normal_post_workflow_runs_companion_after_canonical_and_isolates_failur
         assert calls[-1] == 'canonical'
         assert kwargs == {'season':2026,'round_number':3}
         calls.append('bsf')
-        if bsf_fails:
+        if bsf_status == 'failed':
             raise ValueError('Unsupported canonical input bank')
-        return {'status':'available','method':'projected_mean'}
+        return {'status':bsf_status,'method':'projected_mean',
+                'warnings':['Incomplete clean-lap input; reduced evidence coverage']
+                           if bsf_status == 'degraded_input' else []}
     providers.update(race_performance=canonical,race_performance_tracker=canonical,
                      bsf_junction_reference=companion)
     run = run_post_race(PostRaceConfig.parse(raw),event='2026-03',input_config=raw,
@@ -92,12 +94,17 @@ def test_normal_post_workflow_runs_companion_after_canonical_and_isolates_failur
     assert run.load_json('race_performance_tracker') == canonical_value
     assert canonical_value == {'scores':[0.0,1.234],'provenance':'unchanged canonical'}
     results = run.load_json('analysis_results')
-    assert results['bsf_junction_reference']['status'] == ('FAILED' if bsf_fails else 'SUCCESS')
+    expected = {'available': 'SUCCESS', 'degraded_input': 'DEGRADED', 'failed': 'FAILED'}[bsf_status]
+    assert results['bsf_junction_reference']['status'] == expected
     assert results['race_performance']['status'] == 'SUCCESS'
     assert results['standings']['status'] == 'SUCCESS'
     assert results['bsf_junction_reference']['provenance']['failure_isolated']
     assert run.load_json('report_context')['bsf_junction_reference'] == results['bsf_junction_reference']
     assert (next(run.path.glob('report_bundle.*'))/'BSF_JUNCTION_REFERENCE.md').exists()
+    if bsf_status == 'degraded_input':
+        assert run.load_json('bsf_junction_reference')['status'] == 'degraded_input'
+        assert results['bsf_junction_reference']['warnings'] == ['Incomplete clean-lap input; reduced evidence coverage']
+        assert run.load_json('manifest')['status'] == 'PARTIAL'
 
 
 def test_report_only_cli_uses_saved_outputs(tmp_path,monkeypatch,capsys):
@@ -234,3 +241,36 @@ def test_unavailable_final_report_removes_html_bsf_for_all_src_forms(tmp_path, q
     assert not any('bsf' in p.name.lower() for p in report.parent.rglob('*'))
     assert (report.parent / 'figures' / CANONICAL).read_bytes() == b'canonical unchanged'
     assert (report.parent / unrelated).read_bytes() == b'preserve unrelated'
+
+
+@pytest.mark.parametrize('status', ['DEGRADED', 'SUCCESS'])
+def test_degraded_r16_warning_survives_bundle_and_saved_report(tmp_path, status, monkeypatch):
+    from wostrategy.analysis.bsf_junction.input_coverage import degraded_warning
+    coverage = dict(original_rows=170, retained_rows=148, excluded_rows=22,
+                    affected_drivers=['ALB', 'COL', 'LAW', 'VER'],
+                    reasons=['missing physical `TyreLife`'])
+    support = dict(provenance={'P': 2, 'F': 9, 'N': 0}, projected_teams=['Alpine', 'Mercedes'],
+                   disconnected_components=6, junction_transfers=0)
+    warning = degraded_warning(16, coverage, support)
+    component = {'status': status, 'output': {'status': 'degraded_input', 'warnings': [warning]}}
+    sources = []
+    for name in [CANONICAL, TRACKER]:
+        path = tmp_path/name; path.write_bytes(name.encode()); sources.append(path)
+    bundle = create_report_bundle(run_path=tmp_path, workflow='post_race', event='2026-16',
+        context={'bsf_junction_reference': component}, results={'bsf_junction_reference': component},
+        figures=sources, language='en-GB')
+    fragment = (bundle/'BSF_JUNCTION_REFERENCE.md').read_text()
+    assert fragment.index('Degraded execution') < fragment.index(f'![{TITLE}]')
+    for expected in ['22/170', 'retained 148', 'ALB, COL, LAW, VER', 'physical `TyreLife`',
+                     '2 P / 9 F / 0 N', '6 graph components', '0 junction transfers',
+                     'Only Alpine and Mercedes have projected support', 'reduced evidence coverage',
+                     'should not be interpreted as a fully supported graph estimate']:
+        assert expected in fragment
+    assert (bundle/'figures'/TRACKER).is_file()
+    monkeypatch.setattr('wostrategy.analysis.bsf_junction.workflow.get_bsf_event',
+                        lambda **kw: pytest.fail('no analysis during report assembly'))
+    draft = tmp_path/'draft.md'; draft.write_text(DRAFT)
+    report = finalize_post_race_report(bundle_path=bundle, draft_path=draft)
+    assert fragment.rstrip() in report.read_text()
+    assert (report.parent/'figures'/TRACKER).is_file()
+    assert report.read_text().replace(fragment.rstrip()+'\n\n', '') == DRAFT

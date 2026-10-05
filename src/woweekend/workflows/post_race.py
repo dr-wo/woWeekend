@@ -158,11 +158,13 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
                 output = _normalize_empirical_pit_loss(
                     output, season=metadata.season, round_number=metadata.round_number,
                 )
+            degraded = (name == "bsf_junction_reference" and isinstance(output, Mapping)
+                        and output.get("status") == "degraded_input")
             unavailable = (name == "standings" and isinstance(output, Mapping)
                            and output.get("status") == "UNAVAILABLE")
             components[name] = ComponentResult(
-                "UNAVAILABLE" if unavailable else "SUCCESS", output,
-                warnings=list(output.get("warnings", [])) if unavailable else [],
+                "UNAVAILABLE" if unavailable else "DEGRADED" if degraded else "SUCCESS", output,
+                warnings=list(output.get("warnings", [])) if degraded or unavailable else [],
                 provenance={"owner": "woStanding" if name == "standings" else "woStrategy", "overrides": overrides, **({"experimental_companion": True, "failure_isolated": True} if name == "bsf_junction_reference" else {})})
         except Exception as exc:
             components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}", provenance={"overrides": overrides, **({"experimental_companion": True, "failure_isolated": True, "substitute_used": False} if name == "bsf_junction_reference" else {})})
@@ -311,7 +313,7 @@ def run_post_race(config: PostRaceConfig, *, event: str, input_config: dict[str,
         provenance={"substitute_used": False},
     )
     for name, item in components.items():
-        if item.status == "SUCCESS" or (item.status == "UNAVAILABLE" and item.output is not None):
+        if item.status in {"SUCCESS", "DEGRADED"} or (item.status == "UNAVAILABLE" and item.output is not None):
             try:
                 run.save_json(name, item.output)
             except (TypeError, ValueError):

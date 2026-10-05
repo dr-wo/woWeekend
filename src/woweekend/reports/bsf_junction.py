@@ -12,6 +12,29 @@ CAPTION = (
 )
 TRACKER = 'bsf_junction_reference_mercedes.png'
 
+
+def bsf_has_output(component):
+    """Degraded calculation is usable output; failed calculation is not."""
+    return (component or {}).get('status') in {'SUCCESS', 'DEGRADED'}
+
+
+def degradation_markdown(component):
+    output = component.get('output') or {}
+    current = output.get('current_event') or {}
+    degraded = (component.get('status') == 'DEGRADED'
+                or output.get('status') == 'degraded_input'
+                or current.get('status') == 'degraded_input')
+    if not degraded:
+        return ''
+    warnings = output.get('warnings') or current.get('warnings') or component.get('warnings')
+    if not warnings:
+        warnings = ['Incomplete clean-lap input reduced evidence coverage. Saved exclusion '
+                    'and graph-support diagnostics are unavailable. Do not interpret '
+                    'this event as a fully supported graph estimate.']
+    return ('> **Degraded execution — incomplete clean-lap input**\n>\n'
+            + '\n>\n'.join('> ' + warning.replace('\n', '\n> ') for warning in warnings)
+            + '\n\n')
+
 _INLINE_IMAGE = re.compile(r'!\[([^\]]*)\]\(\s*(<[^>]+>|[^\s)]+)(?:\s+[^)]*)?\)')
 _HTML_IMAGE = re.compile(r'<img\b[^>]*>', re.I)
 _SRC = re.compile(r'''(?<!\S)src\s*=\s*(?:(["'])(.*?)\1|([^\s"'`=<>]+))''', re.I | re.S)
@@ -119,10 +142,10 @@ def bsf_markdown(component, figure_paths):
     component = component or {}
     available = {Path(p).name for p in figure_paths}
     header = f'## {TITLE}\n\n'
-    if component.get('status') != 'SUCCESS' or TRACKER not in available:
+    if not bsf_has_output(component) or TRACKER not in available:
         reason = component.get('error') or 'Saved companion figure is unavailable in this bundle.'
         return header + f'Companion unavailable: {reason}\n\nCanonical outputs remain primary. No substitute BSF figure is supplied.\n'
-    return (header + f'![{TITLE}](figures/{TRACKER})\n\n'
+    return (header + degradation_markdown(component) + f'![{TITLE}](figures/{TRACKER})\n\n'
             + CAPTION + '\n\nP is provenance, not a confidence grade. N appears only in the support strip. '
             'Use this companion to inspect differences from canonical alongside its evidence flags.\n')
 

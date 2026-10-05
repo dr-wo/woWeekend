@@ -92,6 +92,7 @@ def finalize_post_race_report(*, bundle_path, draft_path):
     from .bsf_junction import (
         bsf_markdown, insert_bsf_after_canonical, sanitize_bsf_draft,
         image_references, is_bsf_image, TRACKER,
+        bsf_has_output,
     )
 
     bundle, draft_path = Path(bundle_path), Path(draft_path)
@@ -105,7 +106,7 @@ def finalize_post_race_report(*, bundle_path, draft_path):
     manifest_path = bundle / 'figure_manifest.json'
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     approved = {}
-    if bsf.get('status') == 'SUCCESS':
+    if bsf_has_output(bsf):
         for entry in manifest.get('figures', []):
             relative = Path(entry['file'])
             source = bundle / relative
