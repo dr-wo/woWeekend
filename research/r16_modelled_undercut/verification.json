@@ -1,0 +1,25 @@
+{
+  "source_run": "/Users/zhxutong/dr-wo/woData/woweekend/runs/schema_v1/event=2026-16/workflow=race_preparation/runs/20261003T225359.171082Z-f370e12cf1",
+  "verification_run": "/Users/zhxutong/dr-wo/woWeekend/research/r16_modelled_undercut/data/woweekend/runs/schema_v1/event=2026-16/workflow=race_preparation/runs/20261008T213335.659182Z-c113976b32",
+  "points": 513,
+  "compound_transitions": 9,
+  "model_age_range": [
+    0,
+    56
+  ],
+  "canonical_numerical_outputs_equal": {
+    "strategy_unrestricted": true,
+    "strategy_rules_compliant": true,
+    "cutoff_unrestricted": true,
+    "cutoff_rules_compliant": true
+  },
+  "canonical_race_run_hashes_unchanged": true,
+  "canonical_post_run_hashes_unchanged": true,
+  "older_canonical_post_bsf_status": "FAILED",
+  "saved_bsf_reference": "/Users/zhxutong/dr-wo/woStrategy/research/r16_tyre_life_repair_20261006/run/report_bundle.en-GB.engineering/analysis_results.json",
+  "bsf_component_status": "DEGRADED",
+  "saved_bsf_reference_unchanged": true,
+  "report_bundle": "/Users/zhxutong/dr-wo/woWeekend/research/r16_modelled_undercut/data/woweekend/runs/schema_v1/event=2026-16/workflow=race_preparation/runs/20261008T213335.659182Z-c113976b32/report_bundle.zh-CN.engineering",
+  "saved_output_regeneration": "/Users/zhxutong/dr-wo/woWeekend/research/r16_modelled_undercut/data/woweekend/runs/schema_v1/event=2026-16/workflow=race_preparation/runs/20261008T213335.659182Z-c113976b32/report_bundle.en-GB.engineering",
+  "offline_scope": "Real strategy and cutoff calculations; cached event metadata, FP and historical report context; model config reused. No post-race/BSF regeneration."
+}

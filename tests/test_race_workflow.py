@@ -158,7 +158,20 @@ def _distance_event(*, scheduled=None, session=None):
     )
 
 
-def test_race_produces_both_strategy_modes_and_cutoffs(tmp_path: Path) -> None:
+def test_race_produces_both_strategy_modes_and_cutoffs(tmp_path: Path, monkeypatch) -> None:
+    import woweekend.reports.modelled_undercut as presentation
+    import woweekend.workflows.race as workflow
+    seen = []
+    original_save = presentation.save_modelled_undercut
+    original_search = workflow.search_best_compound_sequences
+    def save(run, model, max_age):
+        seen.append(model)
+        return original_save(run, model, max_age)
+    def search(state, model, *args, **kwargs):
+        assert model is seen[0]
+        return original_search(state, model, *args, **kwargs)
+    monkeypatch.setattr(presentation, "save_modelled_undercut", save)
+    monkeypatch.setattr(workflow, "search_best_compound_sequences", search)
     raw = RaceConfig.template()
     raw.update({"total_laps": 6, "result_count": 2, "data_root": str(tmp_path)})
     raw["degradation_cutoff"] = {"scan_min": 0.05, "scan_max": 0.15, "coarse_step": 0.05, "refine_tolerance": 0.01}
@@ -174,6 +187,11 @@ def test_race_produces_both_strategy_modes_and_cutoffs(tmp_path: Path) -> None:
     assert compliant_cutoff["primary_0_to_1"] is None
     assert compliant_cutoff["primary_0_to_1_status"] == "unavailable_rules_compliant"
     assert compliant_cutoff["cutoff_table"][0]["cutoff_medium_degradation"] is None
+    undercut = run.load_json("modelled_undercut_power")
+    assert len(undercut["points"]) == 9 * 7
+    assert undercut["model"]["degradation"] == dict(seen[0].degradation)
+    assert (run.path / "figures/modelled_undercut_power.png").exists()
+    assert (run.path / "report_bundle.zh-CN.engineering/MODELLED_UNDERCUT_POWER.md").exists()
 
 
 def test_missing_tyre_prediction_fails_before_run_or_downstream_work(tmp_path: Path) -> None:

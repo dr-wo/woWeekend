@@ -45,7 +45,11 @@ def create_report_bundle(
         # PNGs are the authoring assets; vector exports remain in the run directory.
         figure_paths = [p for p in figure_paths if not (
             p.name.startswith("bsf_junction_reference_") and p.suffix == ".svg")]
-    base_files = 7 if workflow == "race_preparation" else 6 if workflow == "post_race" else 5
+    has_undercut = bool(results.get("modelled_undercut_power", {}).get("output"))
+    if has_undercut:
+        from .modelled_undercut import FIGURE
+        figure_paths.sort(key=lambda path: path.name != FIGURE)
+    base_files = (7 if workflow == "race_preparation" else 6 if workflow == "post_race" else 5) + int(has_undercut)
     if len(figure_paths) + base_files > MAX_BUNDLE_FILES:
         figure_paths = figure_paths[: MAX_BUNDLE_FILES - base_files]
     (root / "figures").mkdir(parents=True)
@@ -53,6 +57,9 @@ def create_report_bundle(
     _write(root / "REPORT_INSTRUCTION.md", _instruction(language, template, workflow))
     _json(root / "report_context.json", {**dict(context), "workflow": workflow, "event": event, "language": language, "template": template})
     _json(root / "analysis_results.json", results)
+    if has_undercut:
+        from .modelled_undercut import undercut_markdown
+        _write(root / "MODELLED_UNDERCUT_POWER.md", undercut_markdown(results["modelled_undercut_power"]))
     if workflow == "post_race":
         from .bsf_junction import bsf_markdown
         _write(root / "BSF_JUNCTION_REFERENCE.md", bsf_markdown(
@@ -76,6 +83,9 @@ def create_report_bundle(
         destination = root / "figures" / source.name
         shutil.copy2(source, destination)
         entry = {"file": f"figures/{source.name}", "purpose": "supplementary deterministic figure", "labels": "English"}
+        if source.name == "modelled_undercut_power.png":
+            entry.update(title="Modelled / predicted undercut power",
+                         purpose="tyre-only effective strategy model; theoretical age-zero replacement anchor")
         if workflow == "post_race" and source.name == "bsf_junction_reference_mercedes.png":
             from .bsf_junction import CAPTION, TITLE
             entry.update(title=TITLE, caption=CAPTION, purpose="experimental BSF companion; canonical remains primary",
@@ -117,6 +127,7 @@ For a race-preparation report, use these explicit sections:
 3. `Automatic model baseline`: explain the selected P0/D0 or other supplied source, including whether Pirelli affected allocation, descriptors, or both.
 4. `Automatic model result without manual override`: include this appendix only when the deterministic component is supplied; do not substitute FP diagnostic values.
 5. `Degradation cutoffs`: render the supplied `cutoff_table` rows, including 0→1, 1→2, and 2→3. Show an unavailable 0→1 value as `N/A` with its supplied status; never infer a crossing from the figure or sweep.
+   After this section, include `MODELLED_UNDERCUT_POWER.md` and its figure when supplied. Label it `Modelled / predicted undercut power`. Preserve the model tyre-age axis, theoretical age-zero replacement reference and sign convention. This is distinct from Live Observed undercut estimate; do not blend them or call the modelled curve measured.
 6. `Historical VSC evidence`: render the per-year rows in `historical_vsc_evidence` without averaging them. Preserve each status, source, sample support and layout-comparability field. Any supplied estimator number is GREEN-relative pit-sector excess evidence, not an operational VSC pit window. Explicitly state that the evidence did not populate or alter current-event operational inputs and that no empirical Apply action is available. When a year is unavailable, preserve its supplied reason.
 7. `Prior-event operational assumptions`: report `previous_season_operational_inputs` separately from empirical VSC evidence. Label these as the values previously adopted by the operator, not observations, and state that they did not populate or alter current-event calculations. When unavailable, preserve the supplied reason.
 8. `Historical Safety Car / Red Flag context`: include the supplied `HISTORICAL_INTERRUPTION_CONTEXT.md` table and `historical_interruptions` values. Show editions, SC periods/ranges, Red Flag occurrences/laps and unavailable coverage. Pure VSC is excluded. SC ranges cover laps active for any portion; withdrawal exactly at a lap boundary excludes the next lap. Red Flags use entry laps. Preserve minimum counts, uncertain fragments and unavailable laps; only affirmative TrackStatus integrity supports confirmed zeros. Preserve “No event observed; coverage unproven” when integrity is unknown. This is descriptive context only and does not alter strategy inputs.

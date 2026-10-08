@@ -239,6 +239,12 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
         tyre.artifact_id, tyre.model_version or "unknown",
     )
     state = StrategySearchState(0, total_laps, "MEDIUM", 0, None, resolved.max_stops, "pre_race_tyre_prediction")
+    from woweekend.reports.modelled_undercut import save_modelled_undercut
+    undercut, undercut_figure = save_modelled_undercut(run, model, total_laps)
+    components["modelled_undercut_power"] = ComponentResult(
+        "SUCCESS", undercut, provenance={"owner": "woStrategy", "input": "effective StrategyModel"},
+    )
+    figures.append(undercut_figure)
     for name, rules in (("strategy_unrestricted", StrategyRules()), ("strategy_rules_compliant", StrategyRules(minimum_distinct_dry_compounds=2))):
         try:
             results = search_best_compound_sequences(state, model, resolved.pit_loss.green.effective_total, max_stops=resolved.max_stops, k=resolved.result_count, allow_any_start=True, strategy_rules=rules)
