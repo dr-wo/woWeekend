@@ -268,6 +268,17 @@ replaces the latest event-scoped operational-history record under
 That history is a durable mirror, not a second editable source. Changing the
 current config to the next event does not erase the completed event's record.
 
+**R16 DBG-5: CLOSED (2026-10-08) — documentation/readiness only.** Pre-race VSC
+pit loss is an optional, explicitly adopted, event-specific operational assumption.
+R16's archived input already contained explicit VSC `null`; resolution and Planner
+correctly preserved **Unresolved**. Author a separate `pit_loss.vsc` total or complete
+S3/S1 loss pair in this config, or use DBG-9's manual VSC override in standard
+Planner when a value is needed. The override is immediately effective; **Apply
+pit losses** persists it to this authoritative config and the woData mirror.
+Clearing the override restores the underlying value; Apply persists the removal.
+Unresolved VSC does not block preparation that only needs GREEN. This closure adds
+no estimation, fallback, readiness blocking, automatic propagation, or UI behavior.
+
 The four persistence roles are intentionally distinct: `configs/race.json` is
 the editable current operational config; a run's `config.resolved.json` is its
 immutable input snapshot; the woData event record preserves the latest/final
@@ -290,6 +301,13 @@ For example, an event may retain an operational VSC assumption of `12.0 s` and a
 supported post-race empirical VSC result of `11.8 s`. A future report may show
 both as separately labelled previous-event context, but neither auto-fills or
 becomes the next event's operational VSC input.
+The empirical estimator measures GREEN-relative pit-sector excess, not the
+operational Planner VSC loss against staying out under VSC. These quantities are
+not semantically interchangeable merely because both are measured in seconds.
+
+The suspicious archived R16 event identity and historical lookup misses are
+tracked separately in [R16 event identity debug item](docs/R16_EVENT_IDENTITY_DEBUG.md);
+they are not part of DBG-5's closure.
 
 ## Degradation cutoff scan
 
