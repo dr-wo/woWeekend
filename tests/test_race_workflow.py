@@ -187,6 +187,10 @@ def test_race_produces_both_strategy_modes_and_cutoffs(tmp_path: Path, monkeypat
     assert compliant_cutoff["primary_0_to_1"] is None
     assert compliant_cutoff["primary_0_to_1_status"] == "unavailable_rules_compliant"
     assert compliant_cutoff["cutoff_table"][0]["cutoff_medium_degradation"] is None
+    assert unrestricted["initial_scan_max"] == unrestricted["effective_scan_max"] == 0.15
+    bundled = json.loads((run.path / "report_bundle.zh-CN.engineering/analysis_results.json").read_text())
+    assert bundled["cutoff_unrestricted"]["output"]["cutoff_table"] == unrestricted["cutoff_table"]
+    assert compliant_cutoff["cutoff_table"][0]["coverage"]["status"] == "unavailable_rules_compliant"
     undercut = run.load_json("modelled_undercut_power")
     assert len(undercut["points"]) == 9 * 7
     assert undercut["model"]["degradation"] == dict(seen[0].degradation)
