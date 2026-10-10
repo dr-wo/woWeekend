@@ -864,6 +864,9 @@ def test_cutoff_output_includes_supported_fp_medium_markers(tmp_path: Path) -> N
     assert marker["session"] == "FP2"
     assert marker["medium_degradation"] == .08
     assert marker["production_input"] is False
+    assert marker["coverage_anchor_semantics"] == "medium_degradation_context"
+    assert cutoff["anchor_coverage"]["anchor_max"] == .08
+    assert "no FP SOFT/HARD" in cutoff["fp_marker_interpretation"]
     assert "not fully separable" in cutoff["fp_marker_limitation"]
     practice = run.load_json("practice_tyre_evidence")
     fp2 = next(row for row in practice["sessions"] if row["session"] == "FP2")

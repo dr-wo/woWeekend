@@ -61,3 +61,7 @@ def test_bundle_preserves_cutoff_coverage_and_reports_legacy_limitations(tmp_pat
     assert "scan coverage unavailable" in instruction
     assert "Never describe an unavailable class as a losing strategy" in instruction
     assert "s/lap per tyre-age lap" in instruction
+    assert "scalar contextual coverage anchors only" in instruction
+    assert "coverage incomplete due to explicit scan_max" in instruction
+    assert "never infer 4→5" in instruction
+    assert "Absence of anchor metadata in legacy artifacts" in instruction

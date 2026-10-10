@@ -4,6 +4,7 @@ from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import csv
 import json
+from math import isfinite
 from pathlib import Path
 from typing import Any, Callable
 
@@ -255,7 +256,7 @@ def run_race(config: RaceConfig, *, event: str, input_config: dict[str, Any] | N
             components[name] = ComponentResult("FAILED", error=f"{type(exc).__name__}: {exc}")
     for name, rules in (("cutoff_unrestricted", StrategyRules()), ("cutoff_rules_compliant", StrategyRules(minimum_distinct_dry_compounds=2))):
         try:
-            cutoff = calculate_degradation_cutoffs(model=model, state=state, pit_loss=resolved.pit_loss.green.effective_total, strategy_rules=rules, **asdict(resolved.degradation_cutoff))
+            cutoff = calculate_degradation_cutoffs(model=model, state=state, pit_loss=resolved.pit_loss.green.effective_total, strategy_rules=rules, coverage_anchors=fp_cutoff_markers, **asdict(resolved.degradation_cutoff))
             output = _cutoff_output_with_fp_markers(cutoff.to_dict(), fp_cutoff_markers)
             run.save_json(name, output)
             try:
@@ -700,6 +701,7 @@ def _automatic_baseline_appendix(*, tyre, state, pit_loss, max_stops, result_cou
     ))
     cutoff = _cutoff_output_with_fp_markers(calculate_degradation_cutoffs(
         model=model, state=state, pit_loss=pit_loss, strategy_rules=rules,
+        coverage_anchors=fp_cutoff_markers,
         **asdict(cutoff_config),
     ).to_dict(), fp_cutoff_markers)
     return {
@@ -738,12 +740,16 @@ def _fp_medium_cutoff_markers(fp_evidence):
         support = quantity.get("support", {})
         coordinate = quantity.get("posterior_coordinate", {})
         value = coordinate.get("median")
+        try:
+            value = float(value)
+        except (TypeError, ValueError, OverflowError):
+            continue
         if (
             support.get("status") != "measured"
             or int(support.get("usable_laps", 0)) <= 0
             or int(support.get("usable_runs", 0)) <= 0
-            or value is None
-            or float(value) < 0
+            or not isfinite(value)
+            or value < 0
         ):
             continue
         markers.append({
@@ -755,6 +761,7 @@ def _fp_medium_cutoff_markers(fp_evidence):
             "support": dict(support),
             "fp_structural_identifiability": quantity.get("fp_structural_identifiability"),
             "source_family": "fp_diagnostic",
+            "coverage_anchor_semantics": "medium_degradation_context",
             "production_input": False,
         })
     return markers
@@ -765,8 +772,10 @@ def _cutoff_output_with_fp_markers(output, markers):
         **dict(output),
         "fp_diagnostic_medium_markers": list(markers),
         "fp_marker_interpretation": (
-            "Session-level FP MEDIUM posterior coordinates positioned against the "
-            "unchanged production strategy cutoff envelope."
+            "FP MEDIUM posterior medians are scalar x-axis coverage anchors only. "
+            "Cutoff sensitivity uses the effective compound-ratio model; no FP SOFT/HARD "
+            "projection or equality of tyre-model vectors is implied. Marker positions "
+            "do not predict the true or probabilistic optimal stop count."
         ),
         "fp_marker_limitation": FP_CUTOFF_MARKER_LIMITATION,
         "fp_markers_modify_production_inputs": False,
