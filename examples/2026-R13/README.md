@@ -1,5 +1,7 @@
 # 2026-R13 weekend example
 
+[dr-wo project home](https://github.com/dr-wo/dr-wo) · [woWeekend guide](../../README.md) · [Analysis methods](https://github.com/dr-wo/woStrategy) · [Application](https://github.com/dr-wo/woPlanner)
+
 This is a compact, commit-friendly view of the Italian Grand Prix workflow using
 real public 2026-R13 data. The files were selected without modifying numerical
 results from these immutable `woData` runs:
@@ -11,7 +13,11 @@ For portability, machine-specific source prefixes in the selected JSON copies
 are represented as `<WODATA_ROOT>`; numerical values and workflow statuses are
 unchanged.
 
-The command-line event identifier is `2026-13` (canonical `YYYY-RR` form):
+The command-line event identifier is `2026-13` (canonical `YYYY-RR` form).
+The commands below illustrate the workflow entry points. Current `configs/` files
+are editable operational inputs and may target a later event; they do not recreate
+this archived run unchanged. Inspect the saved artifacts above and the
+[workflow guide](../../docs/WORKFLOW_GUIDE.md) before a new run:
 
 ```bash
 woweekend-quali --event 2026-13 --config configs/qualifying.json

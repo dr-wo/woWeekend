@@ -1,5 +1,7 @@
 # 2026 Italian Grand Prix — Pre-Race Strategy Engineering Report
 
+[Weekend example and artifacts](../../README.md) · [woWeekend documentation](../../../../README.md) · [dr-wo project home](https://github.com/dr-wo/dr-wo) · [Analysis methods](https://github.com/dr-wo/woStrategy)
+
 **Event:** 2026-13 — Italian Grand Prix<br>
 **Session:** Race<br>
 **Workflow:** `race_preparation`<br>
