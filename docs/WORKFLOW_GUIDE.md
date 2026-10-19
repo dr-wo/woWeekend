@@ -5,6 +5,30 @@
 Run commands from the woWeekend checkout root. Event-specific examples describe
 their named scenarios; review current configs before running a different event.
 
+## Main-branch compatibility
+
+The public main branches currently have a standings integration mismatch.
+`woweekend.workflows.post_race._default_standings` imports
+`StandingsUnavailableError` from `wostanding.script.points_progression`, but
+woStanding main does not define that class. The default standings component fails
+with `ImportError` before calculating points. Post-Race catches the failure,
+records the component as `FAILED`, and continues attempting other components;
+this is not the adapter's separate `UNAVAILABLE` result for unpublished results.
+The standalone woStanding CLI remains available for published race results.
+
+The missing class and published-result guard belong to an unpublished woStanding
+code change, excluded from this documentation-only publication. Do not assume
+main rejects driver-only results as unavailable. Resolving the integration needs
+a separately reviewed code publication; installing all current main branches
+does not resolve it.
+
+Live tyre-model replay also depends on woPlanner's current traffic policy:
+automatic Race traffic retains the existing model, while new fits require
+explicit sector-boundary mode and sufficient clean-lap evidence. Historical R13
+figures and component statuses describe the saved run, not a fresh guarantee of
+what today's defaults will reproduce. Report-only rendering can reuse saved
+artifacts without repeating their numerical calculations.
+
 ## Operator interface
 
 The three preparation/review stages are independently invokable. Numerical

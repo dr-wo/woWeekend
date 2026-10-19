@@ -72,6 +72,12 @@ artifacts and report bundles are distinct from the authored report narrative.
 | `woweekend-post` | Assemble retrospective performance, tyre, replay and standings analysis. |
 | `woweekend-traffic-history` | Explicitly prepare optional historical traffic context. |
 
+The current main branches have a known standings integration gap: the default
+Post-Race adapter imports an error class not yet available in woStanding main,
+so that component is recorded as `FAILED`. Other components are attempted
+independently. The historical R13 report is not a fresh validation of this
+combination; see [main-branch compatibility](docs/WORKFLOW_GUIDE.md#main-branch-compatibility).
+
 ## Methods and operation
 
 - [Workflow guide](docs/WORKFLOW_GUIDE.md): prerequisites, operational inputs,
